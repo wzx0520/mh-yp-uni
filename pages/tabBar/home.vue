@@ -102,7 +102,7 @@ export default {
   components: {
 
   },
-  data () {
+  data() {
     return {
       show: false,
       showHome: false,
@@ -156,18 +156,24 @@ export default {
           type: 1,
           box_type: 4
         },
+        // {
+        //   id: 4,
+        //   title: '对对碰',
+        //   type: 4,
+        //   box_type: ''
+        // },
+        // {
+        //   id: 5,
+        //   title: '爬塔',
+        //   type: 5,
+        //   box_type: ''
+        // },
         {
           id: 4,
-          title: '对对碰',
-          type: 4,
-          box_type: ''
-        },
-        {
-          id: 5,
-          title: '爬塔',
-          type: 5,
-          box_type: ''
-        },
+          title: '宝箱',
+          type: 1,
+          box_type: 4
+        }
       ],
       is_new: '',
       site_title: '',
@@ -205,7 +211,8 @@ export default {
           2: { text: '无限抽', color: '#FF9900' },
           3: { text: '好物', color: '#FF9900' },
           4: { text: '福袋', color: '#FF9900' },
-          5: { text: '爬塔', color: '#FF9900' }
+          5: { text: '爬塔', color: '#FF9900' },
+          6: { text: '宝箱', color: '#FF9900' }
         },
         4: { // type 4: 对对碰
           default: { text: '对对碰', color: '#FF9900' }
@@ -213,7 +220,7 @@ export default {
       },
     }
   },
-  onLoad (options) {
+  onLoad(options) {
     this.optionsData = options
     // 推广码获取
     // console.log('参数', options)
@@ -245,7 +252,7 @@ export default {
     switchMusic.src = switchMp3
 
   },
-  onShow () {
+  onShow() {
     this.$store.dispatch('getAppConfig').then((res) => {
       this.site_title = res.data.site_title
       this.wx_group = res.data.wx_group
@@ -264,13 +271,13 @@ export default {
     // this.getLog()
     this.getList({ num: 1, size: 20 })
   },
-  onUnload () {
+  onUnload() {
     // bgMusic.pause()
   },
   computed: {
     ...mapGetters(['sysConfig']),
     // 计算属性：生成每个item对应的标签信息映射
-    tagMap () {
+    tagMap() {
       return (item) => {
         const { type, box_type } = item;
 
@@ -290,13 +297,13 @@ export default {
     }
   },
   methods: {
-    onSwiperChange (e) {
+    onSwiperChange(e) {
       this.activeIndex = e.detail.current
     },
-    onImageLoad (item) {
+    onImageLoad(item) {
       this.$set(item, 'loaded', true);
     },
-    changeIndex (item, index) {
+    changeIndex(item, index) {
       if (item.id == 5) {
         this.$common.to({
           url: '/pages/box/tower'
@@ -325,7 +332,7 @@ export default {
       }
 
     },
-    playMusic () {
+    playMusic() {
       this.muteBgMusic = !this.muteBgMusic;
       this.$nextTick(() => {
         if (switchMusic) {
@@ -338,7 +345,7 @@ export default {
         bgMusic.pause()
       }
     },
-    jump () {
+    jump() {
       uni.navigateTo({
         url: '/pages/index/web-view?url=https://mp.weixin.qq.com/s?__biz=Mzg3NDY2Njg2MQ==&tempkey=MTI2N19WL29GSlhRMm9kWTBZNTdHeFNHR1U3X2RBaDMwNDIydVlnR3prQ2FDdnJmNGhxVDBORTV6MTY1QW9BWmNRalo5QTNVVmw2dUFyNVFLSWI2azRqZDFFV1FiXzRtOUJxNFhPRnVfaW01ekg2VGVqRGxyMktvdk9Kdlp4X2xmM1hmemI4c0xPLUc2S2JyeVlJYlBUOVBUTW1qOWhjdElpd1R2UFBBUDBnfn4%3D&chksm=4ecc0f3579bb8623030d4931b5f19995fae2b69ef8ed909f1cbbe68cda5e90a44102c5a93430#rd',
         success: (result) => {
@@ -348,19 +355,19 @@ export default {
         complete: () => { }
       });
     },
-    jump2 () {
+    jump2() {
       console.log(123)
       uni.navigateTo({
         url: 'https://www.cwhm1.xcooo.cn/#/'
       })
     },
-    getSwiperList () {
+    getSwiperList() {
       /* 获取轮播图 */
       this.$common.getBanner(1).then(res => {
         this.swiperList = res
       })
     },
-    getUrlCode () { //
+    getUrlCode() { //
       var url = location.search
       var theRequest = new Object()
       if (url.indexOf("?") != -1) {
@@ -372,7 +379,7 @@ export default {
       }
       return theRequest
     },
-    getOpenid () { //获取opendi
+    getOpenid() { //获取opendi
       this.req({
         url: '/v1/shop/wxLogin',
         data: {
@@ -408,7 +415,7 @@ export default {
  * @param {*}
  * @return {*}
  */
-    pageTo (wx) {
+    pageTo(wx) {
       this.$store.dispatch('getUserInfo').then(() => {
         let pages = getCurrentPages()
         console.log(pages)
@@ -458,7 +465,7 @@ export default {
         })
       })
     },
-    clearUrlParams () {
+    clearUrlParams() {
       // 获取当前 URL
       let url = window.location.href;
       // 找到 URL 中的参数部分
@@ -474,7 +481,7 @@ export default {
 * @description: 中奖记录
 * @return {*}
 */
-    getLog () {
+    getLog() {
       this.req({
         url: '/v1/box/log',
         data: {},
@@ -491,7 +498,7 @@ export default {
 * @param {*}
 * @return {*}
 */
-    getList ({
+    getList({
       num,
       size
     }) {
@@ -532,8 +539,8 @@ export default {
         }
       })
     },
-    toDetail (item) {
-      // console.log(item)
+    toDetail(item) {
+      console.log(item)
       // return
       switch (item.type) {
         // 普通盒子
@@ -565,6 +572,13 @@ export default {
                   id: item.id
                 }
               })
+            case 6:
+              this.$common.to({
+                url: '/pages/box/treasureBox',
+                query: {
+                  id: item.id
+                }
+              })
               break
           }
           break
@@ -581,23 +595,23 @@ export default {
       }
 
     },
-    goRoom () {
+    goRoom() {
       this.$common.to({
         url: '/package/rightTouch/list'
       })
     },
-    goTower () {
+    goTower() {
       this.$common.to({
         url: '/pages/box/tower'
       })
     },
-    goMenu (item) {
+    goMenu(item) {
       this.$common.to({
         url: item.url,
       })
     },
     // 获取当前用户队列状态
-    getQueueStatus () {
+    getQueueStatus() {
       this.req({
         url: '/v1/box/getUserQueue',
         data: {},
@@ -612,10 +626,10 @@ export default {
         }
       });
     },
-    onFinishCountDown () {
+    onFinishCountDown() {
       this.$store.dispatch('stopQueueCountdown')
     },
-    goYFS () {
+    goYFS() {
       console.log(this.userQueueInfo)
       // 一番赏
       if (this.userQueueInfo.box_type == 1) {
@@ -626,7 +640,7 @@ export default {
             set_count: this.userQueueInfo.set_count
           }
         })
-      }else if(this.userQueueInfo.box_type == 4) {
+      } else if (this.userQueueInfo.box_type == 4) {
         this.$common.to({
           url: '/pages/box/lotteryBag',
           query: {
@@ -635,7 +649,7 @@ export default {
           }
         })
       }
-       else {
+      else {
         // 无限赏
         this.$common.to({
           url: '/pages/box/kaixiang',

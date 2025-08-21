@@ -46,8 +46,8 @@ let imgURL = ""
 if (process.env.NODE_ENV === 'development') {
   //console.log('开发环境')
   // #ifdef H5
-  baseURL = "http://www.ypmh.com"
-  imgURL = "http://www.ypmh.com"
+  baseURL = "https://box.bjkc010.com"
+  imgURL = "https://box.bjkc010.com"
   // baseURL = "http://www.mh-v16.xcooo.cn";
   // imgURL = "http://www.mh-v16.xcooo.cn";
   // #endif

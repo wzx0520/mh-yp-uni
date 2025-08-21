@@ -88,6 +88,13 @@
       }
     },
     {
+      "path": "pages/box/treasureBox",
+      "style": {
+        "enablePullDownRefresh": false,
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
       "path": "pages/box/test",
       "style": {
         "enablePullDownRefresh": false,
