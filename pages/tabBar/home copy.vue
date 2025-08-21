@@ -1,151 +1,103 @@
 <template>
   <view>
-    <cus-tabbar :current-page="0"></cus-tabbar>
+    <!-- <cus-tabbar :current-page="0"></cus-tabbar> -->
     <!-- #ifdef MP-WEIXIN -->
-    <!-- <view :style="{ height: `${sysConfig.statusBarHeight - 5}px` }">
-    </view> -->
+    <view class="xc-top" :style="{ height: `${sysConfig.statusBarHeight - 5}px` }">
+    </view>
     <!-- #endif -->
     <view class="home-page">
-      <view class="top-head">
+      <view class="top-header">
         <view class="title-wrap">
-          <view class="title-img">
-            星城一番赏
-          </view>
+          {{ site_title }}
         </view>
 
-        <view class="banner">
-          <swiper class="swiper" circular :indicator-dots="indicatorDots" :autoplay="false" :interval="interval"
+        <view class="carousel-wrapper">
+          <swiper class="carousel" circular :indicator-dots="indicatorDots" :autoplay="false" :interval="interval"
             :duration="duration" v-if="swiperList.length > 0">
             <swiper-item v-for="(item, index) in swiperList" :key="index" @click="$common.bannerTo(item)">
-              <view class="swiper-item">
-                <image :src="item.thumb" mode="widthFix" lazy-load="false" class="swiper-img" />
+              <view class="carousel-item">
+                <image :src="item.thumb" mode="widthFix" lazy-load="false" binderror="" bindload=""
+                  class="carousel-img" />
               </view>
             </swiper-item>
           </swiper>
+
         </view>
+      </view>
 
 
-        <!-- 弹幕 -->
-        <view class="barrage-wrap" :style="{
-          top: `calc(${sysConfig.statusBarHeight}px + 44px)`
-        }">
-          <lff-barrage :style="{
-            top: '-70rpx',
-            width: '100%'
-          }" background="linear-gradient(to right,rgba(230,83,109, 0.9),rgba(230,83,109, 0.1))" type="rightToLeft"
-            ref="detailBarrage" height="120" :maxTop="0"></lff-barrage>
-        </view>
-
+      <view class="home-body">
         <view class="notice-view">
-          <u-notice-bar mode="horizontal" color="#333" :speed="100" :list="popContent"></u-notice-bar>
+          <u-notice-bar mode="horizontal" color="#8b8d8a" :speed="100" :list="popContent">
+          </u-notice-bar>
+          <!-- <image class="notice-more" src="https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01qOPkAK24Ndco6UAIy_!!2200676927379.png" lazy-load="false" binderror=""
+          bindload="" /> -->
         </view>
-      </view>
-      <view class="cate-wrap">
-        <view class="cate-item" :class="[currentIndex == index ? 'cate-item-active' : '']"
-          v-for="(item, index) in cateList" :key="item.id" @click="changeIndex(item, index)">
 
-          <!-- 图标 -->
-          <image class="cate-icon" :src="item.icon" mode="aspectFit" />
-
-          <!-- 文字 -->
-          <view class="cate-title">{{ item.title }}</view>
+        <view class="play-wrap">
+          <view class="pd-img" @click="goRoom">
+            <!-- <cimage src="https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01Y76eXS24NdcVmhMgk_!!2200676927379.png"
+            mode="widthFix" /> -->
+            <cimage src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01synMeY24Nddq3VfLz_!!2200676927379.jpg"
+              mode="widthFix" />
+          </view>
+          <view class="pd-img" @click="goTower">
+            <!-- <cimage src="https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01PjhSox24NdcQxFLPk_!!2200676927379.png"
+            mode="widthFix" /> -->
+            <cimage src="https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01JOTXre24NddqdV9uI_!!2200676927379.jpg"
+              mode="widthFix" />
+          </view>
         </view>
-      </view>
-      <view class="content-wrap">
-        <!-- 热门专区 -->
-        <section class="hot-zone">
-          <view class="hot-zone__content">
-            <scroll-view scroll-x="true" class="scroll-view">
-              <view class="hot-zone__list">
-                <view class="hot-zone__item" v-for="(item, index) in items" :key="index">
-                  <image :src="item.image" class="hot-zone__item-image" mode="aspectFill" />
-                  <view class="hot-zone__item-title">{{ item.title }}</view>
-                  <view class="hot-zone__item-price">¥{{ item.price }}</view>
-                </view>
-              </view>
-            </scroll-view>
+
+        <view class="menu-container">
+          <view class="menu-item" v-for="(item, index) in menuList" :key="index" @click="goMenu(item)">
+            <image class="menu-image" :src="item.url" mode="widthFix" />
           </view>
-        </section>
+        </view>
 
-        <!-- 一番赏 -->
-        <section class="raffle-zone">
-          <header class="raffle-zone__header">
-            <h2 class="raffle-zone__title">一番赏</h2>
-            <view class="raffle-zone__more">查看更多<u-icon name="arrow-right" color="#e53e38" size="28"></u-icon></view>
-          </header>
-          <div class="raffle-zone__content">
-            <scroll-view scroll-x="true" class="scroll-view">
-              <div class="raffle-zone__list">
-                <article class="raffle-zone__item" v-for="(item, index) in listData" :key="index" @click="toDetail(item)">
-                  <img :src="item.thumb" class="raffle-zone__item-image" alt="Item Image" />
-                  <div class="raffle-zone__item-title">{{ item.title }}</div>
-                  <div class="raffle-zone__item-price">¥{{ item.price }}</div>
-                </article>
-              </div>
-            </scroll-view>
-          </div>
-        </section>
-
-        <!-- 潮玩福袋 -->
-        <section class="raffle-zone">
-          <header class="raffle-zone__header">
-            <h2 class="raffle-zone__title">潮玩福袋</h2>
-            <view class="raffle-zone__more">查看更多<u-icon name="arrow-right" color="#e53e38" size="28"></u-icon></view>
-          </header>
-          <div class="raffle-zone__content">
-            <scroll-view scroll-x="true" class="scroll-view">
-              <div class="raffle-zone__list">
-                <article class="raffle-zone__item" v-for="(item, index) in items" :key="index">
-                  <img :src="item.image" class="raffle-zone__item-image" alt="Item Image" />
-                  <div class="raffle-zone__item-title">{{ item.title }}</div>
-                  <div class="raffle-zone__item-price">¥{{ item.price }}</div>
-                </article>
-              </div>
-            </scroll-view>
-          </div>
-        </section>
-
-        <!-- 每日福利 -->
-        <section class="raffle-zone">
-          <header class="raffle-zone__header">
-            <h2 class="raffle-zone__title">每日福利</h2>
-            <view class="raffle-zone__more">查看更多<u-icon name="arrow-right" color="#e53e38" size="28"></u-icon></view>
-          </header>
-          <div class="raffle-zone__content">
-            <scroll-view scroll-x="true" class="scroll-view">
-              <div class="raffle-zone__list">
-                <article class="raffle-zone__item" v-for="(item, index) in items" :key="index">
-                  <img :src="item.image" class="raffle-zone__item-image" alt="Item Image" />
-                  <div class="raffle-zone__item-title">{{ item.title }}</div>
-                  <div class="raffle-zone__item-price">¥{{ item.price }}</div>
-                </article>
-              </div>
-            </scroll-view>
-          </div>
-        </section>
-
-
-        <!-- 分类 -->
-        <section class="tabs-container">
-          <view class="tabs">
-            <view class="tab-item" v-for="(tab, index) in tabs" :key="index" :class="{ 'active': activeTab === index }"
-              @click="setActiveTab(index)">
-              {{ tab }}
-            </view>
+        <view class="cate-wrap">
+          <view class="cate-item" :class="[currentIndex == index ? 'cate-item-active' : '']"
+            v-for="(item, index) in cateList" @click="changeIndex(item, index)">
+            {{ item.title }}
           </view>
-        </section>
+        </view>
 
         <mescroll-body ref="mescrollRef" height="400" @init="mescrollInit" @down="downCallback" @up="getList"
           :down="downOption" :up="upOption">
           <view class="list-container">
             <view class="list-item" v-for="(item, index) in listData" :key="index" @click="toDetail(item)">
-              <image :src="item.thumb" class="item-image" mode="aspectFill" />
+              <!-- 图片自适应比例显示 如 "16:9"、"4:3"、"1:1" 等 -->
+              <xc-image :src="item.thumb" @load="onImageLoad(item)" :borderRadius="{
+                bottomRight: '0',
+                bottomLeft: '0'
+              }" />
               <view class="item-title">{{ item.title }}</view>
               <view class="item-price"><text>¥</text><text class="price">{{ item.price }}</text></view>
             </view>
           </view>
         </mescroll-body>
       </view>
+    </view>
+
+    <!-- 进群 -->
+    <u-popup v-model="kefushow" mode="center" border-radius="16">
+      <view class="bgbox">
+        <view class="content">
+          <view class="ma">
+            <image class="" :src="wx_group" mode="widthFix" lazy-load="false" binderror="" bindload="" />
+          </view>
+          <view class="yi">
+            微信扫一扫
+          </view>
+        </view>
+        <view class="off" @click="kefushow = false">
+          <uni-icons type="close" color="#fff" size="45" />
+        </view>
+      </view>
+    </u-popup>
+
+    <view class="fixed-timer">
+      <CountdownCircle @click="goYFS" @finish="onFinishCountDown" />
     </view>
   </view>
 </template>
@@ -192,45 +144,52 @@ export default {
       cateList: [
         {
           id: 1,
-          title: '每日签到',
-          icon: 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN015MRxWp24NdcWPKP0W_!!2200676927379.png'
+          title: '一番赏'
         },
         {
           id: 2,
-          title: '福利抽选',
-          icon: 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01eReg4C24NdcV2j2X0_!!2200676927379.png'
+          title: '无限赏',
         },
         {
           id: 3,
-          title: '满开福袋',
-          icon: 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01yrwmQu24NdcWCwFy0_!!2200676927379.png'
+          title: '银票好物',
         },
-        {
-          id: 4,
-          title: '一番赏',
-          icon: 'https://img.alicdn.com/imgextra/i3/2200676927379/O1CN011HF0aB24NdcXAt9o1_!!2200676927379.png'
-        },
-        {
-          id: 5,
-          title: '对对碰',
-          icon: 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01Tt1OW624NdcQD9If5_!!2200676927379.png'
-        }
+        // {
+        //   id: 999,
+        //   title: '快乐发车',
+        // },
+        // {
+        //   id: 3,
+        //   title: '全局赏',
+        // },
+        // {
+        //   id: 4,
+        //   title: '擂台赏',
+        // },
+        // {
+        //   id: 5,
+        //   title: '领主赏',
+        // },
       ],
       is_new: '',
-      barrageTimer: null,
-      barrageCur: 0,
-      items: [
-        { title: '我是标题', price: '10.99', image: 'https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01Ai90vI24NdXObsaGE_!!2200676927379.png' },
-        { title: '我是标题我是标题我是标题我是标题', price: '15.99', image: 'https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01Ai90vI24NdXObsaGE_!!2200676927379.png' },
-        { title: '我是标题我是标题', price: '20.99', image: 'https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01Ai90vI24NdXObsaGE_!!2200676927379.png' },
-        { title: '我是标题', price: '$20.99', image: 'https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01Ai90vI24NdXObsaGE_!!2200676927379.png' },
-        { title: 'Item 3', price: '20.99', image: 'https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01Ai90vI24NdXObsaGE_!!2200676927379.png' },
-        // Add more items as needed
+      site_title: '',
+      // menuList: [
+      //   { type: 1, url: 'https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01uRkdPX24NdcZ5u7Vp_!!2200676927379.png' },
+      //   { type: 2, url: 'https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01sIj9rw24NdcWm4MCW_!!2200676927379.png' },
+      //   { type: 3, url: 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN0173kj5C24NdcQxGPxq_!!2200676927379.png' },
+      //   { type: 4, url: 'https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01Xq8mdT24NdcVtNaLl_!!2200676927379.png' }
+      // ],
+      menuList: [
+        { type: 1, url: 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01FthhZx24NddqdWQsq_!!2200676927379.jpg' },
+        { type: 2, url: 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN010GdbP624Nddr7wFOU_!!2200676927379.jpg' },
+        { type: 3, url: 'https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01mAQ75g24NddkQ3tQe_!!2200676927379.jpg' },
+        { type: 4, url: 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01Rkrjaq24NddrZ3hM2_!!2200676927379.jpg' }
       ],
-      tabs: ['潮玩', '满开赏', '一番赏'], // 标签内容
-      activeTab: 0, // 默认激活标签
+      userInfo: '',
+      kefushow: false,
+      wx_group: '',
+      userQueueInfo: {}
     }
-
   },
   onLoad (options) {
     this.optionsData = options
@@ -263,7 +222,11 @@ export default {
 
     switchMusic.src = switchMp3
 
+  },
+  onShow () {
     this.$store.dispatch('getAppConfig').then((res) => {
+      this.site_title = res.data.site_title
+      this.wx_group = res.data.wx_group
       this.popContent = [res.data.pop_con]
       if (res.data.bg_music) {
         bgMusic.src = res.data.bg_music
@@ -271,45 +234,53 @@ export default {
         bgMusic.loop = false;
       }
     })
-  },
-  onShow () {
+    this.$store.dispatch('getUserInfo').then(res => {
+      console.log(res)
+      this.userInfo = res.data
+    })
+    this.getQueueStatus()
     this.getSwiperList()
-    this.getLog()
+    // this.getLog()
     this.getList({ num: 1, size: 20 })
   },
   onUnload () {
     // bgMusic.pause()
-    clearInterval(this.barrageTimer)
-    this.barrageTimer = null
   },
   computed: {
     ...mapGetters(['sysConfig'])
   },
   methods: {
-    setActiveTab (index) {
-      this.activeTab = index;
+    onImageLoad (item) {
+      this.$set(item, 'loaded', true);
     },
     changeIndex (item, index) {
-      this.currentIndex = index
-      if (item.sort) {
-        if (item.sortType !== 4) {
-          item.sortType = 4
-        } else {
-          item.sortType = 5
-        }
-      } else {
-        this.cateList.map(item => {
-          item.sortType = ''
+      if (item.id == 999) {
+        this.$common.to({
+          url: '/pages/box/roomlist'
         })
-      }
-      if (item.is_new) {
-        this.is_new = 2
       } else {
-        this.is_new = ''
+        this.currentIndex = index
+        if (item.sort) {
+          if (item.sortType !== 4) {
+            item.sortType = 4
+          } else {
+            item.sortType = 5
+          }
+        } else {
+          this.cateList.map(item => {
+            item.sortType = ''
+          })
+        }
+        if (item.is_new) {
+          this.is_new = 2
+        } else {
+          this.is_new = ''
+        }
+        this.listData = []
+        this.mescroll.resetUpScroll()
+        this.mescroll.scrollTo(0, 0)
       }
-      this.listData = []
-      this.mescroll.resetUpScroll()
-      this.mescroll.scrollTo(0, 0)
+
     },
     playMusic () {
       this.muteBgMusic = !this.muteBgMusic;
@@ -333,21 +304,6 @@ export default {
         fail: () => { },
         complete: () => { }
       });
-      // uni.setClipboardData({
-      //   data: 'https://www.cwhm1.xcooo.cn/#/',
-      //   success: function () {
-      //     uni.getClipboardData({
-      //       success: function (res) {
-      //         uni.showToast({
-      //           title: '链接复制成功',
-      //           icon: 'success',
-      //           duration: 3000
-      //         });
-      //       }
-      //     })
-      //   }
-      // });
-      // this.show = true
     },
     jump2 () {
       console.log(123)
@@ -472,6 +428,22 @@ export default {
       history.replaceState(null, '', url);
     },
     /**
+* @description: 中奖记录
+* @return {*}
+*/
+    getLog () {
+      this.req({
+        url: '/v1/box/log',
+        data: {},
+        Loading: true,
+        success: res => {
+          if (res.code == 200) {
+            this.logList = res.data
+          }
+        }
+      })
+    },
+    /**
 * @description: 获取商品列表数据
 * @param {*}
 * @return {*}
@@ -486,7 +458,8 @@ export default {
         per_page: size,
         sort_type: '',
         is_new: this.is_new,
-        type: 1
+        type: 1,
+        box_type: this.cateList[this.currentIndex].id
       }
       if (this.cateList[this.currentIndex].id != 4) {
         data.sort_type = this.cateList[this.currentIndex].id
@@ -502,7 +475,11 @@ export default {
             if (num == 1) {
               this.listData = []
             }
-            this.listData = [...this.listData, ...res.data.data]
+            let newArr = res.data.data.map(item => ({
+              ...item,
+              loaded: false
+            }));
+            this.listData = [...this.listData, ...newArr]
             this.mescroll.endBySize(res.data.data.length, res.data.total)
           } else {
             this.mescroll.endBySize(0, 0)
@@ -511,200 +488,221 @@ export default {
       })
     },
     toDetail (item) {
-      // this.$nextTick(() => {
-      //   console.log(switchMusic)
-      //   if (switchMusic) {
-      //     switchMusic.play()
-      //   }
-      // })
-      this.$common.to({
-        url: '/pages/box/kaixiang',
-        query: {
-          id: item.id
-        }
-      })
+      switch (item.box_type) {
+        case 1:
+          this.$common.to({
+            url: '/pages/box/firstReward',
+            query: {
+              id: item.id
+            }
+          })
+          break
+        case 2:
+          this.$common.to({
+            url: '/pages/box/kaixiang',
+            query: {
+              id: item.id
+            }
+          })
+          break
+        case 3:
+          this.$common.to({
+            url: '/pages/box/yinpiao',
+            query: {
+              id: item.id
+            }
+          })
+          break
+      }
+
     },
     goRoom () {
       this.$common.to({
-        url: '/pages/box/roomlist'
+        url: '/package/rightTouch/list'
       })
     },
     goTower () {
       this.$common.to({
         url: '/pages/box/tower'
       })
-      // this.$common.to({
-      //   url: '/pages/box/test'
-      // })
     },
-    getLog () {
+    goMenu (item) {
+      console.log(item)
+      switch (item.type) {
+        case 1:
+          this.$common.to({
+            url: '/pages/index/sign',
+          })
+          break
+        case 2:
+          // this.$common.to({
+          //   type: 3,
+          //   url: '/pages/tabBar/charts',
+          // })
+          this.$common.to({
+            url: '/pages/index/consume',
+          })
+          break
+        case 3:
+          if (!this.userInfo) {
+            uni.showToast({
+              title: '登录后再操作',
+              icon: 'none',
+              mask: true
+            })
+            return
+          }
+          let url
+          if (this.userInfo.level == 2) {
+            url = '/package/mine/daili'
+          } else {
+            url = '/package/mine/yaoqing'
+          }
+          this.$common.to({
+            tabCur: 1,
+            url,
+          })
+          break
+        case 4:
+          this.kefushow = true
+          break
+      }
+    },
+    // 获取当前用户队列状态
+    getQueueStatus () {
       this.req({
-        url: '/v1/box/log',
+        url: '/v1/box/getUserQueue',
         data: {},
-        Loading: true,
         success: res => {
           if (res.code == 200) {
-            this.logList = res.data
-            this.runBarrage()
+            this.userQueueInfo = res.data
+            if (res.data && res.data.remainingTime > 0) {
+              const countdown = res.data.remainingTime;
+              this.$store.dispatch('startQueueCountdown', countdown)
+            }
           }
         }
-      })
+      });
     },
-    runBarrage () {
-      this.barrageTimer = setInterval(() => {
-        console.log(this.logList.length)
-        if (this.logList.length > 0) {
-          this.$nextTick(() => {
-            this.$refs.detailBarrage.add({
-              // head_pic: this.logList[this.barrageCur].avatar,
-              head_pic: this.logList[this.barrageCur].avatar,
-              title: this.logList[this.barrageCur].title,
-              name: this.logList[this.barrageCur].nickName,
-              times: this.logList[this.barrageCur].times,
-              markTitle: this.logList[this.barrageCur].mark_title,
-              prize: this.logList[this.barrageCur].thumb
-            })
-            this.barrageCur += 1
-            if (this.barrageCur == this.logList.length) {
-              this.barrageCur = 0
-            }
-          })
-        }
-      }, 3000)
+    onFinishCountDown () {
+      this.$store.dispatch('stopQueueCountdown')
     },
+    goYFS () {
+      console.log(this.userQueueInfo)
+      // 一番赏
+      if (this.userQueueInfo.box_type == 1) {
+        this.$common.to({
+          url: '/pages/box/firstReward',
+          query: {
+            id: this.userQueueInfo.box_id,
+            set_count:this.userQueueInfo.set_count
+          }
+        })
+      } else {
+        // 无限赏
+        this.$common.to({
+          url: '/pages/box/kaixiang',
+          query: {
+            id: this.userQueueInfo.box_id
+          }
+        })
+      }
+    }
   },
 }
 </script>
 
 <style lang='scss' scoped>
-page {
-  background: #fefacb;
-}
-
-.content-wrap {
-  padding: 0 20rpx;
-  padding-bottom: 200rpx;
-}
-
 .cate-wrap {
   display: flex;
-  justify-content: space-around;
-  padding: 20rpx 0;
-  background: linear-gradient(to bottom, #feb2ae, #fefacb);
+  margin: 20rpx 0;
+
+  .cate-item {
+    color: #777;
+    font-size: 30rpx;
+    font-weight: 700;
+    margin-right: 20rpx;
+    text-align: center;
+    padding: 5rpx 15rpx;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s;
+    padding-bottom: 10rpx;
+    white-space: nowrap;
+    /* 确保文字不换行 */
+    position: relative;
+    /* 设置为相对定位，为伪元素提供定位上下文 */
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  .cate-item-active {
+    color: #333333;
+  }
+
+  .cate-item-active::after {
+    content: '';
+    display: block;
+    width: 60rpx;
+    height: 10rpx;
+    background-color: #333333;
+    position: absolute;
+    bottom: -5rpx;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 }
 
-.cate-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 24rpx;
-  color: #333;
-}
-
-.cate-item-active {
-  // color: #fdffa5;
-}
-
-.cate-icon {
-  width: 120rpx;
-  height: 120rpx;
-  margin-bottom: 10rpx;
-}
-
-.cate-title {
-  text-align: center;
+.xc-top {
+  background: linear-gradient(95deg, #8bf9ba, #c0fac6, #c3edee, #c2f6f4);
 }
 
 .home-page {
+  background: linear-gradient(to bottom, #eefde9, #00f2fe);
+  background: linear-gradient(to bottom, #eefde8, #ffffff);
 
-  .top-head {
-    background: url("https://img.alicdn.com/imgextra/i1/2200676927379/O1CN014ICM8j24NdcWWacE8_!!2200676927379.png") no-repeat;
-    zoom: 1;
-    background-size: cover;
-    padding: 0 20rpx;
-    // background-size: 100vw 100%;
-    // -webkit-background-size: 100vw 100%;
-    // -o-background-size: 100vw 100%;
-    // min-height: calc(100vh - 50px);
+  .top-header {
+    // background: linear-gradient(95deg, #8bf9ba, #c0fac6, #c3edee, #c2f6f4);
+    border-bottom-left-radius: 30rpx;
+    border-bottom-right-radius: 30rpx;
+    padding: 0 30rpx;
+    padding-top: 20rpx;
+    padding-bottom: 10rpx;
+    margin-bottom: 20rpx;
   }
 
-
-
-  .xc-icon-setUp {
-    .xc-header-icon {
-      width: 400rpx;
-      height: 20rpx;
-    }
+  .home-body {
+    padding: 0 30rpx;
   }
 
 
   .title-wrap {
     display: flex;
     align-items: center;
-
-    .music-view {
-      width: 60rpx;
-      margin-right: 20rpx;
-    }
-
-    .title-img {
-      // width: 200rpx;
-      font-size: 50rpx;
-      color: #fefacb;
-      font-weight: 700;
-    }
-  }
-
-  .swiper {
-    width: 100%;
-    height: 350rpx;
-    margin: 20rpx 0;
-  }
-
-  .swiper-item {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    .template-img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 1;
-    }
-
-    .swiper-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 0;
-    }
-  }
-
-  .barrage-wrap {
-    position: relative;
+    color: #000;
+    font-size: 40rpx;
+    font-weight: 700;
+    margin-bottom: 0rpx;
   }
 
   .notice-view {
     position: relative;
-    margin-top: 100rpx;
-    padding: 5rpx;
-    background: #fff;
-    border-radius: 40rpx;
+    margin-bottom: 20rpx;
 
     ::v-deep .u-type-warning-light-bg {
       // background: url('https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01Os5AxC24NdWqqcdWy_!!2200676927379.png') no-repeat;
       // background-size: 100vw 100%;
-      background: #fdffa5;
-      border-radius: 40rpx;
+      border: 2rpx solid #000;
+      border-radius: 50rpx;
+      background-color: #f8fdf6;
     }
 
     ::v-deep .u-notice-bar {
-      padding: 20rpx 44rpx !important;
+      padding: 20rpx 20rpx !important;
+      padding-right: 40rpx !important;
     }
 
     .notice-more {
@@ -716,6 +714,7 @@ page {
     }
 
   }
+
 
 
   .box-wrap {
@@ -994,27 +993,31 @@ page {
   }
 }
 
-.home2 {
-  height: 100%;
-}
 
-.home-img {
-  width: 100%;
-  height: 50vh;
-  display: flex;
-  align-items: center;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-}
+.carousel-wrapper {
+  margin-top: 30rpx;
 
-.banner {
-  position: relative;
+  .carousel {
+    border-radius: 20rpx;
+    overflow: hidden;
+    transform: translateY(0);
+  }
+
+  .carousel-item {
+    width: 100%;
+    // height: 100%;
+    border-radius: 20rpx;
+
+    image {
+      width: 100%;
+      height: 100%;
+    }
+  }
 }
 
 .wind-list {
   position: absolute;
-  top: -7px;
+  top: -10rpx;
   width: 345px;
   height: 50px;
   background-size: 100% 100%;
@@ -1098,227 +1101,131 @@ page {
   justify-content: space-between;
   width: 100%;
 
+
   .pd-img {
-    width: 49%;
-    height: 200rpx;
-  }
-}
-
-.hot-zone {
-
-  &__content {
-    background: url('https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01W8vkmU24NdcY3fdXk_!!2200676927379.png') no-repeat;
-    background-size: 100% 100%;
-    padding: 10px;
-    padding-top: 80rpx;
-
-  }
-
-  &__list {
-    display: flex;
-  }
-
-  &__item {
-    display: flex;
-    flex-direction: column;
-    min-width: 31.33%;
+    flex: 1;
     margin-right: 20rpx;
-    background-color: rgba(255, 255, 255, 0.8);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-    border-radius: 16rpx;
 
-    &:hover {
-      transform: scale(1.05);
+    &:last-child {
+      margin-right: 0;
     }
-
-
-    &-image {
-      width: 100%;
-      height: 200rpx;
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-    }
-
-
-    &-title {
-      font-size: 26rpx;
-      color: #000;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 100%;
-      font-weight: 700;
-      margin-top: 10rpx;
-      padding: 0 10rpx;
-    }
-
-    &-price {
-      font-size: 26rpx;
-      color: #e74c3c;
-      margin-top: 10rpx;
-      font-weight: 700;
-      padding: 0 10rpx;
-      padding-bottom: 10rpx;
-    }
-
-
-  }
-
-  .scroll-view {
-    white-space: nowrap;
-    display: flex;
-    justify-content: flex-start;
   }
 }
 
-// 一番赏
-.raffle-zone {
-  background: #fff5ee;
-  border: 2rpx solid #ffdf9e;
-  border-radius: 20rpx;
-  margin-top: 20rpx;
+.menu-container {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 0;
+  padding-bottom: 0;
 
-  &__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20rpx 20rpx;
-  }
+  .menu-item {
+    flex: 1;
+    margin-right: 10rpx;
 
-  .raffle-zone__title {
-    color: #e53e38;
-  }
-
-  .raffle-zone__more {
-    color: #e53e38;
-  }
-
-  &__content {
-    padding: 10px;
-  }
-
-  &__list {
-    display: flex;
-  }
-
-  &__item {
-    display: flex;
-    flex-direction: column;
-    min-width: 31.33%;
-    margin-right: 20rpx;
-    background-color: rgba(255, 255, 255, 0.8);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-    border-radius: 16rpx;
-
-    &:hover {
-      transform: scale(1.05);
-    }
-
-    &-image {
-      width: 100%;
-      height: 200rpx;
-      border-top-left-radius: 16rpx;
-      border-top-right-radius: 16rpx;
-    }
-
-    &-title {
-      font-size: 26rpx;
-      color: #000;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 100%;
-      font-weight: 700;
-      margin-top: 10rpx;
-      padding: 0 10rpx;
-    }
-
-    &-price {
-      font-size: 26rpx;
-      color: #e74c3c;
-      margin-top: 10rpx;
-      font-weight: 700;
-      padding: 0 10rpx;
-      padding-bottom: 10rpx;
+    &:last-child {
+      margin-right: 0;
     }
   }
 
-  .scroll-view {
-    white-space: nowrap;
-    display: flex;
-    justify-content: flex-start;
+  .menu-image {
+    width: 100%;
   }
 }
 
-// 分类
-.tabs-container {
-  .tabs {
-    display: flex;
-    align-items: flex-start;
-    padding: 10rpx;
-  }
 
-  .tab-item {
-    font-size: 40rpx;
-    color: #f29c81;
-    font-weight: 700;
-    padding: 10rpx 20rpx;
-    cursor: pointer;
-    transition: color 0.3s ease;
-    // width: 100%; /* 使标签项宽度占满容器 */
-
-    &.active {
-      color: #e53e38;
-      font-weight: bold;
-    }
-
-  }
-}
 
 // 列表项目
 .list-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 20rpx;
-  padding: 20rpx;
-}
+  padding: 20rpx 0;
 
-.list-item {
-  display: flex;
-  flex-direction: column;
-  background-color: #fff;
-  border-radius: 10rpx;
-  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.1);
-
-}
-
-.item-image {
-  width: 100%;
-  height: 200rpx;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
-.item-title {
-  font-size: 28rpx;
-  color: #333;
-  margin-top: 20rpx;
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding:0 20rpx;
-}
-
-.item-price {
-  font-size: 24rpx;
-  color: #e53e38;
-  padding:20rpx 20rpx;
-  font-weight: 700;
-  .price {
-    font-size: 32rpx;
+  .list-item {
+    background-color: #fff;
+    box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.1);
+    border-radius: 10rpx; // 与图片保持一致
+    overflow: hidden; // 保证图片圆角不被外溢
   }
+
+  .item-title {
+    font-size: 28rpx;
+    color: #333;
+    margin-top: 10rpx;
+    text-align: left;
+    padding: 0 20rpx;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2; //设置行数
+    overflow: hidden;
+  }
+
+  .item-price {
+    font-size: 24rpx;
+    color: #e53e38;
+    padding: 20rpx 20rpx;
+    font-weight: 700;
+
+    .price {
+      font-size: 32rpx;
+    }
+  }
+}
+
+
+::v-deep .u-mode-center-box {
+  background: transparent !important;
+}
+
+.bgbox {
+  background: transparent;
+  background: url('https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01gTyc2924NdcXV2Wi1_!!2200676927379.png') no-repeat;
+  background-size: 100% 100%;
+  width: 540rpx;
+  height: 680rpx;
+  position: relative;
+
+  .content {
+    position: absolute;
+    left: 50%;
+    top: 60%;
+    transform: translate(-50%, -50%);
+
+    .ma {
+      width: 300rpx;
+      height: 300rpx;
+
+      image {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+
+  .yi {
+    text-align: center;
+    font-size: 28rpx;
+    color: #666;
+    line-height: 26px;
+    margin-top: 40rpx;
+  }
+
+  .off {
+    text-align: right;
+    padding: 15px;
+    box-sizing: border-box;
+    position: absolute;
+    right: -7%;
+    // bottom: -20%;
+  }
+
+
+}
+
+.fixed-timer {
+  position: fixed;
+  top: 28%;
+  right: 30rpx;
+  z-index: 999;
 }
 </style>

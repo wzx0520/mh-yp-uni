@@ -1,17 +1,18 @@
 <!--
  * @Date: 2022-11-21 11:38:47
- * @LastEditTime: 2025-04-26 13:39:57
+ * @LastEditTime: 2025-05-26 10:42:28
  * @Description: 首页
 -->
 <template>
   <view class="page-wrap common_bg common-img">
     <!-- 状态栏 -->
+    <!-- #ifdef MP-WEIXIN -->
     <view class="status-bar common_bg common-img" :style="{
       height: `${sysConfig.statusBarHeight}px`,
       width: '100%',
     }
       "></view>
-
+    <!-- #endif -->
     <view :style="{
       width: '100%'
     }
@@ -39,7 +40,7 @@
       <swiper v-if="swiperList.length > 0" class="banner" autoplay :circular="true">
         <swiper-item v-for="( item, i ) of  swiperList " :key="i">
           <view @click="$common.bannerTo(item)" class="swiper-pic">
-            <cimage :src="item.thumb" mode="widthFix" />
+            <xc-image :src="item.thumb" ratio="2:1" mode="widthFix" borderRadius="10" />
           </view>
         </swiper-item>
       </swiper>
@@ -61,7 +62,7 @@
           <template v-for="( item, i ) in  listData ">
             <view @click="toMallDetail(item)" v-if="i % 2 == 0" :key="i" class="goods-list-col-item">
               <view class="pic">
-                <cimage :src="item.thumb" mode="scaleToFill" />
+                <xc-image :src="item.thumb" ratio="1:1" borderRadius="10" />
               </view>
 
               <!-- <view class="tag-list">
@@ -99,7 +100,7 @@
           <template v-for="( item, i ) in  listData ">
             <view @click="toMallDetail(item)" v-if="i % 2 != 0" :key="i" class="goods-list-col-item">
               <view class="pic">
-                <cimage :src="item.thumb" mode="scaleToFill" />
+                <xc-image :src="item.thumb" ratio="1:1" borderRadius="10" />
               </view>
 
               <!-- <view class="tag-list">
@@ -392,6 +393,7 @@ page {
     height: 300rpx;
     // #ifdef MP-WEIXIN
     margin: 30rpx auto 0;
+    margin-top: 90rpx;
     // #endif 
 
 
@@ -636,6 +638,4 @@ page {
     }
   }
 }
-
-
 </style>

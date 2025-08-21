@@ -411,6 +411,9 @@ export default {
   position: absolute;
   right: 0rpx;
   top: 50rpx;
+  // #ifdef MP-WEIXIN 
+  top:10%;
+  // #endif
   font-size: 32rpx;
   color: #000;
   display: flex;

@@ -4,7 +4,7 @@
       <uni-nav-bar color="#fff" leftIcon="left" backgroundColor="transparent" :border="false" :statusBar="true"
         :fixed="true" title="私人房间">
         <view slot="left" class="nav-left" @click="back">
-          <image class="" src="../../static/home/arrow.png" mode="widthFix" lazy-load="false" binderror="" bindload="" />
+          <image class="" src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01jY8IAu24Ndcpz30ga_!!2200676927379.png" mode="widthFix" lazy-load="false" binderror="" bindload="" />
         </view>
         <view slot="right" class="nav-right" @click="rule">
           规则
@@ -26,7 +26,7 @@
             <view class="box-info">
               <view class="box-top">
                 <view class="box-id">
-                  <image class="box-id-img" src="../../static/home/room.png" mode="widthFix" lazy-load="false"
+                  <image class="box-id-img" src="https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01wTk0sq24Ndco6WJMd_!!2200676927379.png" mode="widthFix" lazy-load="false"
                     binderror="" bindload="" />房间号:{{ item.id }}
                 </view>
                 <view class="box-status">
@@ -39,12 +39,12 @@
             </view>
             <view class="box-bottom">
               <view class="box-bottom-left">
-                <image class="box-bottom-left-img" src="../../static/home/box.png" mode="widthFix" lazy-load="false"
+                <image class="box-bottom-left-img" src="https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01vn7g7J24NdcpEgAWA_!!2200676927379.png" mode="widthFix" lazy-load="false"
                   binderror="" bindload="" />
                 <view class="box-left-title">{{ item.box_title }}({{item.num}}人房)</view>
               </view>
               <view class="box-bottom-right">
-                <image class="box-bottom-right-img" src="../../static/home/user.png" mode="widthFix" lazy-load="false"
+                <image class="box-bottom-right-img" src="https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01ObGUHq24Ndco6TtiJ_!!2200676927379.png" mode="widthFix" lazy-load="false"
                   binderror="" bindload="" />{{ item.owner }}
               </view>
             </view>
@@ -82,7 +82,7 @@
     </u-popup>
 
     <view class="create-room" @click="createRoom">
-      <image src="../../static/home/createRoom.png" lazy-load="false" binderror="" bindload="" mode="widthFix" />
+      <image src="https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01PHXeZa24NdcqIQvDX_!!2200676927379.png" lazy-load="false" binderror="" bindload="" mode="widthFix" />
     </view>
 
   </view>
@@ -109,7 +109,7 @@ export default {
         },
         empty: {
           use: true, // 是否显示空布局
-          // icon: "../../static/home/empty.png", // 图标路径
+          // icon: "https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01j9LvjN24NdcpT0y4i_!!2200676927379.png", // 图标路径
           tip: '这里什么都没有~', // 提示
           fixed: false, // 是否使用fixed定位,默认false; 配置fixed为true,以下的top和zIndex才生效 (transform会使fixed失效,最终会降级为absolute)
           top: "100rpx", // fixed定位的top值 (完整的单位值,如 "10%"; "100rpx")
@@ -253,7 +253,7 @@ export default {
     margin-top: 10px;
 
     .cate-item {
-      background: url("../../static/home/tab.png") no-repeat;
+      background: url("https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01lB273a24NdcpAujsL_!!2200676927379.png") no-repeat;
       background-size: 100% 100%;
       width: 100%;
       padding: 20rpx 40rpx;
@@ -268,7 +268,7 @@ export default {
     }
 
     .cate-active-item {
-      background: url("../../static/home/tab-active.png") no-repeat;
+      background: url("https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01tmVjX924NdcmaLsvN_!!2200676927379.png") no-repeat;
       background-size: 100% 100%;
       width: 100%;
     }

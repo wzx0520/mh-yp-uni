@@ -137,8 +137,8 @@ export default {
 }
 
 page {
-  min-height: 100%;
-  background: #f3f8fb;
+  // min-height: 100%;
+  // background: #f3f8fb;
 }
 
 image {

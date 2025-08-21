@@ -23,6 +23,13 @@
       }
     },
     {
+      "path": "pages/index/consume",
+      "style": {
+        "navigationBarTitleText": "",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
       "path": "pages/tabBar/mall",
       "style": {
         "enablePullDownRefresh": false
@@ -53,20 +60,6 @@
       }
     },
     {
-      "path": "pages/rightTouch/list",
-      "style": {
-        "enablePullDownRefresh": false,
-        "navigationBarTextStyle": "white"
-      }
-    },
-    {
-      "path": "pages/rightTouch/detail",
-      "style": {
-        "enablePullDownRefresh": false,
-        "navigationBarTextStyle": "white"
-      }
-    },
-    {
       "path": "pages/box/box",
       "style": {
         "enablePullDownRefresh": false,
@@ -82,6 +75,13 @@
     },
     {
       "path": "pages/box/tower",
+      "style": {
+        "enablePullDownRefresh": false,
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/box/lotteryBag",
       "style": {
         "enablePullDownRefresh": false,
         "navigationBarTextStyle": "white"
@@ -131,6 +131,20 @@
     },
     {
       "path": "pages/box/kaixiang",
+      "style": {
+        "navigationBarTextStyle": "black",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/box/yinpiao",
+      "style": {
+        "navigationBarTextStyle": "black",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/box/yinpiaoDetail",
       "style": {
         "navigationBarTextStyle": "black",
         "enablePullDownRefresh": false
@@ -220,6 +234,12 @@
       "style": {
         "enablePullDownRefresh": false
       }
+    },
+    {
+      "path": "pages/tabBar/bag-detail",
+      "style": {
+        "enablePullDownRefresh": false
+      }
     }
   ],
   "globalStyle": {
@@ -240,7 +260,7 @@
         "pagePath": "pages/tabBar/home",
         "iconPath": "static/tabbar/taba.png",
         "selectedIconPath": "static/tabbar/taba_o.png",
-        "text": "主页"
+        "text": "首页"
       },
       {
         "pagePath": "pages/tabBar/charts",
@@ -269,6 +289,25 @@
     ]
   },
   "subPackages": [
+    {
+      "root": "package/rightTouch",
+      "pages": [
+        {
+          "path": "list",
+          "style": {
+            "navigationBarTitleText": "",
+            "enablePullDownRefresh": false
+          }
+        },
+        {
+          "path": "detail",
+          "style": {
+            "navigationBarTitleText": "",
+            "enablePullDownRefresh": false
+          }
+        }
+      ]
+    },
     {
       "root": "package/index",
       "pages": [

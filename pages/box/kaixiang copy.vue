@@ -2,24 +2,26 @@
   <view class="kaixiang">
     <view class="nav">
       <uni-nav-bar color="#fff" leftIcon="left" backgroundColor="transparent" :border="false" :statusBar="true"
-        :fixed="true" :title="boxInfo.title">
+        :fixed="true" title="无限赏">
         <view slot="left" class="nav-left" @click="back">
           <image class=""
             src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01jY8IAu24Ndcpz30ga_!!2200676927379.png"
             mode="widthFix" lazy-load="false" binderror="" bindload="" />
         </view>
       </uni-nav-bar>
-      <view class="diamond-wrap">
-        <view class="diamond">
-          <image class="diamond-img"
-            src="https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01c1I8qk24NdcpT1dgw_!!2200676927379.png"
-            mode="widthFix" lazy-load="false" binderror="" bindload="" />
-        </view>
-        <view>{{ diamonds }}</view>
-      </view>
     </view>
+    <!-- <view class="lunbo">
+      <view class="lunboitem">
+        <image class="pic" :src="boxInfo.thumb" mode="widthFix" lazy-load="false" binderror="" bindload="" />
+      </view>
+    </view> -->
 
-    <view class="banner">
+    <view class="banner" :style="{
+      backgroundImage: `url(${imgBaseUrl}${'/static/v2/headerBg2.png'})`
+    }">
+      <view class="banner-left" @click.stop="prev">
+        <cimage class="" src="/static/v2/10.png" mode="widthFix" lazy-load="false" binderror="" bindload="" />
+      </view>
       <swiper class="swiper" easing-function="linear" circular :current="currentBanner" :indicator-dots="false"
         :autoplay="false" :interval="100" :duration="1000" @change="handleSwiperChange">
         <swiper-item v-for="(item, index) in awardList" :key="item.id">
@@ -28,14 +30,30 @@
           </view>
         </swiper-item>
       </swiper>
+      <view class="banner-right" @click.stop="next">
+        <cimage class="" src="/static/v2/11.png" mode="widthFix" lazy-load="false" binderror="" bindload="" />
+      </view>
       <!-- <view class="free-play" @click="tryPlay">
         <view class="free-play-bg">
           <image class="" src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01cgGJ9524NdcoP7cTg_!!2200676927379.png" mode="widthFix" lazy-load="false" binderror="" bindload="" />
         </view>
         <view class="free-play-img">
-          <image class="" src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01FXtjZy24Ndcpz28by_!!2200676927379.png" mode="widthFix" lazy-load="false" binderror="" bindload="" />
+          <image class="" src="https://xcooo88.oss-cn-beijing.aliyuncs.com/12.png" mode="widthFix" lazy-load="false" binderror="" bindload="" />
         </view>
       </view> -->
+    </view>
+
+    <view class="rule-btn-wrap">
+      <view class="rule-btn-item" @click="openRule">
+        <image class="rule-btn-item-img"
+          src="https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01WhNdaL24NdcWm4MBp_!!2200676927379.png"
+          mode="widthFix" lazy-load="false" binderror="" bindload="" />
+      </view>
+      <view class="rule-btn-item" @click="fresh">
+        <image class="rule-btn-item-img"
+          src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01WJw25c24NdcXfR5bK_!!2200676927379.png"
+          mode="widthFix" lazy-load="false" binderror="" bindload="" />
+      </view>
     </view>
 
     <!-- <view class="setAnimate">
@@ -58,7 +76,6 @@
 
     <view class="gd-desc">抽赏存在概率性, 请谨慎购买 <text @click="goRule">发货须知</text></view>
 
-
     <view class="shop-list">
       <view class="shop-list-rate">
         <view class="list" v-for="(item, index) in markList" :key="index">
@@ -67,36 +84,31 @@
             {{ item.rate }}%
           </view>
         </view>
-        <view class="recode-btn" @click="zs">中奖记录</view>
+        <view class="recode-btn" @click="zs">中赏记录</view>
       </view>
 
-      <!-- <view class="mh-goods-list">
-        <view class="mh-goods-list-item" :style="{ backgroundImage: `url(${item.image})` }"
+      <view class="mh-goods-list">
+        <view class="mh-goods-list-item" :style="{ backgroundImage: `url(${item.mark_bg})` }"
           v-for="(item, index) in awardList" :key="index" @click="openDetailPop(item)">
           <image class="mh-goods-rate" :src="item.mark_icon" mode="widthFix" lazy-load="false" binderror="" bindload="" />
-
-          <image class="mh-goods-img" :src="item.thumb" mode="widthFix" lazy-load="false" binderror="" bindload="" />
-
-          <view class="zhengming-wrap">
-            <cimage class="zhengming-img" v-if="item.type == 2" src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN015x1wmp24NdcpVdAWe_!!2200676927379.png" mode="scaleToFill" />
-            <cimage class="zhengming-img" v-if="item.type == 3" src="/static/web/zhengming2.png" mode="scaleToFill" />
-          </view>
-
-          <view class="mh-sale">{{ item.remaining_quantity }}/{{ item.initial_quantity }}</view>
+          <!-- 图片自适应比例显示 如 "16:9"、"4:3"、"1:1" 等 -->
+          <!-- <xc-image :src="item.thumb"  ratio="1:1" borderRadius="10" /> -->
+          <image class="mh-goods-img" :src="item.thumb" mode="aspectFill" lazy-load="false" binderror="" bindload="" />
+          <!-- <image class="" src="" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload="" /> -->
+            
+          <view class="mh-title">{{ item.title }}</view>
+          <!-- <view class="mh-num">{{ item.remaining_quantity }}/{{ item.initial_quantity }}</view> -->
 
           <view class="mh-sale">￥{{ item.price }}</view>
 
         </view>
-      </view> -->
-      <list-rate-section v-for="(mark, index) in marks" :key="index" :icon="mark.icon" :rate="mark.rate"
-        :awards="mark.awards" />
-
+      </view>
     </view>
 
     <view class="luckbox">
       <view class="option ">
         <view class="row">
-          <view class="chou" v-for="(item, index) in boxBtnList" :key="index" @click="changeBuyType(item.id)">
+          <view class="chou" v-for="(item, index) in boxBtnList" :key="index" @click="changeBuyType(item.num)">
             <view class="chou-wrap">
               <view class="chou-title">
                 <!-- {{ item.title }} -->
@@ -148,7 +160,7 @@
           </view>
 
           <view class="row">
-            <view class="title">余额抵扣</view>
+            <view class="title">星币抵扣</view>
 
             <view class="right">
               <view class="price red">
@@ -401,6 +413,54 @@
         </view>
       </view>
     </u-popup>
+
+    <!-- 规则说明 -->
+    <u-popup v-model="rulePop" mode="center" width="93%" border-radius="20">
+      <view class="rule-pop">
+        <view class="rule-title">
+          玩法说明
+        </view>
+        <scroll-view class="rule-pop-bd" scroll-y>
+          <view class="rule-content">
+            “无限赏”的所有商品均有图文展示及数量说明，购买赏品具有盲盒的特点，您购买所得赏品可能与您预期不符，您需要根据个人的消费需求对自己消费行为负责，请理性消费，未成年人不得购买。
+          </view>
+          <view class="rule-content"> 1、“无限赏”为开赏类商品，一经购买不可退货，请谨慎、理性购买;</view>
+          <view class="rule-content">
+            2、未成年人禁止购买;
+          </view>
+          <view class="rule-content">
+            3、用户根据需求点击[抽1发][抽3发]或[抽5发]等购买按钮;
+          </view>
+          <view class="rule-content">
+            4、本平台只保证发出的货品内容物全新未拆，不保任何商品的运输
+          </view>
+          <view class="rule-content">
+            5、若收到的商品出现涂装瑕疵、零件错误等官方瑕疵情况，则不包售后，不予退换(如有特殊情况请联系客服);
+          </view>
+          <view class="rule-content">
+            6、收到商品后请先确认封条、外箱完整，并全程拍摄开箱验货视频(照片无效)，该视频将会是定责的唯一证据，若出现运输损坏情况，请联系承运快递发起索赔，或联系客服索要索赔所需的相关材料;
+          </view>
+          <view class="rule-content">
+            7、部分3C电子产品，发货后必须激活产品。本平台保证预激活时间在发货日前后的5-7天内，全新未使用，商品激活无拆封，不接受因商品本身质量问题以外的退换货要求;
+          </view>
+          <view class="rule-content">
+            8、无限赏概率解释:每一次打开盲盒都是从剩下的赏品中提取1个赏品，根据赏品剩余数量，系统会测算出，剩余赏品抽赏概率。
+          </view>
+          <view class="rule-content">
+            9、无限赏不提供任何形式的物品交易和回收渠道，为保障您的资金安全，亦不建议用户进行任何形式的私下交易;
+          </view>
+          <view class="rule-content">
+            10、禁止从事任何形式的赌博/欺诈/作弊/诈骗行为，若有发现，将封禁您的账号并交由相关部门处理:
+          </view>
+          <view class="rule-content">
+            11、无限赏概率解释:例如: 传说概率设置的是0.01%，并不是1万次里有1次出现传说,而是每一次打开盲盒概率都是按照公示概率数值进行抽奖，无论任意次数，也有可能1万次里多次出现或者不出。
+          </view>
+          <view class="rule-content">
+            12、无限赏说明。
+          </view>
+        </scroll-view>
+      </view>
+    </u-popup>
   </view>
 </template>
 
@@ -410,14 +470,13 @@ const switchMusic = uni.createInnerAudioContext();
 // const bg_music = 'https://img.50api.cn/dingdang/music.mp3'
 const bg_music = ''
 const bgMusic = uni.createInnerAudioContext();
-import listRateSection from './components/listRateSection'
 import {
   mapGetters
 } from 'vuex'
 export default {
   name: 'kaixiang',
   components: {
-    listRateSection
+
   },
   data () {
     return {
@@ -428,36 +487,25 @@ export default {
       scrollTop: 0,
       boxBtnList: [
         {
-          id: 1,
           num: 1,
           title: '一发入魂',
-          img: 'https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01uDibP824NdcoDFYlf_!!2200676927379.png',
+          img: 'https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01uDibP824NdcoDFYlf_!!2200676927379.png'
         },
         {
-          id: 3,
           num: 3,
           title: '霸气三连',
           img: 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN015KXyAD24NdcotafBb_!!2200676927379.png'
         },
         {
-          id: 5,
           num: 5,
           title: '五连绝世',
           img: 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01Jd8j3U24Ndcpz2k2H_!!2200676927379.png'
-        },
-        {
-          id: 6,
-          num: 10,
-          title: '十发真爽',
-          img: 'https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01HWMUns24NdcmaL97G_!!2200676927379.png'
         },
       ],
       markIconList: [
         'https://www.img.xcooo.cn/uploads/2024/03/198c2a7e10410c63.png',
         'https://www.img.xcooo.cn/uploads/2024/03/f7c171b8f3dabff6.png',
         'https://www.img.xcooo.cn/uploads/2024/03/7e0edd987451aae3.png'
-      ],
-      marks: [
       ],
       list: [
         '恭喜 微信用户获得路由器'
@@ -488,7 +536,7 @@ export default {
         // {
         //   id: 2,
         //   icon: '',
-        //   title: '余额支付'
+        //   title: '星币支付'
         // }
       ],
       agree: true,
@@ -519,7 +567,7 @@ export default {
       coupon_info: {},
       animateSet: uni.getStorageSync('animateSet') ? uni.getStorageSync('animateSet') : false,
       setShow: false,
-      diamonds: 0
+      rulePop: false,
     }
   },
   onLoad (options) {
@@ -550,21 +598,17 @@ export default {
   onShow () {
     this.$store.dispatch('getUserInfo').then(res => {
       console.log(res)
-      this.diamonds = res.data.diamonds
     })
     this.$store.dispatch('getAppConfig').then((res) => {
       console.log(res);
       this.is_epay = res.data.is_epay
       this.wx_kefu = res.data.wx_kefu
-
       // if (res.data.bg_music) {
       //   bgMusic.src = res.data.bg_music
       //   bgMusic.autoplay = true;
       //   bgMusic.loop = true;
       // }
     })
-
-
     // 清空优惠券信息
     this.coupon_info = {}
     this.getData()
@@ -585,6 +629,25 @@ export default {
     ...mapGetters(['sysConfig', 'userInfo']),
   },
   methods: {
+    onImageLoad (item) {
+      this.$set(item, 'loaded', true);
+    },
+    prev () {
+      this.$nextTick(() => {
+        if (switchMusic) {
+          switchMusic.play()
+        }
+      })
+      this.currentBanner = (this.currentBanner - 1 + this.awardList.length) % this.awardList.length;
+    },
+    next () {
+      this.$nextTick(() => {
+        if (switchMusic) {
+          switchMusic.play()
+        }
+      })
+      this.currentBanner = (this.currentBanner + 1) % this.awardList.length;
+    },
     setAnimate () {
       this.$nextTick(() => {
         if (switchMusic) {
@@ -755,11 +818,10 @@ export default {
                 this.$common.toast({
                   title: '支付成功', icon: 'success', duration: 1500, success: () => {
                     this.$common.to({
-                      type: 1, url: '/pages/box/towerDraw', query: {
+                      type: 1, url: '/pages/index/draw', query: {
                         id: res.data.id,
                         order_sn: order_info.order_sn,
-                        drawNum: res.data.box_num,
-                        layer: this.boxInfo.layer
+                        drawNum: res.data.box_num
                       }
                     })
                   }
@@ -818,27 +880,19 @@ export default {
     getData () {
       return new Promise((resolve, reject) => {
         this.req({
-          url: '/v1/tower/info',
+          url: '/v1/box/info',
           data: {
-            layer: this.optionsData.layer
+            id: this.optionsData.id
           },
           Loading: true,
           success: res => {
             if (res.code == 200) {
               this.boxInfo = res.data.box
-              this.awardList = res.data.awardList
-
+              this.awardList = res.data.awardList.map(item => ({
+                ...item,
+                loaded: false
+              }));
               this.markList = res.data.box ? res.data.box.markList : []
-              // 生成最终的 marks 数组
-              this.marks = this.markList.map(mark => {
-                return {
-                  id: mark.id,
-                  icon: mark.icon,
-                  rate: mark.rate,
-                  awards: this.awardList.filter(award => award.mark_id === mark.id)
-                }
-              })
-
               this.getDraw()
               resolve()
             }
@@ -885,9 +939,9 @@ export default {
         this.$refs.loginPopup.open('center')
         return
       }
-      if (this.btnList?.length == 0) {
-        await this.getDraw()
-      }
+      // if (this.btnList?.length == 0) {
+      //   await this.getDraw()
+      // }
 
       if (e == 1 && !this.agree) {
         this.$common.toast({
@@ -901,9 +955,12 @@ export default {
         return
       }
 
+      console.log(this.btnCur)
+
       let data = {
         id: this.boxInfo.id,
-        draw_id: this.btnCur || '',
+        // draw_id: this.btnList[this.btnCur].id || '',
+        draw_num: this.btnCur,
         invite_user_id: this.optionsData.userId || '',
         pay_type: this.payTypeList[this.payTypeCur].id,
         coupon_id: this.coupon_info?.id || '',
@@ -911,7 +968,7 @@ export default {
       }
 
       this.req({
-        url: '/v1/tower/order',
+        url: '/v1/box/order',
         data,
         success: res => {
           if (res.code == 200) {
@@ -936,12 +993,11 @@ export default {
                       success: () => {
                         this.$common.to({
                           type: 1,
-                          url: '/pages/box/towerDraw',
+                          url: '/pages/index/draw',
                           query: {
                             id: this.boxInfo.id,
                             order_sn: res.data.order_sn,
-                            drawNum: this.orderData.box.num,
-                            layer: this.boxInfo.layer
+                            drawNum: this.orderData.box.num
                           }
                         })
                       }
@@ -955,12 +1011,11 @@ export default {
                   success: () => {
                     this.$common.to({
                       type: 1,
-                      url: '/pages/box/towerDraw',
+                      url: '/pages/index/draw',
                       query: {
                         id: this.boxInfo.id,
                         order_sn: res.data.order_sn,
-                        drawNum: this.orderData.box.num,
-                        layer: this.boxInfo.layer
+                        drawNum: this.orderData.box.num
                       }
                     })
                   }
@@ -1108,11 +1163,32 @@ export default {
         }
       })
 
-      uni.navigateTo({
-        url: '/pages/box/tower'
-      });
+      uni.switchTab({
+        url: '/pages/tabBar/home',
 
-    }
+      });
+    },
+    fresh () {
+      this.$nextTick(() => {
+        if (switchMusic) {
+          switchMusic.play()
+        }
+      })
+      uni.showToast({
+        title: '刷新成功',
+        icon: 'none',
+        mask: true
+      })
+      this.getData()
+    },
+    openRule () {
+      this.$nextTick(() => {
+        if (switchMusic) {
+          switchMusic.play()
+        }
+      })
+      this.rulePop = true
+    },
   },
 }
 </script>
@@ -1123,6 +1199,7 @@ export default {
   background-size: 100vw 100%;
   background-repeat: no-repeat;
   min-height: calc(100vh - 50px);
+  // background: #222333;
 
   .nav {
     ::v-deep .uni-navbar__header {
@@ -1130,8 +1207,7 @@ export default {
     }
 
     ::v-deep .uni-nav-bar-text {
-      font-size: 48rpx;
-      font-weight: 700;
+      font-size: 38rpx;
       font-family: xcooo;
     }
 
@@ -1143,11 +1219,43 @@ export default {
   }
 
   .banner {
-    margin-top: 100rpx;
-    height: 17.71875rem;
-    background: url(https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01PYl5yI24Ndcpz1460_!!2200676927379.png) no-repeat 50% 0%/50rem auto;
-
+    margin-top: 80rpx;
+    height: 20rem;
+    // background: url(https://xcooo88.oss-cn-beijing.aliyuncs.com/headerBg2.png) no-repeat 50% 0%/50rem auto;
+    background-repeat: no-repeat;
+    background-size: 100vw 100%;
     position: relative;
+
+    .banner-left {
+      position: absolute;
+      z-index: 2;
+      left: 0;
+      width: 41px;
+      height: 41px;
+      top: 50%;
+      margin-top: -50px;
+      left: 20px;
+
+      image {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .banner-right {
+      position: absolute;
+      z-index: 2;
+      width: 41px;
+      height: 41px;
+      right: 20px;
+      top: 50%;
+      margin-top: -50px;
+
+      image {
+        width: 100%;
+        height: 100%;
+      }
+    }
 
     .free-play {
       width: 62px;
@@ -1352,62 +1460,67 @@ export default {
     align-items: center;
     padding: 30rpx 20rpx;
     color: #999999;
-    /* z-index: 100; */
+    // z-index: 100;
     padding-bottom: env(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
+    /*兼容 IOS>11.2*/
     background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01Rhzmc824Ndcoy7ivj_!!2200676927379.png") no-repeat 50%/100% 100%;
     height: 200rpx;
+
+    display: flex;
     box-sizing: border-box;
-  }
 
-  .option {
-    width: 100%;
-    padding: 10px 0;
+    .option {
+      padding: 10px 0;
 
-    .row {
-      display: flex;
-      justify-content: space-around;
-      /* 均匀分布 */
-
-      .chou {
-        color: #000;
-        background-size: 100%;
-        width: 119px;
+      .row {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        /* 居中对齐 */
-        text-align: center;
-        height: 57px;
-        margin: 0 10px;
-        position: relative;
-        flex-shrink: 0;
-        border-radius: 10px;
-        box-sizing: border-box;
-        border: 1px solid #666;
-        flex: 1;
-        /* 均匀分布 */
-        max-width: 150px;
-        /* 限制按钮最大宽度 */
-        margin: 0 5px;
-        border: none;
-        color: #fff;
+        justify-content: space-between;
 
-        .chou-wrap {
-          width: 100%;
+        .chou {
+          // background: #fff;
+          color: #000;
+          background-size: 100%;
+          width: 119px;
+          display: flex;
+          align-items: center;
+          text-align: center;
+          height: 57px;
+          margin: 0px 10px;
+          position: relative;
+          flex-shrink: 0;
+          border-radius: 10px;
+          box-sizing: border-box;
+          border: 1px solid #666;
 
-          .chou-title {
-            .chou-img {
-              width: 150rpx;
-              height: 100rpx;
+          margin: 0 5px;
+          // width: 104px;
+          // height: 46px;
+          // background-color: rgba(91, 70, 198, .8);
+          border: none;
+          color: #fff;
+
+          .chou-wrap {
+            width: 100%;
+
+            .chou-title {
+
+              // font-size: 16px;
+              // margin-bottom: 3px;
+              // text-align: center;
+              // padding: 0;
+              // font-size: 16px;
+              .chou-img {
+                width: 150rpx;
+                height: 100rpx;
+              }
+
             }
           }
         }
       }
     }
   }
-
-
-
 
   .luckbox-top {
     background: transparent;
@@ -1419,7 +1532,6 @@ export default {
     // border-radius: 10px;
     overflow: hidden;
     margin: 30rpx 20rpx;
-    padding-bottom: 200rpx;
 
     .shop-list-rate {
       height: 78px;
@@ -1429,7 +1541,7 @@ export default {
       align-items: center;
       // padding: 15px 5rpx;
       border: 2rpx solid #3cbcc1;
-      margin-bottom: 30rpx;
+
 
       .recode-btn {
         color: #fff;
@@ -1479,150 +1591,26 @@ export default {
       }
     }
 
-    // .mh-goods-list {
-    //   padding: 20rpx 0;
-    //   display: flex;
-    //   flex-wrap: wrap;
-    //   justify-content: flex-start;
-    //   padding-bottom: 200rpx;
-
-    //   .mh-goods-list-item {
-    //     position: relative;
-    //     flex: 1;
-    //     margin: 0 10px 15px 0;
-    //     background-color: rgba(0, 0, 0, .2);
-    //     width: calc((100% - 20px) / 3);
-    //     max-width: calc((100% - 20px) / 3);
-    //     text-align: center;
-    //     padding: 20rpx 3px;
-    //     border-radius: 5px;
-    //     display: flex;
-    //     flex-direction: column;
-    //     justify-content: space-between;
-    //     align-items: center;
-    //     background-size: 100% 100%;
-
-    //     &:nth-child(3n) {
-    //       margin-right: 0;
-    //     }
-
-    //     .mh-goods-rate {
-    //       width: 62px;
-    //       height: 62px;
-    //       position: absolute;
-    //       top: 1px;
-    //       left: 1px;
-    //     }
-
-    //     .mh-goods-img {
-    //       width: 93px;
-    //       height: 93px;
-    //       margin-top: 20rpx;
-    //     }
-
-    //     .zhengming-wrap {
-    //         width: 100px;
-    //         height: 25px;
-    //         position: absolute;
-    //         left: 50%;
-    //         transform: translateX(-50%);
-    //         bottom: 30px;
-
-    //         .zhengming-img {
-    //           animation: bLine 3s linear infinite;
-    //         }
-
-    //         @keyframes bLine {
-
-    //           0%,
-    //           100% {
-    //             transform: scale(1);
-    //           }
-
-    //           50% {
-    //             transform: scale(1.2);
-    //           }
-    //         }
-    //       }
-
-    //     .mh-sale {
-    //       background-color: rgba(0, 0, 0, 0.2);
-    //       color: #fff;
-    //       width: 100%;
-    //     }
-
-    //     .mh-goods-name {
-    //       color: #fff;
-    //       width: 100%;
-    //       font-size: 12px;
-    //       margin-top: 7px;
-    //       display: -webkit-box;
-    //       text-align: left;
-    //       overflow: hidden;
-    //       -webkit-box-orient: vertical;
-    //       -webkit-line-clamp: 2;
-    //     }
-
-    //     .mh-goods-price {
-    //       font-size: 12px;
-    //       font-weight: 700;
-    //       color: #fff;
-    //       margin-top: 5px;
-    //       width: 100%;
-    //       text-align: left;
-
-    //       text {
-    //         color: #a2c2bd;
-    //         font-size: 9px;
-    //       }
-    //     }
-    //   }
-    // }
-
-    .list-rate {
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      // margin: 20rpx 0;
-      // margin-bottom: 10rpx;
-
-      .recode-btn {
-        width: 150rpx;
-      }
-
-      .rate {}
-    }
-
     .mh-goods-list {
       padding: 20rpx 0;
-      display: flex;
-      // flex-wrap: wrap;
-      justify-content: flex-start;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 30rpx 30rpx; // 行间距 15rpx，列间距 10rpx
+      padding-bottom: 200rpx;
 
       .mh-goods-list-item {
         position: relative;
-        flex: 1;
-        // background-color: rgba(0, 0, 0, .2);
-        width: calc((100% - 20px) / 3);
-        max-width: calc((100% - 20px) / 3);
+        background-color: rgba(0, 0, 0, 0.2);
         text-align: center;
-        margin-right: 15px;
-        margin-bottom: 10px;
-
-        .mh-goods-img-wrap {
-          background-size: 100% 100%;
-          padding: 20rpx 3px;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          align-items: center;
-          color: #fff;
-        }
-
-        // &:nth-child(3n) {
-        //   margin-right: 0;
-        // }
+        padding: 20rpx 3px;
+        border-radius: 5rpx;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        background-size: 100% 100%;
+        font-size: 24rpx;
+        color: #fff;
 
         .mh-goods-rate {
           width: 62px;
@@ -1630,20 +1618,37 @@ export default {
           position: absolute;
           top: 1px;
           left: 1px;
-          z-index: 9;
+          z-index: 10;
         }
 
         .mh-goods-img {
-          width: 93px;
-          height: 93px;
-          margin-top: 20rpx;
+          width: 100%;
+          height: 200rpx;
+        }
+
+        .mh-title {
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 1;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          margin-top: 5rpx;
+        }
+
+        .mh-num {
+          margin: 10rpx 0;
+        }
+
+        .mh-sale {
+          background-color: rgba(0, 0, 0, 0.2);
+          width: 100%;
         }
 
         .mh-goods-name {
           color: #fff;
           width: 100%;
-          font-size: 12px;
-          margin-top: 7px;
+          font-size: 12rpx;
+          margin-top: 7rpx;
           display: -webkit-box;
           text-align: left;
           overflow: hidden;
@@ -1651,54 +1656,22 @@ export default {
           -webkit-line-clamp: 2;
         }
 
+        .mh-goods-price {
+          font-size: 12rpx;
+          font-weight: 700;
+          color: #fff;
+          margin-top: 5rpx;
+          width: 100%;
+          text-align: left;
 
-      }
-
-      .zhengming-wrap {
-        width: 70px;
-        height: 20px;
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        bottom: 30px;
-
-        .zhengming-img {
-          animation: bLine 3s linear infinite;
-        }
-
-        @keyframes bLine {
-
-          0%,
-          100% {
-            transform: scale(1);
+          text {
+            color: #a2c2bd;
+            font-size: 9rpx;
           }
-
-          50% {
-            transform: scale(1.2);
-          }
-        }
-      }
-
-      .mh-sale {
-        background-color: rgba(0, 0, 0, 0.2);
-        color: #fff;
-        width: 100%;
-      }
-
-      .mh-goods-price {
-        font-size: 12px;
-        font-weight: 700;
-        color: #fff;
-        margin-top: 5px;
-        width: 100%;
-        text-align: center;
-
-        text {
-          color: #a2c2bd;
-          font-size: 9px;
         }
       }
     }
+
   }
 
   .btmbox {
@@ -1732,25 +1705,6 @@ export default {
     }
   }
 
-}
-
-.diamond-wrap {
-  position: absolute;
-  top: 100rpx;
-  right: 40rpx;
-  background-color: #000;
-  padding: 0 20rpx;
-  border-radius: 20rpx;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  z-index: 10;
-  // max-width: 150rpx;
-
-  .diamond-img {
-    width: 50rpx;
-    margin-right: 10rpx;
-  }
 }
 </style>
 
@@ -2419,5 +2373,53 @@ export default {
 
 .xx2 {
   background-color: #999;
+}
+
+.rule-btn-wrap {
+  position: fixed;
+  top: 30%;
+  right: 10rpx;
+  z-index: 10;
+
+  .rule-btn-item {
+    width: 100rpx;
+    margin-bottom: 40rpx;
+
+    image {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+.rule-pop {
+  background: linear-gradient(to right, #5dfda1, #baf828);
+  border-radius: 20rpx;
+  padding: 20rpx;
+  padding-bottom: 40rpx;
+
+  .rule-title {
+    text-align: center;
+    font-size: 48rpx;
+    font-weight: 700;
+    margin: 30rpx 0;
+    margin-top: 20rpx;
+    text-shadow: -1px -1px #fff, 1px 1px #333;
+  }
+
+  .rule-pop-bd {
+    background: #eefed9;
+    padding: 30rpx 20rpx;
+    border-radius: 20rpx;
+    height: 700rpx; // 改成固定高度
+    overflow: hidden; // 防止外面内容溢出
+
+    .rule-content {
+      line-height: 50rpx;
+      color: #696969;
+      font-weight: 700;
+      font-size: 28rpx;
+    }
+  }
 }
 </style>

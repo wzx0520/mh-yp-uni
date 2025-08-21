@@ -30,40 +30,40 @@
     <u-gap height="150" v-if="currentTab == 0"></u-gap>
     <u-gap height="70" v-if="currentTab == 1"></u-gap>
 
-    <view class="list" v-if="listData.length && tabCur != 1">
+    <view class="list" v-if="listData.length">
       <view v-for="(item, i) in listData" :key="i" class="list-item">
         <view class="list-item-wrap">
-          <!-- 复选框（仅 tabCur == 0 显示） -->
-          <view class="cart_chk_warp" v-if="tabCur === 0">
+          <view class="cart_chk_warp" v-if="tabCur == 0">
             <u-checkbox-group @change="hangldeItemChange">
               <u-checkbox v-model="item.checked"></u-checkbox>
             </u-checkbox-group>
           </view>
-
-          <!-- 商品卡片主体 -->
           <view class="card-item">
             <view class="list-item-hd">
               <view class="pic">
                 <cimage :src="item.thumb" mode="scaleToFill" />
-                <!-- 标签 -->
-                <view v-if="item.mark_title" :style="{ background: item.mark_color }" class="tag">
-                  <template v-if="item.is_box === 1">BX赏</template>
-                  <template v-else>{{ item.mark_title }}</template>
+
+                <view v-if="item.mark_title" :style="{
+                  background: item.mark_color
+                }" class="tag">
+                  <template v-if="item.is_box == 1">
+                    BX赏
+                  </template>
+                  <template v-else>
+                    {{ item.mark_title }}
+                  </template>
                 </view>
               </view>
-
               <view class="info">
-                <view class="title hang2">{{ item.title }}</view>
-                <!-- 可分解余额（仅 currentTab == 0 显示） -->
-                <view class="title return_wrap" v-if="currentTab === 0">
-                  <view class="return_price">
+                <view class="title hang2">
+                  {{ item.title }}
+                </view>
+                <view class="title return_wrap">
+                  <view class="return_price" v-if="currentTab == 0">
                     <image class="return-img" src="https://www.img.xcooo.cn/uploads/2024/02/231fcebf5c7a968d.png"
-                      mode="widthFix" />
-                    可分解余额: {{ item.total_return_price }}
+                      mode="widthFix" lazy-load="false" binderror="" bindload="" />可分解余额: {{ item.total_return_price }}
                   </view>
                 </view>
-
-                <!-- 数量操作 -->
                 <view class="return_total">
                   <u-number-box :min="1" v-model="item.num" :max="item.total"
                     @change="totalChange(item, $event)"></u-number-box>
@@ -71,111 +71,43 @@
                 </view>
               </view>
             </view>
-
-            <!-- 操作按钮区 -->
             <view class="list-item-bd">
-              <template v-if="tabCur === 0">
-                <!-- 分解 -->
-                <view @click="openDhModel(item)" v-if="item.type === 1 || item.type === 5 || item.type === 6" class="btn">
-                  分解</view>
-                <!-- 提货 -->
-                <view @click="toSend(item)" class="btn" v-if="currentTab === 0">提货</view>
-                <!-- 宝箱详情 -->
-                <view @click="openBoxDetail(item)" class="btn" v-if="currentTab === 1">宝箱详情</view>
-                <!-- 开宝箱 -->
-                <view @click="openOneBox(item)" class="btn" v-if="currentTab === 1" :class="{ disabled: isRequesting }"
+              <template v-if="tabCur == 0">
+                <template v-if="currentTab == 0">
+                  <view @click="openDhModel(item)" v-if="item.type == 1 || item.type == 5 || item.type == 6" class="btn">
+                    分解
+                  </view>
+                </template>
+
+                <view @click="toSend(item)" class="btn" v-if="currentTab == 0">提货</view>
+                <view @click="openBoxDetail(item)" class="btn" v-if="currentTab == 1">宝箱详情</view>
+                <view @click="openOneBox(item)" class="btn" v-if="currentTab == 1" :class="{ disabled: isRequesting }"
                   :style="{ pointerEvents: isRequesting ? 'none' : 'auto' }">
+                  <!-- 根据请求状态显示不同文本 -->
                   {{ isRequesting ? '开启中...' : '开宝箱' }}
                 </view>
+
               </template>
 
-              <!-- 查看详情（tabCur == 1 或 4） -->
-              <view @click="toDetail(item)" v-if="tabCur === 1 || tabCur === 4" class="btn">查看详情</view>
+              <view @click="toDetail(item)" v-if="tabCur == 1 || tabCur == 4" class="btn">
+                查看详情
+              </view>
 
-              <!-- 物流/确认收货（tabCur == 2） -->
-              <template v-if="tabCur === 2">
+              <template v-if="tabCur == 2">
                 <view @click="toExpress(item)" class="btn">查看物流</view>
+
                 <view @click="openModel(item)" class="btn">确认收货</view>
               </template>
 
-              <!-- 去评价（tabCur == 3 且 特定条件） -->
-              <view @click="toComment(item)"
-                v-if="tabCur === 3 && item.type === 1 && (item.mark_id === 1 || item.mark_id === 2)" class="btn">去评价
+              <view @click="toComment(item)" v-if="tabCur == 3 &&
+                item.type == 1 &&
+                (item.mark_id == 1 || item.mark_id == 2)
+                " class="btn">
+                去评价
               </view>
 
-              <!-- 再次购买（tabCur == 4 且 特定条件） -->
-              <view @click="buyAgain(item)" v-if="tabCur === 4 && item.type === 1 && item.is_change === 0" class="btn">
-                再次购买</view>
-            </view>
-          </view>
-        </view>
-      </view>
-    </view>
-
-    <!-- status ≠ 0 的场景 -->
-    <view class="list" v-else-if="listData.length && tabCur == 1">
-      <view v-for="(shipItem, i) in listData" :key="i" class="ship-item">
-        <!-- 发货信息概览 -->
-        <view class="ship-header">
-          <!-- 状态标签 + 操作区 单独一行 -->
-          <view class="ship-header-top">
-            <view class="status-tag" :style="{
-              background: statusColor,
-              color: statusTextColor
-            }">
-              {{ tabList[tabCur]['title'] }}
-            </view>
-            <!-- <view class="top-actions">
-              <view class="action-btn edit-btn" @click="editAddress(shipItem)">
-                修改地址
-              </view>
-              <view class="action-btn edit-btn" >
-                复制单号
-              </view>
-            </view> -->
-          </view>
-
-          <!-- 核心信息区，分两列布局 -->
-          <view class="ship-header-main">
-            <view class="ship-info-col">
-              <view class="info-item">
-                <text class="label">发货单号：</text>
-                <text class="value">{{ shipItem.ship_id }}</text>
-              </view>
-              <view class="info-item">
-                <text class="label">收货信息：</text>
-                <text class="value">{{ shipItem.address }} {{ shipItem.recipient }} {{ shipItem.mobile }}</text>
-              </view>
-              <view class="info-item">
-                <text class="label">申请用户：</text>
-                <text class="value">{{ shipItem.name }}</text>
-              </view>
-            </view>
-            <view class="ship-info-col">
-              <view class="info-item">
-                <text class="label">申请时间：</text>
-                <text class="value">{{ shipItem.ship_time }}</text>
-              </view>
-              <view class="info-item">
-                <text class="label">发货数量：</text>
-                <text class="value">× {{ shipItem.total_count }}</text>
-              </view>
-              <view class="info-item">
-                <text class="label">发货编号：</text>
-                <text class="value">NO.{{ shipItem.total_return_value }}</text>
-              </view>
-            </view>
-          </view>
-
-          <!-- 新增的发货详情行 -->
-          <view class="ship-detail-row">
-            <view class="detail-left" @click="viewShipInfo(shipItem)">
-              <text class="detail-title">发货详情</text>
-              <u-icon name="arrow-right" size="28" color="#000" class="detail-arrow"></u-icon>
-            </view>
-            <view class="detail-right">
-              <view class="detail-btn" @click="copyShip(shipItem)">
-                复制单号
+              <view @click="buyAgain(item)" v-if="tabCur == 4 && item.type == 1 && item.is_change == 0" class="btn">
+                再次购买
               </view>
             </view>
           </view>
@@ -470,39 +402,18 @@ export default {
       isRequesting: false, // 全局请求锁
       btnDisabled: false,  // 按钮禁用状态
       oneBox: null,        // 单独开的宝箱
-      showExpressBtn: false
     }
   },
 
   computed: {
     ...mapGetters(['sysConfig']),
-    statusColor () {
-      // 根据 tabCur 对应的状态设置不同背景色
-      const statusColorMap = {
-        0: '#FFA500', // 待提货 - 橙色
-        1: '#FFD700', // 待发货 - 金色 
-        2: '#32CD32', // 已发货 - 绿色
-        4: '#90EE90'  // 已完成 - 浅绿
-      };
-      return statusColorMap[this.tabCur] || '#fff';
-    },
-    statusTextColor () {
-      // 根据背景色动态调整文字颜色，保证可读性
-      const bgColor = this.statusColor;
-      // 简单的颜色亮度判断（可根据实际需求优化）
-      const r = parseInt(bgColor.slice(1, 3), 16);
-      const g = parseInt(bgColor.slice(3, 5), 16);
-      const b = parseInt(bgColor.slice(5, 7), 16);
-      const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-      return brightness > 128 ? '#333' : '#fff';
-    }
   },
   onLoad (options) {
     this.optionsData = options
   },
   onShow () {
     // this.tabCur = getApp().globalData.tabCur ?? 0
-    // this.currentTab = getApp().globalData.tabCur ?? 0
+    this.currentTab = getApp().globalData.tabCur ?? 0
     this.$store.dispatch('getUserInfo').then(res => {
       this.userInfo = res.data
     })
@@ -1036,14 +947,6 @@ export default {
         }
       })
     },
-    viewShipInfo (item) {
-      this.$common.to({
-        url: '/pages/tabBar/bag-detail',
-        query: {
-          ship_id: item.ship_id
-        }
-      })
-    },
     toDetail (item) {
       this.$common.to({
         url: '/package/mine/bag-order-detail',
@@ -1059,6 +962,8 @@ export default {
       getApp().globalData.tabCur = e
       this.resetParams()
       this.getList()
+      this.mescroll.resetUpScroll()
+      this.mescroll.scrollTo(0, 0)
     },
     // 获取当前用户队列状态
     getQueueStatus () {
@@ -1108,17 +1013,6 @@ export default {
           }
         })
       }
-    },
-    copyShip (shipItem) {
-      this.$copy({
-        content: shipItem.ship_id,
-        success (res) {
-          uni.showToast({
-            title: res,
-            icon: 'success'
-          })
-        }
-      })
     }
   }
 }
@@ -1821,155 +1715,5 @@ page {
 /* 列表底部留白 */
 .list {
   padding-bottom: 120rpx !important;
-  margin-top: 20rpx;
-}
-
-/* status≠0 新样式 */
-.ship-header {
-  background: #fff;
-  border-radius: 8px;
-  padding: 16rpx 10rpx;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  margin-bottom: 12px;
-
-  // 顶部状态 + 操作
-  &-top {
-    display: flex;
-    align-items: center;
-    // justify-content: space-between;
-    justify-content: flex-end;
-    margin-bottom: 12rpx;
-
-    .status-tag {
-      padding: 6rpx 12rpx;
-      border-radius: 4px;
-      font-size: 24rpx;
-      font-weight: 500;
-
-      // 搭配不同状态的文字颜色
-      &.pending {
-        background: #ffd100;
-        color: #333;
-      }
-
-      &.delivered {
-        background: #4cd964;
-        color: #fff;
-      }
-
-      &.canceled {
-        background: #f0f0f0;
-        color: #999;
-      }
-    }
-
-    .top-actions {
-      .edit-btn {
-        background: #f5f5f5;
-        color: #333;
-        padding: 6px 14px;
-        border-radius: 4px;
-        font-size: 14px;
-
-        &:active {
-          opacity: 0.8;
-        }
-      }
-    }
-  }
-
-  // 核心信息区
-  &-main {
-    display: flex;
-    flex-wrap: wrap;
-
-    .ship-info-col {
-      flex: 1;
-      min-width: 200px;
-
-      .info-item {
-        display: flex;
-        align-items: flex-start;
-        margin-bottom: 8px;
-
-        .label {
-          color: #999;
-          width: 150rpx;
-          text-align: right;
-          margin-right: 8px;
-          display: inline-block;
-        }
-
-        .value {
-          color: #333;
-          flex: 1;
-        }
-      }
-    }
-  }
-
-  // 发货详情行样式
-  .ship-detail-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12rpx 0 0; // 与上方信息保持间距
-    border-top: 1px dashed #eee; // 虚线分隔
-    color: #333;
-
-    .detail-left {
-      display: flex;
-      align-items: center;
-      cursor: pointer; // 点击可展开/查看详情
-      padding: 5px 0;
-
-      .detail-title {
-        font-size: 15px;
-        color: #000;
-        margin-right: 5px;
-      }
-
-      .detail-arrow {
-        transition: transform 0.3s ease;
-        // 可根据展开状态添加旋转动画
-        // transform: rotate(90deg);
-      }
-    }
-
-    .detail-right {
-      .detail-btn {
-        /* 主色调采用品牌蓝，增强识别度 */
-        background-color: #1677ff;
-        color: #fff;
-
-        /* 优化尺寸和圆角 */
-        padding: 7px 20px;
-        border-radius: 6px;
-        font-size: 14px;
-        font-weight: 500;
-
-        /* 细腻的阴影增加立体感 */
-        box-shadow: 0 2px 6px rgba(22, 119, 255, 0.2);
-
-        /* 过渡动画提升交互质感 */
-        transition: all 0.25s ease;
-
-        /* 点击状态反馈 */
-        &:active {
-          background-color: #0958d9;
-          /* 深色变体 */
-          box-shadow: 0 1px 3px rgba(22, 119, 255, 0.3);
-          transform: translateY(1px);
-          /* 微下沉效果 */
-        }
-
-        /* hover状态（非移动端可选） */
-        &:hover {
-          background-color: #4096ff;
-          /* 亮色变体 */
-        }
-      }
-    }
-  }
 }
 </style>

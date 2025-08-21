@@ -4,7 +4,7 @@
       <uni-nav-bar color="#fff" leftIcon="left" backgroundColor="transparent" :border="false" :statusBar="true"
         :fixed="true" title="排行榜">
         <view slot="left" class="nav-left" @click="back">
-          <image class="" src="../../static/home/arrow.png" mode="widthFix" lazy-load="false" binderror="" bindload="" />
+          <image class="" src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01jY8IAu24Ndcpz30ga_!!2200676927379.png" mode="widthFix" lazy-load="false" binderror="" bindload="" />
         </view>
         <view slot="right" class="nav-right" @click="rule">
           规则
@@ -99,7 +99,7 @@
     <scroll-view class="footer" :scroll-y="true">
       <view class="footer-item" v-for="(item, index) in seasonInfo.all_stats" :key="index">
         <view class="item-left">
-          <view class="item-index">{{ item.ranking }}</view>
+          <view class="item-index" >{{ item.ranking }}</view>
           <image :src="item.avatar" class="avatar"></image>
         </view>
         <view class="item-center">
@@ -115,10 +115,10 @@
       </view>
     </scroll-view>
 
-    <view class="user-my">
+    <view class="user-my" v-if="current_user_ranking.ranking">
       <view class="footer-item">
         <view class="item-left">
-          <view class="item-index">{{ current_user_ranking.ranking }}</view>
+          <view class="item-index" v-if="current_user_ranking.ranking">{{ current_user_ranking.ranking }}</view>
           <image :src="current_user_ranking.avatar" class="avatar"></image>
         </view>
         <view class="item-center">
@@ -137,13 +137,13 @@
 
     <view class="side-buttons">
       <!-- <view class="side-button">
-        <image src="../../static/home/wfgz.png" mode="widthFix" lazy-load="false" binderror="" bindload="" />
+        <image src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN010y44PZ24NdcoP7YMu_!!2200676927379.png" mode="widthFix" lazy-load="false" binderror="" bindload="" />
       </view> -->
       <view class="side-button" @click="getCurrentSeasonAwards">
-        <image src="../../static/home/jplb.png" mode="widthFix" lazy-load="false" binderror="" bindload="" />
+        <image src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01b6IIt124NdcpAsrSO_!!2200676927379.png" mode="widthFix" lazy-load="false" binderror="" bindload="" />
       </view>
       <view class="side-button" @click="getPastRewards">
-        <image src="../../static/home/wqjl.png" mode="widthFix" lazy-load="false" binderror="" bindload="" />
+        <image src="https://img.alicdn.com/imgextra/i2/2200676927379/O1CN012nkC5F24NdcoDDHSs_!!2200676927379.png" mode="widthFix" lazy-load="false" binderror="" bindload="" />
       </view>
     </view>
 
@@ -223,7 +223,7 @@
           <view class="product-price">¥{{ productDetail.award_price }}</view>
           <image :src="productDetail.award_thumb" class="product-image" mode="widthFix" />
           <view class="product-details">
-            <image src="../../static/home/product-detail.png" mode="widthFix" />
+            <image src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN010f5iau24Ndcotdc9j_!!2200676927379.png" mode="widthFix" />
           </view>
         </view>
       </view>
@@ -251,7 +251,14 @@ export default {
       timer: '27天08时04分22秒',
       productDetail: {},
       top_three:[],
-      current_user_ranking:{}
+      current_user_ranking:{
+        ranking:null,
+        avatar:null,
+        nickName:null,
+        count:null,
+        last_completed_at:null,
+        award_thumb:null
+      }
     }
   },
   onLoad (options) {
@@ -301,7 +308,9 @@ export default {
           if (res.code == 200) {
             this.seasonInfo = res.data
             this.top_three = res.data.top_three
-            this.current_user_ranking = res.data.current_user_ranking
+            if(res.data.current_user_ranking) {
+              this.current_user_ranking = res.data.current_user_ranking
+            }
           } else {
           }
         }
@@ -326,7 +335,7 @@ export default {
 
 <style lang='scss' scoped>
 .rank {
-  background: url("../../static/home/rank_bg.png") no-repeat;
+  background: url("https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01utCTL624NdcpArmwQ_!!2200676927379.webp") no-repeat;
   background-size: 100vw 100%;
   background-repeat: no-repeat;
   // min-height: calc(100vh - 50px);
@@ -508,7 +517,7 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: url("../../static/home/rank_item.png") no-repeat;
+      background: url("https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01xzC6JG24Ndcpz18He_!!2200676927379.png") no-repeat;
       background-size: 100vw 100%;
       padding: 10px 20px;
       border-radius: 10px;
@@ -591,7 +600,7 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: url("../../static/home/rank_item.png") no-repeat;
+      background: url("https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01xzC6JG24Ndcpz18He_!!2200676927379.png") no-repeat;
       background-size: 100vw 100%;
       padding: 10px 20px;
       border-radius: 10px;

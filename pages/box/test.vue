@@ -3,7 +3,7 @@
     <view class="tower-background">
       <view class="tower">
         <view class="floor" v-for="floor in floors" :key="floor" :style="{ top: `${-20 * (floor - 1)}px` }">
-          <image src="../../static/home/climb_status3.png" class="floor-image"></image>
+          <image src="https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01Wz7dng24NdcpT1AW4_!!2200676927379.png" class="floor-image"></image>
         </view>
       </view>
     </view>

@@ -128,7 +128,7 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "appid" : "wxffe1514fa92304f9",
+        "appid" : "wx89570aa918a62968",
         "setting" : {
             "urlCheck" : false,
             "es6" : true,
@@ -174,7 +174,7 @@
             "proxy" : {
                 "/api" : {
                     // "target" : "填写您的域名注意区分HTTPS",
-                    "target" : "http://www.ckmh.com/",
+                    "target" : "http://www.ypmh.com/",
                     "changeOrigin" : true,
                     "secure" : false,
                     "pathRewrite" : {
@@ -185,10 +185,10 @@
             "https" : false
         },
         "router" : {
-            "base" : "/h5/",
+            "base" : "",
             "mode" : "hash"
         },
-        "domain" : "http://www.ckmh.com/",
+        "domain" : "http://www.ypmh.com/",
         "title" : ""
     }
 }

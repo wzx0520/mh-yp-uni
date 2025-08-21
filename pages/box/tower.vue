@@ -4,7 +4,9 @@
       <uni-nav-bar color="#fff" leftIcon="left" backgroundColor="transparent" :border="false" :statusBar="true"
         :fixed="true" :title="seasonInfo.title">
         <view slot="left" class="nav-left" @click="back">
-          <image class="" src="../../static/home/arrow.png" mode="widthFix" lazy-load="false" binderror="" bindload="" />
+          <image class=""
+            src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01jY8IAu24Ndcpz30ga_!!2200676927379.png"
+            mode="widthFix" lazy-load="false" binderror="" bindload="" />
         </view>
         <!-- <view slot="right" class="nav-right" @click="rule">
           规则
@@ -13,15 +15,17 @@
     </view>
     <view class="diamond-wrap">
       <view class="diamond">
-        <image class="diamond-img" src="../../static/home/yaoshi.png" mode="widthFix" lazy-load="false" binderror=""
-          bindload="" />
+        <image class="diamond-img"
+          src="https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01c1I8qk24NdcpT1dgw_!!2200676927379.png"
+          mode="widthFix" lazy-load="false" binderror="" bindload="" />
       </view>
       <view>{{ diamonds }}</view>
     </view>
     <view class="rank-wrap">
       <view>
-        <image class="rank-img" src="../../static/home/rank.png" mode="widthFix" lazy-load="false" binderror=""
-          bindload="" />
+        <image class="rank-img"
+          src="https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01u4h49724NdcqISX3B_!!2200676927379.png"
+          mode="widthFix" lazy-load="false" binderror="" bindload="" />
       </view>
       <view class="rank-list">
         <view class="rank-item" v-for="(item, index) in ranks" :key="index">
@@ -38,16 +42,19 @@
     </view>
     <view class="rule-wrap">
       <view class="rule-img" @click="resetLayer">
-        <image class="rule-first-img" src="../../static/home/cxpd.png" mode="widthFix" lazy-load="false" binderror=""
-          bindload="" />
+        <image class="rule-first-img"
+          src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01B9uU8324Ndcotc8gC_!!2200676927379.png"
+          mode="widthFix" lazy-load="false" binderror="" bindload="" />
       </view>
       <view class="rule-img" @click="rule">
-        <image class="rule-first-img" src="../../static/home/guize.png" mode="widthFix" lazy-load="false" binderror=""
-          bindload="" />
+        <image class="rule-first-img"
+          src="https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01X7oV4B24Ndco6T5nh_!!2200676927379.png"
+          mode="widthFix" lazy-load="false" binderror="" bindload="" />
       </view>
       <view class="rule-img" @click="refresh">
-        <image class="rule-first-img" src="../../static/home/shuaxin.png" mode="widthFix" lazy-load="false" binderror=""
-          bindload="" />
+        <image class="rule-first-img"
+          src="https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01r7Nij624NdcmaMcfn_!!2200676927379.png"
+          mode="widthFix" lazy-load="false" binderror="" bindload="" />
       </view>
     </view>
     <view class="tower-background" :style="{ backgroundImage: `url(${imgBaseUrl}${'/static/web/tower.png'})` }">
@@ -55,10 +62,12 @@
         <view class="tower-item" v-for="(item, index) in listData" :key="index"
           :style="{ top: `${-20 * (index - 1)}px` }">
           <template v-if="item.status">
-            <image class="tower-item-img" src="../../static/home/climb_status3.png" @click="toTowerDetail(item)" />
+            <image class="tower-item-img" src="https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01Wz7dng24NdcpT1AW4_!!2200676927379.png" @click="toTowerDetail(item)" />
+            <!-- <xc-image src="https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01Wz7dng24NdcpT1AW4_!!2200676927379.png"
+              ratio="16:9" :borderRadius="0" @click="toTowerDetail(item)" /> -->
           </template>
           <template v-else>
-            <image class="tower-item-img" src="../../static/home/climb_status1.png" bindload="" />
+            <image class="tower-item-img" src="https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01iW5YI624NdcmaJffL_!!2200676927379.png" bindload="" />
           </template>
           <view class="tower-layer">{{ item.layer }}F</view>
 
@@ -460,7 +469,7 @@ export default {
         position: absolute;
         left: -35px;
         top: 40px;
-        background: url("../../static/home/st_bg.png") no-repeat;
+        background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01Le9Hdv24NdcoDD4z8_!!2200676927379.png") no-repeat;
         background-size: 100% 100%;
         width: 120px;
         padding: 5rpx 10rpx;
@@ -490,5 +499,4 @@ export default {
 
     .rule-content {}
   }
-}
-</style>
+}</style>

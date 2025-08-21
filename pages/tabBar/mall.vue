@@ -82,7 +82,7 @@ export default {
   data () {
     return {
       background: {
-        background: "url(" + require('@/static/image/vo.webp') + ") no-repeat",
+        background: "#fff",
         backgroundSize: 'cover',
       },
       navlist: [{

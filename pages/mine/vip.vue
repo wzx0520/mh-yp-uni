@@ -18,7 +18,7 @@
                 </template>
 
                 <view class="vip-top-image">
-                  <u-icon name="../../static/mine/vip.png" color="#fff" size="200"></u-icon>
+                  <u-icon name="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01RiQVWj24Ndco5vWYW_!!2200676927379.png" color="#fff" size="200"></u-icon>
                 </view>
               </view>
               <view class="vip-center">
@@ -121,47 +121,47 @@ export default {
       serveList: [
         // {
         //   name: '自定义头像',
-        //   icon: '../../static/vip/vip01.png',
-        //   activeIcon: '../../static/vip/vip01-active.png',
+        //   icon: 'https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01i0SdG724NdcoOd0Is_!!2200676927379.png',
+        //   activeIcon: 'https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01O1JZJo24NdcmZoW72_!!2200676927379.png',
         //   vip: [3, 4, 5, 6, 7, 8, 9, 10]
         // },
         // {
         //   name: '自定义昵称',
-        //   icon: '../../static/vip/vip02.png',
-        //   activeIcon: '../../static/vip/vip02-active.png',
+        //   icon: 'https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01DgjxhU24NdcpAJTxU_!!2200676927379.png',
+        //   activeIcon: https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01sVAgAr24NdcnC0h1C_!!2200676927379.png',
         //   vip: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         // },
         // {
         //   name: '道具奖励',
-        //   icon: '../../static/vip/vip03.png',
-        //   activeIcon: '../../static/vip/vip03-active.png',
+        //   icon: 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01K6xL2Z24Ndcol9woF_!!2200676927379.png',
+        //   activeIcon: 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01cnEkjM24NdcpV6k09_!!2200676927379.png',
         //   vip: [3, 4, 5, 6, 7, 8, 9, 10]
         // },
         // {
         //   name: '全屏公告',
-        //   icon: '../../static/vip/vip04.png',
-        //   activeIcon: '../../static/vip/vip04-active.png',
+        //   icon: 'https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01kysbhL24NdciHOhve_!!2200676927379.png',
+        //   activeIcon: 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01MImcll24NdcpyTlcX_!!2200676927379.png',
         //   vip: [7, 8, 9, 10]
         // },
         {
           name: '月月领余额',
-          icon: '../../static/vip/vip06.png',
-          activeIcon: '../../static/vip/vip06-active.png',
+          icon: 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01sV9WjY24Ndco5wOk5_!!2200676927379.png',
+          activeIcon: 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01EhUFDI24NdcpSXpaG_!!2200676927379.png',
         },
         {
           name: '专属商城',
-          icon: '../../static/vip/vip08.png',
-          activeIcon: '../../static/vip/vip08-active.png',
+          icon: 'https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01hfrdwK24NdcqHvdV1_!!2200676927379.png',
+          activeIcon: 'https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01nQZ7O924NdcpAMQxD_!!2200676927379.png',
         },
         {
           name: '提货免邮费',
-          icon: '../../static/vip/vip05.png',
-          activeIcon: '../../static/vip/vip05-active.png',
+          icon: 'https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01dK6eTR24NdcpyVqVd_!!2200676927379.png',
+          activeIcon: 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01qrwVVe24Ndcn7y8rC_!!2200676927379.png',
         },
         {
           name: '专属客服',
-          icon: '../../static/vip/vip07.png',
-          activeIcon: '../../static/vip/vip07-active.png',
+          icon: 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01iX0drh24NdcpSYZHR_!!2200676927379.png',
+          activeIcon: 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01h64ZWd24NdcqHt5Wi_!!2200676927379.png',
         },
       ],
       show: false,
@@ -447,7 +447,7 @@ export default {
       .vip-serve {
         position: relative;
         top: -80px;
-        background: url("../../static/vip/01.png") no-repeat;
+        background: url("https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01XRjhOU24NdcoOcXAO_!!2200676927379.png") no-repeat;
         background-size: 100% 100%;
         width: 100%;
         color: #fff;

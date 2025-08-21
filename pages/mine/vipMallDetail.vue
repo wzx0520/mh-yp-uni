@@ -9,7 +9,7 @@
         <view class="swiper-item" :class="[current === index ? 'active-item' : '']">
           <view class="vip-card-wrap">
             <view class="vip-card">
-              <image class="vip-card-img" src="../../static/vip/privilege.png" mode="widthFix" lazy-load="false"
+              <image class="vip-card-img" src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01eSirdM24NdcpSXlNk_!!2200676927379.png" mode="widthFix" lazy-load="false"
                 binderror="" bindload="" />
               <view class="vip-content">
                 <view class="vip-icon-wrap">
@@ -46,34 +46,34 @@ export default {
       serveList: [
         // {
         //   name: '自定义头像',
-        //   icon: '../../static/vip/user.png',
+        //   icon: 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01SWZACB24NdcoJuxnx_!!2200676927379.png',
         //   content: `<p>1.用户成功升级VIP可自定义头像。</p>
         //           <p>2.用户更改头像后，将随同账号头像在平台公开展示。</p>
         //           <p>3.VIP10用户可享定制头像框服务(详情请联系客服)。</p>`
         // },
         // {
         //   name: '自定义昵称',
-        //   icon: '../../static/vip/nickname.png',
+        //   icon: 'https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01NIKlKK24NdcolAU3u_!!2200676927379.png',
         //   content: `<p>1.用户成功升级VIP可自定义昵称。</p>
         //           <p>2.昵称一经改变后永久生效, 以前的昵称视为自主放弃。</p>`
         // },
         // {
         //   name: '道具奖励',
-        //   icon: '../../static/vip/specialEffects.png',
+        //   icon: 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01KCrnP524NdcpyTpkG_!!2200676927379.png',
         //   content: `<p>1.所有道具将在VIP用户每月首次登录平台自动发放。</p>
         //           <p>2.所有道具都具有时限，超过时限的道具将会失效并无法使用。</p>
         //           `
         // },
         // {
         //   name: '全屏公告',
-        //   icon: '../../static/vip/notice.png',
+        //   icon: 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01VnbBUn24Ndco5xGj0_!!2200676927379.png',
         //   content: `<p>1.VIP7及以上用户专属特权。</p>
         //           <p>2.当用户抽中传说时，将会在平台首页、赏池等特定区域公开展示玩家的特效通知。</p>
         //           `
         // },
         {
           name: '月月领余额',
-          icon: '../../static/vip/yabi.png',
+          icon: 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01IY90Fd24NdcoOcCQQ_!!2200676927379.png',
           content: `<p>1.用户成功升级VIP及以上等级时, 每月可以领取余额奖励。</p>
                   <p>2.不同VIP等级, 奖励的余额额度不同。</p>
                   <p>3.用户成功升级奖励的余额将自动发放至账户余额。</p>
@@ -81,7 +81,7 @@ export default {
         },
         {
           name: '专属商城',
-          icon: '../../static/vip/notice.png',
+          icon: 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01VnbBUn24Ndco5xGj0_!!2200676927379.png',
           content: `<p>1.VIP专属商城商品兑换功能目前仅针对VIP以上用户开放。</p>
           <p>2.VIP专属商城商品库存和账号兑换次数都具有限制,非质量问题，一经兑换，无法退换货，请谨慎兑换。</p>
           <p>3.VIP用户不可跨等级兑换商品(如VIP4用户不可兑换VIP3等级的商品)。</p>
@@ -90,7 +90,7 @@ export default {
         },
         {
           name: '提货免邮费',
-          icon: '../../static/vip/freeShipping.png',
+          icon: 'https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01yAzkng24Ndcot3AB8_!!2200676927379.png',
           content: `<p>1.VIP用户享受包邮福利</p>
                   <p>2.包邮福利将在用户成功升级VIP后自动发放至账户, 用户可在提货页面查看相应权益。</p>
                   <p>3.特殊商品或偏远地区可能涉及运费差价，具体以提货详情页提示为准。</p>
@@ -98,7 +98,7 @@ export default {
         },
         {
           name: '专属客服',
-          icon: '../../static/vip/server.png',
+          icon: 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01gsD0AA24NdcnC2VHR_!!2200676927379.png',
           content: `<p>VIP及以上用户可享专属客服一对一服务。</p>`
         },
       ],

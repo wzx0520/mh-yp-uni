@@ -342,7 +342,16 @@ export default {
             // #endif
           }
           else {
-            this.orderCancel(opt.order_sn)
+            this.toast({
+              title: res.msg,
+              icon: 'none',
+              duration: 3000,
+              success: () => {
+                setTimeout(() => {
+                  this.orderCancel(opt.order_sn)
+                }, 3000)
+              }
+            })
 
             // ===================================
             // 易支付 页面处理

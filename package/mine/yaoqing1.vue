@@ -16,20 +16,20 @@
         <view class="earnings-list">
           <view class="earnings-list-text">{{ userInfo.nickName }}</view>
           <view class="earnings-list-text">用户ID{{ userInfo.id }}</view>
+          <view class="earnings-list-text">推广链接:</view>
+          <view class="earnings-list-url">
+            <view class="url-text">
+              {{ userInfo.h5_share_url }}
+            </view>
+            <view class="copy-text" @click="copyUrl(userInfo.h5_share_url)">复制</view>
+          </view>
         </view>
       </view>
       <view class="invite-step">
         <view class="self-user" v-if="userInfo.total_xjnum">
           <text>已邀请用户：{{ userInfo.total_xjnum.total_num }}人</text>
         </view>
-        <!-- #ifdef APP-PLUS || H5  || MP-WEIXIN   -->
         <view class="btn-ground-right" style="background: #6b57dd;" @click="sharePoster">立即邀请</view>
-        <!-- #endif -->
-        <!-- #ifdef MP-WEIXIN  -->
-        <!-- <view class="btn-ground-right" style="background: #6b57dd;" @click="handleInvite">
-          生成分享海报
-        </view> -->
-        <!-- #endif -->
 
       </view>
       <view class="invite-info">
@@ -105,7 +105,7 @@
       </view>
     </u-popup>
     <PosterCanvas ref="childCanvas" @handleSuccess='canvasSuccess' :h5LocalPosterCover="h5LocalPosterCover"
-      :h5Url="userInfo.h5_share_url" :share_url="userInfo.share_url" />
+      :h5Url="userInfo.h5_share_url" />
   </view>
 </template>
 
@@ -123,6 +123,7 @@ export default {
       share_ma: '',
       url: '',
       share_bg: '',
+      userInfo: null,
       show: false,
       showPoster: false,
       posterImage: '',
@@ -173,12 +174,13 @@ export default {
       )
     }
     this.$store.dispatch('getAppConfig').then((res) => {
+      console.log(res);
       this.sysConfig = res.data;
       this.mainbg = res.data.share_bg
       uni.getImageInfo({
         src: res.data.poster_bg,
         success: (image) => {
-          this.h5LocalPosterCover = image.path;
+          this.h5LocalPosterCover = image.path
         },
       });
     })
@@ -186,20 +188,24 @@ export default {
       console.log(res)
       this.userInfo = res.data
       this.codeShareUrl = res.data.codeShareUrl
-      this.invite_code = res.data.invite_code
+      this.share_ma = res.data.invite_code
       this.url = res.data.share_url
-      // #ifdef MP-WEIXIN
-      this.$refs.childCanvas.fetchQrCode(this.invite_code).then(() => {
-        if (!this.$refs.childCanvas.posterImage) {
-          this.$refs.childCanvas.createDraw();
-        }
-      });
-      // #endif
     })
+
+
   },
   methods: {
-    handleInvite () {
-      this.$refs.poster.show(this.share_ma);
+     // 复制
+     copyUrl (e) {
+      this.$copy({
+        content: e,
+        success (res) {
+          uni.showToast({
+            title: '推广链接已复制',
+            icon: 'success'
+          })
+        }
+      })
     },
     sharePoster () {
       this.show = false
@@ -240,6 +246,12 @@ export default {
             // })
           }
         }
+      })
+    },
+    sharePoster () {
+      this.show = false
+      this.$refs.childCanvas.drawPoster().then(() => {
+        uni.hideLoading()
       })
     },
     canvasSuccess (param) {
@@ -298,7 +310,7 @@ export default {
       }
       return {
         title: '邀请好友得豪礼',
-        path: '/pages/tabBar/home?invite_code=' + this.share_ma
+        path: '/pages/box/box?invite_code=' + this.share_ma
       }
     },
   }
@@ -349,6 +361,31 @@ export default {
         font-weight: bold;
       }
 
+      &-url {
+        display: flex;
+
+        .url-text {
+          font-size: 16px;
+          color: #fff;
+          font-weight: 400;
+          word-wrap: break-word;
+        }
+
+        .copy-text {
+          padding: 0.5px 5px;
+          background-color: #b778ce;
+          color: #fff;
+          border: 1px solid;
+          border-radius: 10rpx;
+          display: inline;
+          flex-shrink: 0;
+          margin: 0 20rpx;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+
       &-image {
         width: 150rpx;
         height: 150rpx;
@@ -362,6 +399,7 @@ export default {
       display: flex;
       justify-content: space-around;
       align-items: center;
+      margin-top: 100rpx;
 
       image {
         width: 100%;

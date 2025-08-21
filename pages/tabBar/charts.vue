@@ -1,6 +1,9 @@
 <template>
   <view class="ranking-container">
-
+    <!-- #ifdef MP-WEIXIN -->
+    <!-- <view class="xc-top" :style="{ paddingTop: `${sysConfig.statusBarHeight - 5}px` }">
+    </view> -->
+    <!-- #endif -->
     <!-- 顶部导航栏 -->
     <view class="ranking-header">
       <text class="ranking-title">排行榜</text>
@@ -11,7 +14,7 @@
           <text class="category-title">{{ category }}</text>
         </view>
       </view>
-      <view class="time">
+      <view class="time" v-if="timeRange.start">
         <view class="time">
           {{ timeRange.start }} <text class="time-text">至</text> {{ timeRange.end }}
         </view>
@@ -129,6 +132,7 @@
 <script>
 const switchMp3 = 'https://www.img.xcooo.cn/uploads/2024/02/17887756404cea30.mp3'
 const switchMusic = uni.createInnerAudioContext();
+import { mapGetters } from 'vuex'
 export default {
   data () {
     return {
@@ -141,7 +145,7 @@ export default {
         // { nickname: '嗨', avatarUrl: 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01pWpy1324NdcZ5vSha_!!2200676927379.png', count: 22, index: 9 },
         // { nickname: '无情', avatarUrl: 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01pWpy1324NdcZ5vSha_!!2200676927379.png', count: 8, index: 10 },
       ],
-      categories: ['周榜', '月榜'],
+      categories: ['总榜', '周榜', '月榜'],
       activeCategory: 0, // 当前激活的分类
       rulePop: false, // 控制 u-popup 是否显示
       top_three: [
@@ -174,6 +178,9 @@ export default {
     this.updateTimeRange();
     this.getRankInfo();
   },
+  computed: {
+    ...mapGetters(['sysConfig'])
+  },
   methods: {
     updateTimeRange () {
       const now = new Date();
@@ -181,6 +188,11 @@ export default {
       let endTime = '';
 
       if (this.activeCategory == 0) {
+        // 总榜
+        startTime = '';
+        endTime = '';
+      }
+      else if (this.activeCategory == 1) {
         // 周榜
         const day = now.getDay() || 7;
         const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - day + 1);
@@ -275,7 +287,8 @@ export default {
 
 <style lang="scss" scoped>
 page {
-  background: #fff;
+  // height: 100vh;
+  background: #ffffff;
 }
 
 .ranking-container {
@@ -291,6 +304,9 @@ page {
     // min-height: 60vh;
     // max-height: 60vh;
     // padding-bottom:0;
+    // #ifdef MP-WEIXIN
+    padding-top: 55rpx;
+    // #endif
 
     .ranking-title {
       font-size: 28px;
@@ -298,6 +314,7 @@ page {
       color: #222222;
       text-align: left;
       text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+
     }
 
     .category-list {
@@ -435,6 +452,7 @@ page {
             text-overflow: ellipsis;
             color: #000;
             font-weight: 700;
+            max-width: 200rpx;
           }
 
           .times {
@@ -583,6 +601,9 @@ page {
   .rule-btn-wrap {
     position: fixed;
     top: 3%;
+    // #ifdef MP-WEIXIN
+    top: 15%;
+    // #endif
     right: 10rpx;
     z-index: 10;
 
@@ -596,6 +617,8 @@ page {
       }
     }
   }
+
+
 
   .rule-pop {
     background: linear-gradient(to right, #5dfda1, #baf828);

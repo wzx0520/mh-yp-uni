@@ -1,5 +1,7 @@
 <template>
   <view class="zz">
+    <uni-nav-bar title="转赠记录" color="#333" leftIcon="left" backgroundColor="#fff" :border="false" :statusBar="true"
+    :fixed="true" @clickLeft="$common.back()"></uni-nav-bar>
     <mescroll-body ref="mescrollRef" height="400" @init="mescrollInit" @down="downCallback" @up="getList"
       :down="downOption" :up="upOption">
       <view class="award-log-item" v-for="(item, index) in listData" :key="index">
@@ -94,7 +96,7 @@ page {
   .award-log-item {
     color: #fff;
     width: 100%;
-    background: url('../../static/home/100.png') no-repeat;
+    background: url('https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01PZkzwd24NdcoKRnBt_!!2200676927379.png') no-repeat;
     background-size: 100% 100%;
     width: 100%;
     height: 200px;

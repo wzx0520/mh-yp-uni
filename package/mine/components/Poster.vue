@@ -138,7 +138,7 @@ export default {
       const wpx = system.windowWidth / 750
       // 图片尺寸
       // 绘画过程,需先将网络图片转为本地临时图片
-      const image = 'https://xcooo.oss-cn-hangzhou.aliyuncs.com/wxapp/share_bg.png'
+      const image = 'https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01UzdEtK24NdXfTZnGw_!!2200676927379.png'
       uni.getImageInfo({
         src: image,
         success: async (res) => {
@@ -300,7 +300,7 @@ export default {
   transition: opacity .5s;
 
   .poster {
-    background: url('https://xcooo.oss-cn-hangzhou.aliyuncs.com/wxapp/share_bg.png');
+    background: url('https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01UzdEtK24NdXfTZnGw_!!2200676927379.png');
     background-size: 100% 100%;
     background-repeat: no-repeat;
     position: absolute;

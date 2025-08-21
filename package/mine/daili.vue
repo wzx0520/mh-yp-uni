@@ -1,12 +1,10 @@
 <template>
 	<view>
-		<uni-nav-bar title="申请推广员" color="#fff" leftIcon="left" backgroundColor="#222333" :border="false" :statusBar="true"
+		<uni-nav-bar title="申请推广员" color="#333" leftIcon="left" backgroundColor="#fff" :border="false" :statusBar="true"
 			:fixed="true" @clickLeft="$common.back()"></uni-nav-bar>
 
 		<view class="all"
-			style="background: url('https://xcooo.oss-cn-hangzhou.aliyuncs.com/wxapp/bg.png') no-repeat 0 0 / 100% 100%">
-			<u-navbar title="申请推广员" :border-bottom="false" title-color="#fff" back-icon-color="#fff" title-size="24rpx"
-				title-width="560rpx" :custom-back="customBack"></u-navbar>
+			style="background: url('https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01cvtcfA24Ndcq5jEaO_!!2200676927379.png') no-repeat 0 0 / 100% 100%">
 			<view class="new-all ">
 				<view style="text-align: center;">请填写申请信息</view>
 				<view class="all-one">
@@ -128,7 +126,7 @@
 		background: #FFFFFF;
 		border-radius: 20rpx;
 		position: absolute;
-		top: 280rpx;
+		top: 235rpx;
 		left: 30rpx;
 		padding: 40rpx 40rpx;
 		box-sizing: border-box;
@@ -139,6 +137,7 @@
 		font-family: Source Han Sans CN;
 		font-weight: 400;
 		color: #222222;
+    background: rgba(255,255,255,0.5);
 
 		.all-one {
 			font-size: 28rpx;

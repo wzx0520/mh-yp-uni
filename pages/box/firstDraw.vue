@@ -1,6 +1,6 @@
 <!--
  * @Date: 2022-12-08 13:46:18
- * @LastEditTime: 2025-04-30 11:08:46
+ * @LastEditTime: 2025-07-11 17:34:11
  * @Description: content
 -->
 <template>
@@ -221,7 +221,7 @@
               <view class="prize-box-item common_bg upin" :style="{
                 backgroundImage: `url(${item.mark_bg_thumb})`,
                 'animation-delay': `${i * 0.2}s`
-              }">
+              }" >
                 <view class="pic">
                   <cimage :src="item.thumb" mode="scaleToFill" />
                 </view>
@@ -250,36 +250,39 @@
           </view>
 
           <view v-else class="prize-box tenth">
-            <view v-for="(item, i) in prizeResult" :key="i">
-              <view class="prize-box-item common_bg upin" :style="{
-                backgroundImage: `url(${item.mark_bg_thumb})`,
-                'animation-delay': `${i * 0.2}s`
-              }">
-                <view class="pic">
-                  <cimage :src="item.thumb ? item.thumb : ''" mode="scaleToFill" />
+            <!-- 用prize-box-list作为网格容器，包裹所有循环项 -->
+            <view class="prize-box-list">
+              <view v-for="(item, i) in prizeResult" :key="i" class="prize-item-wrapper">
+                <!-- 奖品项内容 -->
+                <view class="prize-box-item common_bg upin" :style="{
+                  backgroundImage: `url(${item.mark_bg_thumb})`,
+                  'animation-delay': `${i * 0.2}s`
+                }" :class="[item.mark_bg_thumb ? 'prize-box-item1' : 'prize-box-item2']">
+                  <view class="pic">
+                    <cimage :src="item.thumb ? item.thumb : ''" mode="scaleToFill" />
+                  </view>
+                  <view class="title hang1">
+                    {{ item.title }}
+                  </view>
+                  <view class="price">
+                    参考价:
+                    <text>
+                      ¥
+                      <text>{{ item.price }}</text>
+                    </text>
+                  </view>
                 </view>
-
-                <view class="title hang1">
-                  {{ item.title }}
-                </view>
-
-                <view class="price">
-                  参考价:
-
-                  <text>
-                    ¥
-
-                    <text>{{ item.price }}</text>
-                  </text>
+                <!-- 按钮区域 -->
+                <view class="dissolve_btn-wrap">
+                  <view class="dissolve_btn" @click="duihuan(item.order_list_id)"
+                    v-if="!item.is_hs && optionsData.type != 'play'">
+                    <view class="dissolve-title">退货余额:</view>
+                    <view class="dissolve-price"> {{ item.return_price }}</view>
+                  </view>
+                  <view class="dissolve_btn dissolve_has_btn" v-if="item.is_hs" disabled>已退货</view>
                 </view>
               </view>
             </view>
-            <!-- <view class="dissolve_btn" @click="duihuan(item.order_list_id)"
-              v-if="!item.is_hs && optionsData.type != 'play'">
-              <view class="dissolve-title">退货</view>
-              <view class="dissolve-price">余额: {{ item.return_price }}</view>
-            </view>
-            <view class="dissolve_btn dissolve_has_btn" v-if="item.is_hs" disabled>已退货</view> -->
           </view>
 
           <view class="ft-btn">
@@ -331,7 +334,6 @@
             我知道了
           </view>
         </view>
-
       </view>
     </u-popup>
   </view>
@@ -366,7 +368,8 @@ export default {
       /* 中奖列表 */
       prizeResult: [],
       all: false,
-      animateSet: uni.getStorageSync('animateSet'),
+      // animateSet: uni.getStorageSync('animateSet'),
+      animateSet: true,
       total_return_price: 0,
       showVideo: false,
       videoSrc: this.imgBaseUrl + "/kaijiang.mp4",
@@ -384,7 +387,7 @@ export default {
         //   "price": 129.0,
         //   mark_title: 'First赏'
         // },
-      ]
+      ],
     }
   },
 
@@ -531,7 +534,7 @@ export default {
         url: '/v1/box/info',
         data: {
           id: this.optionsData.id,
-          car_type: this.optionsData.car_type ? this.optionsData.car_type : ''
+          set_no: this.optionsData.set_no,
         },
         Loading: true,
         success: async res => {
@@ -565,6 +568,7 @@ export default {
       if (id == '-1') {
         let ids = [];
         this.all = true;
+        console.log(arr)
         arr.forEach((val, index) => {
           ids.push(val.order_list_id);
         })
@@ -627,7 +631,7 @@ export default {
       if (this.giftList.length) {
         setTimeout(() => {
           this.showPopup = true
-        }, 1000)
+        }, 500)
       }
     },
 
@@ -1279,19 +1283,37 @@ export default {
         padding: 40rpx 0rpx;
 
         .prize-box-list {
+          width: 100%;
           margin-bottom: 30rpx;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          /* 核心：一行3列 */
+          grid-column-gap: 20rpx;
+          /* 仅设置水平间距 */
+          grid-row-gap: 30rpx;
+          /* 仅设置垂直间距 */
+        }
+
+        /* 每个网格项的容器，包裹奖品和按钮 */
+        .prize-item-wrapper {
+          display: flex;
+          flex-direction: column;
+          grid-column-gap: 20rpx;
+          /* 仅设置水平间距 */
+          grid-row-gap: 20rpx;
+          /* 仅设置垂直间距 */
         }
 
         .prize-box-item {
-          width: 230rpx;
-          height: 300rpx;
-          padding-top: 70rpx;
-          margin-right: 20rpx;
-          margin-bottom: 20rpx;
+          width: 100%;
+          height: 200rpx;
+          padding-top: 30rpx;
 
           .pic {
             width: 120rpx;
             height: 120rpx;
+            margin: 0 auto;
+            /* 图片居中 */
           }
 
           .title {
@@ -1300,11 +1322,15 @@ export default {
             font-weight: 500;
             color: #ffffff;
             padding: 10rpx 20rpx;
+            text-align: center;
+            /* 文字居中，避免内容偏移 */
           }
 
           .price {
             font-size: 16rpx;
-            padding: 0rpx 20rpx;
+            padding: 0 20rpx;
+            text-align: center;
+            /* 价格居中 */
 
             text {
               font-size: 16rpx;
@@ -1314,8 +1340,40 @@ export default {
               }
             }
           }
+        }
 
+        .prize-box-item1 {
+          height: 300rpx;
+        }
 
+        .dissolve_btn-wrap {
+          display: flex;
+          justify-content: center;
+          flex-wrap: nowrap;
+          gap: 10rpx;
+          padding: 0 20rpx;
+
+          .dissolve_btn {
+            flex: 1 1 auto;
+            // max-width: 350rpx;
+            color: #fff;
+            background: #000000;
+            box-shadow: inset 0 0 40rpx 0 #61708f;
+            border-radius: 10rpx;
+            font-size: 24rpx;
+            padding: 12rpx;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+          }
+
+          .dissolve_has_btn {
+            font-size: 24rpx;
+            font-style: italic;
+            font-weight: 700;
+            padding: 20rpx 0;
+            white-space: nowrap;
+          }
         }
 
 

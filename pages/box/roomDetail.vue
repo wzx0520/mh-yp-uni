@@ -4,7 +4,9 @@
       <uni-nav-bar color="#fff" leftIcon="left" backgroundColor="transparent" :border="false" :statusBar="true"
         :fixed="true" :title="roomInfo.title">
         <view slot="left" class="nav-left" @click="back">
-          <image class="" src="../../static/home/arrow.png" mode="widthFix" lazy-load="false" binderror="" bindload="" />
+          <image class=""
+            src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01jY8IAu24Ndcpz30ga_!!2200676927379.png"
+            mode="widthFix" lazy-load="false" binderror="" bindload="" />
         </view>
         <view slot="right" class="nav-right" @click="rule">
           规则
@@ -23,10 +25,10 @@
       </swiper>
       <!-- <view class="free-play" @click="tryPlay">
         <view class="free-play-bg">
-          <image class="" src="../../static/home/11.png" mode="widthFix" lazy-load="false" binderror="" bindload="" />
+          <image class="" src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01cgGJ9524NdcoP7cTg_!!2200676927379.png" mode="widthFix" lazy-load="false" binderror="" bindload="" />
         </view>
         <view class="free-play-img">
-          <image class="" src="../../static/home/12.png" mode="widthFix" lazy-load="false" binderror="" bindload="" />
+          <image class="" src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01FXtjZy24Ndcpz28by_!!2200676927379.png" mode="widthFix" lazy-load="false" binderror="" bindload="" />
         </view>
       </view> -->
     </view>
@@ -108,7 +110,8 @@
       </scroll-view>
 
       <view class="yaoqing-wrap">
-        <view class="yaoqing-desc">车位<text>{{ roomInfo.isAddNum?roomInfo.isAddNum:0 }}</text>/{{ roomInfo.num?roomInfo.num:0 }}人</view>
+        <view class="yaoqing-desc">车位<text>{{ roomInfo.isAddNum ? roomInfo.isAddNum : 0 }}</text>/{{
+          roomInfo.num ? roomInfo.num : 0 }}人</view>
         <view class="yaoqing-list">
           <view class="yaoqing-item" v-for="(item, index) in roomInfo.players">
             <view class="yaoqing-img">
@@ -137,8 +140,9 @@
         <template v-if="roomStatus == 1">
           <template v-if="!existingOrder">
             <view class="shangche-box-img" @click="openBox">
-              <image class="" src="../../static/home/win.png" mode="widthFix" lazy-load="false" binderror=""
-                bindload="" />
+              <image class=""
+                src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01t8EASH24NdcpT3eR5_!!2200676927379.png"
+                mode="widthFix" lazy-load="false" binderror="" bindload="" />
             </view>
             <view class="shangche-box-text">恭喜获得拳王宝箱</view>
           </template>
@@ -147,8 +151,9 @@
         <template v-if="roomStatus == 2">
           <template v-if="!existingOrder">
             <view class="shangche-box-img" @click="openBox">
-              <image class="" src="../../static/home/loser.png" mode="widthFix" lazy-load="false" binderror=""
-                bindload="" />
+              <image class=""
+                src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01YboTPQ24NdciHvCTW_!!2200676927379.png"
+                mode="widthFix" lazy-load="false" binderror="" bindload="" />
             </view>
             <view class="shangche-box-text">恭喜获得拳手宝箱</view>
           </template>
@@ -164,7 +169,7 @@
         <view class="order-title">加入车队</view>
         <view class="order-pay">
           <view class="order-type">
-          余额抵扣
+            余额抵扣
           </view>
           <view class="order-price">
             -￥{{ room_price }}<text style="margin-left:5px">(余额:{{ money }})</text>
@@ -182,8 +187,9 @@
         <template v-if="roomInfo.is_full == 1">
           <view class="zs-item">
             <view class="zs-info">
-              <image class="zs-img" src="../../static/home/win.png" mode="widthFix" lazy-load="false" binderror=""
-                bindload="" />
+              <image class="zs-img"
+                src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01t8EASH24NdcpT3eR5_!!2200676927379.png"
+                mode="widthFix" lazy-load="false" binderror="" bindload="" />
               <view>拳王得主</view>
             </view>
             <view class="prize-info">
@@ -197,16 +203,18 @@
                 拳王宝箱
               </view>
               <view class="award-log-right" @click="lookAward(0)">
-                <image class="prize-img" src="../../static/home/win.png" mode="widthFix" lazy-load="false" binderror=""
-                  bindload="" />
+                <image class="prize-img"
+                  src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01t8EASH24NdcpT3eR5_!!2200676927379.png"
+                  mode="widthFix" lazy-load="false" binderror="" bindload="" />
               </view>
             </view>
           </view>
 
           <view class="zs-item" v-for="(item, index) in loserList">
             <view class="zs-info">
-              <image class="zs-img" src="../../static/home/loser.png" mode="widthFix" lazy-load="false" binderror=""
-                bindload="" />
+              <image class="zs-img"
+                src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01YboTPQ24NdciHvCTW_!!2200676927379.png"
+                mode="widthFix" lazy-load="false" binderror="" bindload="" />
               <view>普通宝箱得主</view>
             </view>
             <view class="prize-info">
@@ -221,8 +229,9 @@
                 普通宝箱
               </view>
               <view class="award-log-right" @click="lookAward(1)">
-                <image class="prize-img" src="../../static/home/loser.png" mode="widthFix" lazy-load="false" binderror=""
-                  bindload="" />
+                <image class="prize-img"
+                  src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01YboTPQ24NdciHvCTW_!!2200676927379.png"
+                  mode="widthFix" lazy-load="false" binderror="" bindload="" />
               </view>
             </view>
           </view>
@@ -332,11 +341,11 @@ export default {
       ],
       boxList: [
         {
-          icon: '../../static/home/win.png',
+          icon: 'https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01t8EASH24NdcpT3eR5_!!2200676927379.png',
           name: '车神宝箱'
         },
         {
-          icon: '../../static/home/loser.png',
+          icon: 'https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01YboTPQ24NdciHvCTW_!!2200676927379.png',
           name: '普通宝箱'
         },
       ],
@@ -450,14 +459,14 @@ export default {
           if (res.code == 200) {
             this.boxAwardList = res.data.map(item => {
               if (item.mark_id == 33) {
-                item.image = '../../static/home/grade1.png'
+                item.image = 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01wmdjUN24NdcqIPVsW_!!2200676927379.png'
               } else if (item.mark_id == 34) {
-                item.image = '../../static/home/grade2.png'
+                item.image = 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01tfLPbl24NdcpT2yp2_!!2200676927379.png'
               }
               else if (item.mark_id == 35) {
-                item.image = '../../static/home/grade3.png'
+                item.image = 'https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01JWsQ7M24NdcoKUk8K_!!2200676927379.png'
               } else if (item.mark_id == 36) {
-                item.image = '../../static/home/grade4.png'
+                item.image = 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01cgJHsL24NdcoKTXJP_!!2200676927379.png'
               }
               return item
             })
@@ -616,14 +625,14 @@ export default {
               this.boxInfo = res.data.box
               this.awardList = res.data.awardList.map(item => {
                 if (item.mark_id == 33) {
-                  item.image = '../../static/home/grade1.png'
+                  item.image = 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01wmdjUN24NdcqIPVsW_!!2200676927379.png'
                 } else if (item.mark_id == 34) {
-                  item.image = '../../static/home/grade2.png'
+                  item.image = 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01tfLPbl24NdcpT2yp2_!!2200676927379.png'
                 }
                 else if (item.mark_id == 35) {
-                  item.image = '../../static/home/grade3.png'
+                  item.image = 'https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01JWsQ7M24NdcoKUk8K_!!2200676927379.png'
                 } else if (item.mark_id == 36) {
-                  item.image = '../../static/home/grade4.png'
+                  item.image = 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01cgJHsL24NdcoKTXJP_!!2200676927379.png'
                 }
                 return item
               })
@@ -709,7 +718,7 @@ export default {
   .banner {
     margin-top: 100rpx;
     height: 17.71875rem;
-    background: url(https://oyfiles.oss-cn-shanghai.aliyuncs.com/ouya-v2/blindBox/headerBg2.png) no-repeat 50% 0%/50rem auto;
+    background: url(https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01PYl5yI24Ndcpz1460_!!2200676927379.png) no-repeat 50% 0%/50rem auto;
 
     position: relative;
 
@@ -1522,5 +1531,4 @@ export default {
   }
 
   .rule-content {}
-}
-</style>
+}</style>

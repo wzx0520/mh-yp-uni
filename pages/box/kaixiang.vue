@@ -1,37 +1,42 @@
 <template>
   <view class="kaixiang">
     <view class="nav">
-      <uni-nav-bar color="#fff" leftIcon="left" backgroundColor="transparent" :border="false" :statusBar="true"
+      <uni-nav-bar color="#000" leftIcon="left" backgroundColor="transparent" :border="false" :statusBar="true"
         :fixed="true" title="无限赏">
         <view slot="left" class="nav-left" @click="back">
-          <image class="" src="../../static/home/arrow.png" mode="widthFix" lazy-load="false" binderror="" bindload="" />
+          <u-icon name="arrow-left" color="#333" size="40"></u-icon>
         </view>
       </uni-nav-bar>
     </view>
-    <!-- <view class="lunbo">
-      <view class="lunboitem">
-        <image class="pic" :src="boxInfo.thumb" mode="widthFix" lazy-load="false" binderror="" bindload="" />
-      </view>
-    </view> -->
 
-    <view class="banner">
-      <swiper class="swiper" easing-function="linear" circular :current="currentBanner" :indicator-dots="false"
-        :autoplay="false" :interval="100" :duration="1000" @change="handleSwiperChange">
-        <swiper-item v-for="(item, index) in awardList" :key="item.id">
-          <view class="swiper-item">
-            <image class="gd-img" :src="item.thumb" mode="widthFix" lazy-load="false" binderror="" bindload="" />
-            <cimage class="gif" src="/static/gif/shan_dian.gif" mode="scaleToFill" />
+    <view class="card-top-wrap">
+      <view class="card-top-item">
+        <view class="card-top-left">
+          <image class="card-top-left-img" :src="cardThumb" mode="aspectFit" lazy-load="false" binderror="" bindload="" />
+          <view class="card-num">
+            <!-- 第{{ currentIndex + 1 }}/{{ boxInfo.set_count }}箱 -->
+            <!-- 第{{ currentIndex + 1 }}/1箱 -->
           </view>
-        </swiper-item>
-      </swiper>
-      <!-- <view class="free-play" @click="tryPlay">
-        <view class="free-play-bg">
-          <image class="" src="../../static/home/11.png" mode="widthFix" lazy-load="false" binderror="" bindload="" />
         </view>
-        <view class="free-play-img">
-          <image class="" src="../../static/home/12.png" mode="widthFix" lazy-load="false" binderror="" bindload="" />
+        <view class="card-top-right">
+          <view class="card-title">
+            {{ boxInfo.title }}
+          </view>
+          <view class="card-price">
+            <text>￥</text> <text class="price">{{ boxInfo.price }}/抽</text>
+          </view>
+          <!-- <view class="card-btn">
+            <image class="card-btn-img"
+              src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01Wtg27c24NdcZ9jUng_!!2200676927379.png"
+              mode="widthFix" lazy-load="false" binderror="" bindload="" @click="prev" />
+            <view class="card-btn-text" @click="changeNum">换箱</view>
+            <image class="card-btn-img"
+              src="https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01Ho6HBV24NdcZCytvN_!!2200676927379.png"
+              mode="widthFix" lazy-load="false" binderror="" bindload="" @click="next" />
+          </view> -->
         </view>
-      </view> -->
+      </view>
+      <view class="card-count">累计已抽:<text class="count-num">{{ boxInfo.sales }}</text></view>
     </view>
 
     <view class="rule-btn-wrap">
@@ -45,65 +50,174 @@
           src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01WJw25c24NdcXfR5bK_!!2200676927379.png"
           mode="widthFix" lazy-load="false" binderror="" bindload="" />
       </view>
-    </view>
-
-    <!-- <view class="setAnimate">
-      <view class="btn" :style="{ 'background-image': 'url(' + `${imgBaseUrl}/static/web/06.png` + ')' }"
-        @click="setAnimate">设置
+      <view class="rule-btn-item" @click="tobag">
+        <image class="rule-btn-item-img"
+          src="https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01YjcRcT24NddntRZ8e_!!2200676927379.png"
+          mode="widthFix" lazy-load="false" binderror="" bindload="" />
       </view>
-    </view> -->
-
-    <swiper class="swiper swiper2" easing-function="linear" circular :current="currentBanner" :indicator-dots="false"
-      :autoplay="false" :interval="100" :duration="1000" @change="handleSwiperChange">
-      <swiper-item v-for="(item, index) in awardList" :key="item.id">
-        <view class="swiper-item">
-          <view class="gd-info">
-            <view class="gd-title">{{ item.title }}</view>
-            <view class="gd-price">开盒价 <text>￥{{ boxInfo.price }}</text></view>
-          </view>
-        </view>
-      </swiper-item>
-    </swiper>
+    </view>
 
     <view class="gd-desc">抽赏存在概率性, 请谨慎购买 <text @click="goRule">发货须知</text></view>
 
-    <view class="shop-list">
-      <view class="shop-list-rate">
-        <view class="list" v-for="(item, index) in markList" :key="index">
-          <image class="" :src="item.icon" mode="widthFix" lazy-load="false" binderror="" bindload="" />
-          <view class="list-text" :class="['ratebg' + index]">
-            {{ item.rate }}%
-          </view>
-        </view>
-        <view class="recode-btn" @click="zs">中赏记录</view>
+    <view class="queue-status-wrapper">
+      <!-- 无人排队 -->
+      <view v-if="queueInfo.status == 0" class="no-queue-box">
+        <text class="no-queue-text">当前无人排队，快来抢购！</text>
       </view>
 
-      <view class="mh-goods-list">
-        <view class="mh-goods-list-item" :style="{ backgroundImage: `url(${item.mark_bg})` }"
-          v-for="(item, index) in awardList" :key="index" @click="openDetailPop(item)">
-          <image class="mh-goods-rate" :src="item.mark_icon" mode="widthFix" lazy-load="false" binderror="" bindload="" />
+      <!-- 轮到我 -->
+      <view v-else-if="queueInfo.status == 1" class="my-turn-box">
+        排到你了，拥有专属时间 <text class="highlight">{{ remainingTime }}</text>s，
+        后面有 <text class="highlight">{{ queueInfo.behind }}</text> 人在排队
+      </view>
 
-          <image class="mh-goods-img" :src="item.thumb" mode="widthFix" lazy-load="false" binderror="" bindload="" />
-          <view class="mh-title">{{ item.title }}</view>
-          <view class="mh-num">{{ item.remaining_quantity }}/{{ item.initial_quantity }}</view>
-
-          <view class="mh-sale">￥{{ item.price }}</view>
-
+      <!-- 等待他人 -->
+      <view v-else-if="queueInfo.status == 2 || queueInfo.status == 3" class="waiting-box">
+        <view class="user-row">
+          <view class="waiting-text">
+            前面还有 <text class="highlight">{{ queueInfo.ahead }}</text> 人，当前排到用户：
+          </view>
+          <view class="user-info-wrap">
+            <image :src="queueInfo.avatar" class="avatar" mode="aspectFill" />
+            <view class="user-info-right">
+              <view class="nickname">{{ queueInfo.nickname || '微信用户' }}</view>
+              <view class="time-info">
+                <text class="highlight">{{ remainingTime }}</text>s
+              </view>
+            </view>
+          </view>
         </view>
       </view>
     </view>
 
-    <view class="luckbox">
-      <view class="option ">
-        <view class="row">
-          <view class="chou" v-for="(item, index) in boxBtnList" :key="index" @click="changeBuyType(item.num)">
-            <view class="chou-wrap">
-              <view class="chou-title">
-                <!-- {{ item.title }} -->
-                <image class="chou-img" :src="item.img" mode="widthFix" lazy-load="false" binderror="" bindload="" />
+    <view class="shop-list">
+      <view class="open-nav">
+        <view class="open-nav-item" :class="[currentCate == index ? 'open-active-nav' : '']"
+          v-for="(item, index) in navList" :key="index" @click="changeCurrentCate(index)">
+          {{ item.name }}
+        </view>
+      </view>
+      <template v-if="currentCate == 0">
+        <template v-if="awardList.length">
+          <view class="mh-goods-list">
+            <view class="mh-goods-list-item" :style="{ backgroundImage: `url(${item.image})` }"
+              v-for="(item, index) in awardList" :key="index" @click="openDetailPop(item)">
+
+              <view class="mh-goods-rate-wrap">
+                <image class="mh-goods-rate-img"
+                  src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01aSrqRl24NdcW9CkVj_!!2200676927379.png"
+                  mode="widthFix" lazy-load="false" binderror="" bindload="" />
+                <view class="mh-goods-rate-text">
+                  <template v-if="item.award_type == 2">
+                    宝箱
+                  </template>
+                  <template v-else>
+                    {{ item.mark_title }}
+                  </template>
+                </view>
               </view>
+
+              <view class="mh-goods-img ">
+                <!-- 图片自适应比例显示 如 "16:9"、"4:3"、"1:1" 等 -->
+                <xc-image :src="item.thumb" :showBg="true" ratio="1:1" borderRadius="10" />
+                <view class="empty-quantity" v-if="item.remaining_quantity == 0">
+                  已售罄
+                </view>
+              </view>
+
+              <view class="mh-title">{{ item.title }}</view>
+
+              <view class="mh-rate"
+                v-if="item.mark_id == 1 || item.mark_id == 2 || item.mark_id == 3 || item.mark_id == 4 || item.mark_id == 5">
+                只赠不售
+              </view>
+              <view class="mh-rate" v-else>概率: {{ item.show_rate }}%</view>
+
+              <!-- <view class="mh-sale">{{ item.remaining_quantity }}/{{ item.initial_quantity }}</view> -->
+              <view class="mh-sale">￥{{ item.price }}</view>
             </view>
           </view>
+        </template>
+        <template v-else>
+          <view class="empty-list">
+            <u-empty text="暂无赏品数据~" mode="list"></u-empty>
+          </view>
+        </template>
+      </template>
+      <template v-else>
+        <template v-if="boxLogList.length">
+          <!-- 中赏记录排序控件 -->
+          <view class="sort-controls">
+            <view class="sort-btn" @click="changeSort('time')">
+              <text>按时间排序</text>
+              <!-- 显示当前排序状态图标 -->
+              <text class="sort-icon" v-if="sortType === 'created_at'">
+                {{ sortOrder === 'asc' ? '↑' : '↓' }}
+              </text>
+            </view>
+            <view class="sort-btn" @click="changeSort('value')">
+              <text>按物品价值排序</text>
+              <text class="sort-icon" v-if="sortType === 'return_price'">
+                {{ sortOrder === 'asc' ? '↑' : '↓' }}
+              </text>
+            </view>
+          </view>
+          <mescroll-body ref="mescrollRef" height="400" @init="mescrollInit" @down="downCallback" @up="getList"
+            :down="downOption" :up="upOption">
+            <view class="award-wrap">
+              <view class="award-log-item" v-for="(item, index) in boxLogList" :key="index">
+                <view class="award-log-left">
+                  <view class="award-log-time">
+                    {{ item.created_at }}
+                  </view>
+                  <view class="award-log-info">
+                    {{ item.nickName }} 获得 <text class="award-name">{{ item.title }}</text>
+                  </view>
+                </view>
+                <view class="award-log-right">
+                  <image class="award-log-img" :src="item.thumb" mode="widthFix" lazy-load="false" binderror=""
+                    bindload="" />
+                </view>
+              </view>
+            </view>
+          </mescroll-body>
+        </template>
+        <template v-else>
+          <view class="empty-list">
+            <u-empty text="暂无中赏记录~" mode="list"></u-empty>
+          </view>
+        </template>
+      </template>
+    </view>
+
+    <view class="chou-btn-wrap">
+      <!-- 状态 1：轮到我，展示购买按钮组 -->
+      <view v-if="queueInfo.status === 1" class="chou-first-wrap">
+        <view class="chou-btn-item chou-first-item" @click="changeBuyType(1)">
+          冲一发
+        </view>
+        <view class="chou-btn-item chou-first-item" @click="changeBuyType(5)">
+          冲五发
+        </view>
+        <view class="chou-btn-item chou-first-item" @click="changeBuyType(10)">
+          冲十发
+        </view>
+        <!-- <view class="chou-btn-item chou-second-item" @click="changeBuyType(-1)">
+          全收
+        </view> -->
+      </view>
+
+      <!-- 状态 0：未加入队列，展示立即排队按钮 -->
+      <view v-else-if="queueInfo.status === 0 || queueInfo.status == 3" class="queue-action-wrap">
+        <view class="chou-action-item" @click="joinQueue">
+          立即排队
+        </view>
+      </view>
+
+      <!-- 状态 2：等待他人，展示取消排队按钮 -->
+      <view v-else-if="queueInfo.status === 2" class="queue-action-wrap">
+        <view class="chou-action-item" @click="cancelQueue">
+          取消排队
         </view>
       </view>
     </view>
@@ -115,26 +229,12 @@
           确认订单
 
           <view @click="closeOrderPop" class="close icon">
-            <image src="../../static/home/close2.png" mode="scaleToFill" />
+            <image src="https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01peY2tu24Ndcpz3gHV_!!2200676927379.png"
+              mode="scaleToFill" />
           </view>
         </view>
 
         <view class="order-pop-bd">
-          <!-- 开盒数量 -->
-          <!-- <view class="row">
-            <view class="title">开盒数量</view>
-
-            <view class="right"></view>
-          </view> -->
-
-          <!-- <view class="btn-list">
-            <view @click="changeBuyType(i)" v-for="(item, i) in btnList" :key="i" class="btn-list-item" :class="{
-              act: btnCur == i
-            }">
-              {{ item.title }}
-            </view>
-          </view> -->
-
           <view class="row">
             <view class="title">订单金额</view>
 
@@ -147,7 +247,7 @@
           </view>
 
           <view class="row">
-            <view class="title">余额抵扣</view>
+            <view class="title">抵扣金额</view>
 
             <view class="right">
               <view class="price red">
@@ -229,7 +329,7 @@
     </uni-popup>
 
     <!-- 联系客服 -->
-    <u-popup v-model="kefushow" mode="center" border-radius="16">
+    <u-popup v-model="kefushow" mode="center" border-radius="20">
       <view class="bgbox">
         <view class="off" @click="kefushow = false">
           <uni-icons type="close" color="#fff" size="25" />
@@ -265,20 +365,29 @@
     </uni-popup>
 
     <!-- 商品详情 -->
-    <uni-popup ref="detailPop" type="bottom">
+    <u-popup v-model="detailPop" mode="center" width="90%" border-radius="20">
       <view class="detail-pop">
         <view class="detail-pop-hd">
-          商品详情
+          赏品详情
           <view @click="closeDetailPop" class="icon close">
             <cimage src="/static/icon/close2.png" mode="scaleToFill" />
           </view>
         </view>
-
         <scroll-view class="detail-pop-bd" scroll-y>
           <view class="detail-pic" v-if="curDetail.thumb">
-            <cimage :src="curDetail.thumb" mode="scaleToFill" />
+            <!-- <cimage :src="curDetail.thumb" mode="scaleToFill" /> -->
+            <image class="" :src="curDetail.thumb" mode="aspectFit" lazy-load="false" binderror="" bindload="" />
           </view>
-
+          <view class="detail-title">
+            <view class="detail-title-content hang2">
+              <text :style="{
+                background: curDetail.mark_color
+              }">
+                {{ curDetail.mark_title }}
+              </text>
+              {{ curDetail.title }}
+            </view>
+          </view>
           <view class="detail-price">
             <view class="price">
               ¥
@@ -288,36 +397,19 @@
                 <text>参考价</text>
               </text>
             </view>
-
-            <!-- <view class="rate">概率{{ curDetail.show_rate }}%</view> -->
-          </view>
-
-          <view class="detail-title">
-            <view class="detail-title-content hang2">
-              <text :style="{
-                background: curDetail.mark_color
-              }">
-                {{ curDetail.mark_title }}
-              </text>
-
-              {{ curDetail.title }}
-            </view>
+            <view class="rate">概率{{ curDetail.show_rate }}%</view>
           </view>
 
           <u-gap height="20"></u-gap>
-
           <view class="zheng-tag">
             <cimage src="/static/img/zheng_pin1.png" mode="scaleToFill" />
           </view>
-
           <u-gap height="20"></u-gap>
-
-          <view class="content-title">商品详情</view>
-
+          <view class="content-title">赏品详情</view>
           <view v-html="curDetail.editor" class="content"></view>
         </scroll-view>
       </view>
-    </uni-popup>
+    </u-popup>
 
     <!-- 中赏记录 -->
     <u-popup v-model="zsPop" mode="bottom" border-radius="16" height="70%">
@@ -448,6 +540,75 @@
         </scroll-view>
       </view>
     </u-popup>
+
+    <!-- 中奖赏品 -->
+    <u-popup v-model="awardShow" mode="center" border-radius="20" width="90%">
+      <view class="box-content box-award-content">
+        <view class="box-popup-title">中奖赏品</view>
+        <view class="box-popup-desc">恭喜你获得获得以下赏品</view>
+        <template v-if="prizeResult && prizeResult.length">
+          <view class="award-grid">
+            <view class="award-card" v-for="(award, index) in prizeResult" :key="index">
+              <view class="award-img-container">
+                <xc-image :src="award.thumb" :showBg="true" ratio="1:1" borderRadius="10" />
+                <view class="award-tag">
+                  {{ award.mark_title }}
+                </view>
+                <view class="award-probability">x{{ award.total }}</view>
+              </view>
+              <view class="award-info">
+                <view class="award-name">{{ award.title }}</view>
+              </view>
+            </view>
+          </view>
+        </template>
+        <template v-else>
+          <view class="empty">
+            <u-empty text="暂无数据" mode="list"></u-empty>
+          </view>
+        </template>
+        <view class="close-btn-wrap">
+          <button class="box-popup-close-btn" @click="tobag">去背包</button>
+        </view>
+      </view>
+    </u-popup>
+
+    <!-- 宝箱物品 -->
+    <!-- <u-popup v-model="isBoxPopupShow" mode="center" border-radius="20" width="90%">
+      <view class="box-content">
+        <view class="box-popup-title">宝箱物品</view>
+        <view class="box-popup-desc">打开后随机获得一个赏品</view>
+        <template v-if="curDetail && curDetail.box_awards.length">
+          <view class="award-grid">
+
+            <view class="award-card" v-for="(award, index) in curDetail.box_awards" :key="index">
+              <view class="award-img-container">
+                <image :src="award.thumb" class="award-img" mode="aspectFill"></image>
+                <view class="award-tag">{{ award.mark_title || 'A' }}</view>
+                <view class="award-probability">{{ award.real_rate }}%</view>
+              </view>
+              <view class="award-info">
+                <view class="award-name">{{ award.title }}</view>
+                <view class="award-ref-price">参考价{{ award.price }}</view>
+              </view>
+            </view>
+          </view>
+        </template>
+        <template v-else>
+          <view class="empty">
+            <u-empty text="暂无数据" mode="list"></u-empty>
+          </view>
+        </template>
+        <view class="close-btn-wrap">
+          <button class="box-popup-close-btn" @click="isBoxPopupShow = false">关闭</button>
+        </view>
+      </view>
+    </u-popup> -->
+    <u-modal v-model="switchQueueShow" content="您已在其他队列中，是否切换到当前队列" show-cancel-button cancel-text="取消"
+      confirm-text="确认切换" @confirm="switchQueue"></u-modal>
+
+    <u-modal v-model="levelQueueShow" content="退出页面, 则视为主动放弃当前拥有的专属抽盒时间，是否继续退出" show-cancel-button cancel-text="取消"
+      confirm-text="退出" @confirm="levelPage"></u-modal>
   </view>
 </template>
 
@@ -461,7 +622,6 @@ import {
   mapGetters
 } from 'vuex'
 export default {
-  name: 'kaixiang',
   components: {
 
   },
@@ -476,17 +636,17 @@ export default {
         {
           num: 1,
           title: '一发入魂',
-          img: '../../static/home/1_2.png'
+          img: 'https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01uDibP824NdcoDFYlf_!!2200676927379.png'
         },
         {
           num: 3,
           title: '霸气三连',
-          img: '../../static/home/3_2.png'
+          img: 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN015KXyAD24NdcotafBb_!!2200676927379.png'
         },
         {
           num: 5,
           title: '五连绝世',
-          img: '../../static/home/5_2.png'
+          img: 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01Jd8j3U24Ndcpz2k2H_!!2200676927379.png'
         },
       ],
       markIconList: [
@@ -500,7 +660,7 @@ export default {
       boxInfo: {},
       // 赏等级列表
       markList: [],
-      // 奖品
+      // 当前展示的奖品列表（默认是第一套的奖品）
       awardList: [],
       orderData: '',
       // 购买方案
@@ -511,7 +671,7 @@ export default {
         // #ifdef H5 || MP
         {
           id: 3,
-          icon: '../../static/mine/wechat.png',
+          icon: 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01mfiDjv24NdXdrF5yS_!!2200676927379.png',
           title: '微信支付'
         },
         // {
@@ -523,7 +683,7 @@ export default {
         // {
         //   id: 2,
         //   icon: '',
-        //   title: '余额支付'
+        //   title: '星币支付'
         // }
       ],
       agree: true,
@@ -546,15 +706,56 @@ export default {
         page: {
           size: 20 // 每页数据的数量,默认10
         },
-        textNoMore: '-- END --'
+        textNoMore: '-- END --',
+        empty: { //无数据的占位图
+          use: true,
+          tip: '暂无数据',
+          btnText: '',
+          fixed: true,
+          top: "190rpx",
+          zIndex: 99,
+        }
       },
       couponList: [],
       couponPop: false,
       couponShow: false,
       coupon_info: {},
-      animateSet: uni.getStorageSync('animateSet') ? uni.getStorageSync('animateSet') : false,
+      // animateSet: uni.getStorageSync('animateSet') ? uni.getStorageSync('animateSet') : false,
+      animateSet: true,
       setShow: false,
+      currentIndex: 0,
+      navList: [
+        {
+          name: '赏品预览'
+        },
+        {
+          name: '中赏记录'
+        }
+      ],
+      currentCate: 0,
+      detailPop: false,
       rulePop: false,
+      isBoxPopupShow: false,
+      queueInfo: {
+        status: 0,
+        ahead: 0,
+        behind: 0,
+        avatar: 'https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01vWIdXu24Ndcpz2oG8_!!2200676927379.png',
+        remainingTime: 0,       // 队首用户的剩余时间，不是当前用户的。
+      },
+      queueTimer: null,      // 队列定时器
+      isMyTurn: false,       // 是否轮到我
+      pollTimer: null,       // 轮询定时器
+      timer: null,
+      remainingTime: 0,   // 队首用户的剩余时间，不是当前用户的。
+      // 中赏物品
+      awardShow: false,
+      prizeResult: [],
+      switchQueueShow: false,
+      levelQueueShow: false,
+      // 排序
+      sortType: 'created_at', // 排序字段：created_at（时间）、price（价值）
+      sortOrder: 'desc', // 排序方向：desc（降序）、asc（升序）
     }
   },
   onLoad (options) {
@@ -581,6 +782,7 @@ export default {
       this.checkPayStatus()
     }
     // #endif
+    this.getData()
   },
   onShow () {
     this.$store.dispatch('getUserInfo').then(res => {
@@ -598,9 +800,23 @@ export default {
     })
     // 清空优惠券信息
     this.coupon_info = {}
-    this.getData()
   },
   watch: {
+    'queueInfo.remainingTime' (val) {
+      this.remainingTime = val;
+      if (this.timer) clearInterval(this.timer);
+
+      if (val > 0) {
+        this.timer = setInterval(() => {
+          if (this.remainingTime > 0) {
+            this.remainingTime--;
+          } else {
+            clearInterval(this.timer);
+            this.getQueueStatus();
+          }
+        }, 1000);
+      }
+    }
   },
   onUnload () {
     console.log('移除事件')
@@ -611,11 +827,125 @@ export default {
     this.cancelOrderPay()
     this.cancelCheckPayStatus()
     bgMusic.pause()
+    if (this.queueTimer) clearInterval(this.queueTimer);
+    if (this.pollTimer) clearInterval(this.pollTimer);
+    if (this.timer) clearInterval(this.timer);
   },
   computed: {
     ...mapGetters(['sysConfig', 'userInfo']),
+    cardThumb () {
+      let img
+      // if (this.currentIndex == 0) {
+      //   img = this.boxInfo.thumb
+      // } else {
+      //   console.log('888', this.currentIndex)
+      //   img = this.awardList[this.currentIndex].thumb
+      // }
+      img = this.boxInfo.thumb
+      return img
+    }
   },
   methods: {
+    // 切换排序方式
+    changeSort (type) {
+      // type: 'time' 时间排序, 'value' 价值排序
+      if (type === 'time') {
+        if (this.sortType === 'created_at') {
+          // 同一字段，切换排序方向
+          this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+        } else {
+          // 切换到时间排序，默认降序（最新在前）
+          this.sortType = 'created_at';
+          this.sortOrder = 'desc';
+        }
+      } else if (type === 'value') {
+        if (this.sortType === 'return_price') {
+          // 同一字段，切换排序方向
+          this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+        } else {
+          // 切换到价值排序，默认降序（价值高在前）
+          this.sortType = 'return_price';
+          this.sortOrder = 'desc';
+        }
+      }
+
+      // 重新获取第一页数据
+      if (this.$refs.mescrollRef) {
+        this.getList({ num: 1, size: this.pageSize });
+      }
+    },
+
+    // 下拉刷新回调
+    downCallback () {
+      // 刷新时使用当前排序参数重新加载第一页
+      this.getList({ num: 1, size: this.pageSize });
+      this.mescroll.endDownScroll(); // 结束下拉刷新
+    },
+    getList ({
+      num,
+      size
+    }) {
+      this.req({
+        url: '/v1/box/boxLogList',
+        data: {
+          id: this.optionsData.id,
+          mark_id: this.btnLists.length ? this.btnLists[this.currentItems].id : 0,
+          setNo: this.currentIndex + 1,
+          page: num,
+          per_page: size,
+          sort_by: this.sortType, // 新增：排序字段
+          sort_order: this.sortOrder // 新增：排序方向
+        },
+        Loading: true,
+        success: res => {
+          if (res.code == 200) {
+            if (num == 1) {
+              this.boxLogList = []
+            }
+            if (res.data.data.length) {
+              this.boxLogList = [...this.boxLogList, ...res.data.data]
+              this.mescroll.endBySize(res.data.data.length, res.data.total)
+            }
+          } else {
+            this.mescroll.endBySize(0, 0)
+          }
+        }
+      })
+    },
+    prev () {
+      this.$nextTick(() => {
+        if (switchMusic) {
+          switchMusic.play()
+        }
+      })
+      this.currentIndex--
+      if (this.currentIndex < 0) {
+        this.currentIndex = this.boxInfo.set_count - 1
+      }
+      this.getData()
+    },
+    next () {
+      this.$nextTick(() => {
+        if (switchMusic) {
+          switchMusic.play()
+        }
+      })
+      this.currentIndex++
+      if (this.currentIndex >= this.boxInfo.set_count) {
+        this.currentIndex = 0
+      }
+      this.getData()
+    },
+    changeNum () {
+      this.$nextTick(() => {
+        if (switchMusic) {
+          switchMusic.play()
+        }
+      })
+      let num = this.boxInfo.set_count
+      this.currentIndex = Math.floor(Math.random() * num)
+      this.getData()
+    },
     setAnimate () {
       this.$nextTick(() => {
         if (switchMusic) {
@@ -687,6 +1017,7 @@ export default {
       this.zsPop = true
       this.getTab()
     },
+
     getBoxLogList ({
       num,
       size
@@ -706,15 +1037,15 @@ export default {
               this.boxLogList = []
             }
             let newArr = res.data.data.map(item => {
-              if (item.mark_id == 33) {
-                item.image = '../../static/home/200.png'
-              } else if (item.mark_id == 34) {
-                item.image = '../../static/home/300.png'
+              if (item.mark_id == 1) {
+                item.image = 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01khNh7d24NdcoDC0Ny_!!2200676927379.png'
+              } else if (item.mark_id == 2) {
+                item.image = 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01KaZ6qs24Ndco6VAfA_!!2200676927379.png'
               }
-              else if (item.mark_id == 35) {
-                item.image = '../../static/home/400.png'
-              } else if (item.mark_id == 36) {
-                item.image = '../../static/home/100.png'
+              else if (item.mark_id == 3) {
+                item.image = 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01GpZzz024NdcoDFpOW_!!2200676927379.png'
+              } else if (item.mark_id == 4) {
+                item.image = 'https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01PZkzwd24NdcoKRnBt_!!2200676927379.png'
               }
               return item
             })
@@ -730,9 +1061,7 @@ export default {
       return new Promise((resolve, reject) => {
         this.req({
           url: '/v1/box/mark',
-          data: {
-            type: 2
-          },
+          data: {},
           Loading: true,
           success: res => {
             if (res.code == 200) {
@@ -782,16 +1111,19 @@ export default {
             switch (res.code) {
               case 200:
                 _this.cancelCheckPayStatus()
-
+                if (this.isMyTurn) {
+                  this.resetTimer() // 付款后重置倒计时
+                }
                 this.$common.toast({
                   title: '支付成功', icon: 'success', duration: 1500, success: () => {
-                    this.$common.to({
-                      type: 1, url: '/pages/index/draw', query: {
-                        id: res.data.id,
-                        order_sn: order_info.order_sn,
-                        drawNum: res.data.box_num
-                      }
-                    })
+                    // this.$common.to({
+                    //   type: 1, url: '/pages/box/firstDraw', query: {
+                    //     id: res.data.id,
+                    //     order_sn: order_info.order_sn,
+                    //     drawNum: res.data.box_num
+                    //   }
+                    // })
+                    this.openBox(order_info.order_sn)
                   }
                 })
                 break;
@@ -850,15 +1182,40 @@ export default {
         this.req({
           url: '/v1/box/info',
           data: {
-            id: this.optionsData.id
+            id: this.optionsData.id,
+            set_no: this.currentIndex + 1
           },
           Loading: true,
           success: res => {
             if (res.code == 200) {
               this.boxInfo = res.data.box
-              this.awardList = res.data.awardList
+              // 一番赏：奖品数据按套分组
+              this.awardList = res.data.awardList.map(item => ({
+                ...item,
+                loaded: false
+              }));
+
+              // this.awardList = res.data.awardList.map(item => {
+              //   if (item.mark_id == 33) {
+              //     item.mark_title = 'A赏'
+              //     // item.image = 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01wmdjUN24NdcqIPVsW_!!2200676927379.png'
+              //   } else if (item.mark_id == 34) {
+              //     item.mark_title = 'B赏'
+              //     // item.image = 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01tfLPbl24NdcpT2yp2_!!2200676927379.png'
+              //   }
+              //   else if (item.mark_id == 35) {
+              //     item.mark_title = 'C赏'
+              //     // item.image = 'https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01JWsQ7M24NdcoKUk8K_!!2200676927379.png'
+              //   } else if (item.mark_id == 36) {
+              //     item.mark_title = 'D赏'
+              //     // item.image = 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01cgJHsL24NdcoKTXJP_!!2200676927379.png'
+              //   }
+              //   return item
+              // })
+
               this.markList = res.data.box ? res.data.box.markList : []
               this.getDraw()
+              this.getQueueStatus();
               resolve()
             }
           }
@@ -904,9 +1261,9 @@ export default {
         this.$refs.loginPopup.open('center')
         return
       }
-      // if (this.btnList?.length == 0) {
-      //   await this.getDraw()
-      // }
+      if (this.btnList?.length == 0) {
+        await this.getDraw()
+      }
 
       if (e == 1 && !this.agree) {
         this.$common.toast({
@@ -920,16 +1277,16 @@ export default {
         return
       }
 
-      console.log(this.btnCur)
-
       let data = {
         id: this.boxInfo.id,
         // draw_id: this.btnList[this.btnCur].id || '',
+        // draw_id: this.btnCur,
         draw_num: this.btnCur,
         invite_user_id: this.optionsData.userId || '',
         pay_type: this.payTypeList[this.payTypeCur].id,
         coupon_id: this.coupon_info?.id || '',
-        submit: e
+        submit: e,
+        set_no: this.currentIndex + 1
       }
 
       this.req({
@@ -956,17 +1313,31 @@ export default {
                       icon: 'success',
                       duration: 1500,
                       success: () => {
-                        this.$common.to({
-                          type: 1,
-                          url: '/pages/index/draw',
-                          query: {
-                            id: this.boxInfo.id,
-                            order_sn: res.data.order_sn,
-                            drawNum: this.orderData.box.num
-                          }
-                        })
+                        this.openBox(res.data.order_sn)
+                        // 表示全收
+                        // if (res.data.draw_num == -1) {
+                        //   uni.switchTab({
+                        //     url: '/pages/tabBar/bag',
+                        //   });
+                        // } else {
+                        //   this.$common.to({
+                        //     type: 1,
+                        //     url: '/pages/box/firstDraw',
+                        //     query: {
+                        //       id: this.boxInfo.id,
+                        //       order_sn: res.data.order_sn,
+                        //       drawNum: this.orderData.box.num,
+                        //       set_no: this.currentIndex + 1
+                        //     }
+                        //   })
+                        // }
+
+
                       }
                     })
+                    if (this.isMyTurn) {
+                      this.resetTimer() // 付款后重置倒计时
+                    }
                   }
                 })
               } else {
@@ -974,43 +1345,83 @@ export default {
                   title: '支付成功',
                   duration: 1500,
                   success: () => {
-                    this.$common.to({
-                      type: 1,
-                      url: '/pages/index/draw',
-                      query: {
-                        id: this.boxInfo.id,
-                        order_sn: res.data.order_sn,
-                        drawNum: this.orderData.box.num
-                      }
-                    })
+                    this.openBox(res.data.order_sn)
+                    // 表示全收
+                    // if (res.data.draw_num == -1) {
+                    //   uni.switchTab({
+                    //     url: '/pages/tabBar/bag',
+                    //   });
+                    // } else {
+                    //   this.$common.to({
+                    //     type: 1,
+                    //     url: '/pages/box/firstDraw',
+                    //     query: {
+                    //       id: this.boxInfo.id,
+                    //       order_sn: res.data.order_sn,
+                    //       drawNum: this.orderData.box.num,
+                    //       set_no: this.currentIndex + 1
+                    //     }
+                    //   })
+                    // }
                   }
                 })
+                if (this.isMyTurn) {
+                  this.resetTimer() // 付款后重置倒计时
+                }
               }
             }
+          } else {
+            this.$common.toast({
+              title: res.msg,
+              duration: 5000,
+              success: () => {
+
+              }
+            })
           }
         }
       })
     },
-    /**
-* @description: 打开订单弹窗
-* @return {*}
-*/
+    openBox (order_sn) {
+      let url = '/v1/box/order/mergeAward'
+      let data = {
+        order_sn: order_sn
+      }
+      this.req({
+        url,
+        data,
+        Loading: false,
+        success: res => {
+          if (res.code == 200) {
+            this.prizeResult = res.data.map(item => {
+              // if (item.mark_id == 33) {
+              //   item.mark_title = 'A赏'
+              // } else if (item.mark_id == 34) {
+              //   item.mark_title = 'B赏'
+              // }
+              // else if (item.mark_id == 35) {
+              //   item.mark_title = 'C赏'
+              // } else if (item.mark_id == 36) {
+              //   item.mark_title = 'D赏'
+              // }
+              return item
+            })
+
+            this.awardShow = true
+            this.getData()
+          }
+        }
+      })
+    },
     openOrderPop () {
       this.agree = true
 
       this.$refs.orderPop.open()
     },
-    /**
- * @description: 关闭订单弹窗
- * @return {*}
- */
     closeOrderPop () {
       this.$refs.orderPop.close()
     },
-    /**
-* @description: 试玩
-* @return {*}
-*/
+
     tryPlay () {
       this.$nextTick(() => {
         if (switchMusic) {
@@ -1018,7 +1429,7 @@ export default {
         }
       })
       this.$common.to({
-        url: '/pages/index/draw',
+        url: '/pages/box/firstDraw',
         query: {
           id: this.boxInfo.id,
           drawNum: 1,
@@ -1091,19 +1502,24 @@ export default {
       this.kefushow = true
     },
     openDetailPop (e) {
-      this.curDetail = ''
-      if (e.editor) {
-        e.editor = e.editor.replace(
-          /\<img/gi,
-          '<img style="width: 100%;vertical-align: middle;"'
-        )
+      if (e.award_type == 2) {
+        this.curDetail = e
+        this.isBoxPopupShow = true;
+      } else {
+        this.curDetail = ''
+        if (e.editor) {
+          e.editor = e.editor.replace(
+            /\<img/gi,
+            '<img style="width: 100%;vertical-align: middle;"'
+          )
+        }
+        this.curDetail = e
+        this.detailPop = true
       }
 
-      this.curDetail = e
-      this.$refs.detailPop.open()
     },
     closeDetailPop () {
-      this.$refs.detailPop.close()
+      this.detailPop = false
     },
     playMusic () {
       this.muteBgMusic = !this.muteBgMusic;
@@ -1121,17 +1537,11 @@ export default {
     noticeEnd (e) {
       console.log('123', e)
     },
-    back () {
-      this.$nextTick(() => {
-        if (switchMusic) {
-          switchMusic.play()
-        }
-      })
-
-      uni.switchTab({
-        url: '/pages/tabBar/home',
-
-      });
+    changeCurrentCate (index) {
+      this.currentCate = index
+      if (index == 1) {
+        this.getList({ num: 1, size: 20 })
+      }
     },
     fresh () {
       this.$nextTick(() => {
@@ -1146,6 +1556,17 @@ export default {
       })
       this.getData()
     },
+    tobag () {
+      this.$nextTick(() => {
+        if (switchMusic) {
+          switchMusic.play()
+        }
+      })
+
+      uni.switchTab({
+        url: '/pages/tabBar/bag',
+      });
+    },
     openRule () {
       this.$nextTick(() => {
         if (switchMusic) {
@@ -1154,17 +1575,206 @@ export default {
       })
       this.rulePop = true
     },
+    back () {
+      this.$nextTick(() => {
+        if (switchMusic) {
+          switchMusic.play()
+        }
+      })
+      this.req({
+        url: '/v1/box/getQueueStatus',
+        data: {
+          box_id: this.boxInfo.id,
+          set_count: this.currentIndex + 1
+        },
+        success: res => {
+          if (res.code === 200) {
+            this.queueInfo = res.data;
+            if (res.data.status === 1) {
+              this.levelQueueShow = true
+            } else {
+              uni.switchTab({
+                url: '/pages/tabBar/home',
+              });
+            }
+          }
+        }
+      });
+    },
+    // 离开页面
+    levelPage () {
+      this.req({
+        url: '/v1/box/leaveQueue',
+        data: {
+          box_id: this.boxInfo.id,
+          set_count: this.currentIndex + 1
+        },
+        success: res => {
+          this.isMyTurn = false;
+          this.queueInfo = { status: 0 };
+          this.getQueueStatus();
+          this.$store.dispatch('stopQueueCountdown')
+          uni.switchTab({
+            url: '/pages/tabBar/home',
+          });
+        }
+      });
+    },
+    // 加入队列
+    joinQueue () {
+      this.req({
+        url: '/v1/box/joinQueue',
+        data: {
+          box_id: this.boxInfo.id,
+          set_count: this.currentIndex + 1
+        },
+        Loading: true,
+        success: res => {
+          // 假设res.data.status: 1=轮到我, 2=等待他人
+          if (res.code == 200) {
+            this.queueInfo = res.data;
+            if (res.data.status === 1) {
+              this.isMyTurn = true;
+              this.startQueueTimer();
+            } else {
+              this.isMyTurn = false;
+              this.startPollQueueStatus();
+            }
+          } else if (res.code == 201) {
+            // 切换队列确认
+            this.switchQueueShow = true
+          } else {
+            this.$common.toast({ title: res.msg || '加入队列失败' });
+          }
+        }
+      });
+    },
+    // 切换队列
+    switchQueue () {
+      // 用户确认切换队列
+      this.req({
+        url: '/v1/box/switchQueue',
+        data: {
+          box_id: this.boxInfo.id,
+          set_count: this.currentIndex + 1
+        },
+        Loading: true,
+        success: switchRes => {
+          if (switchRes.code == 200) {
+            this.queueInfo = switchRes.data;
+            if (switchRes.data.status === 1) {
+              this.isMyTurn = true;
+              this.startQueueTimer();
+            } else {
+              this.isMyTurn = false;
+              this.startPollQueueStatus();
+            }
+            this.$common.toast({ title: '切换队列成功' });
+          } else {
+            this.$common.toast({ title: switchRes.msg || '切换队列失败' });
+          }
+        }
+      });
+    },
+    // 重置倒计时
+    resetTimer () {
+      this.req({
+        url: '/v1/box/resetTimer',
+        data: {
+          box_id: this.boxInfo.id,
+          set_count: this.currentIndex + 1
+        },
+        Loading: true,
+        success: res => {
+          if (res.code === 200) {
+            this.queueInfo = res.data;
+            if (res.data.status === 1) {
+              this.isMyTurn = true;
+              this.startQueueTimer();
+            } else {
+              this.isMyTurn = false;
+              this.startPollQueueStatus();
+            }
+          } else {
+            this.$common.toast({ title: res.msg || '重置倒计时失败' });
+          }
+        }
+      });
+    },
+    // 开始倒计时
+    startQueueTimer () {
+      if (this.queueTimer) clearInterval(this.queueTimer);
+      this.queueTimer = setInterval(() => {
+        if (this.queueInfo.remainingTime > 0) {
+          this.queueInfo.remainingTime--;
+        } else {
+          clearInterval(this.queueTimer);
+          this.leaveQueue();
+        }
+      }, 1000);
+    },
+    // 离开队列
+    leaveQueue () {
+      this.req({
+        url: '/v1/box/leaveQueue',
+        data: {
+          box_id: this.boxInfo.id,
+          set_count: this.currentIndex + 1
+        },
+        success: res => {
+          this.isMyTurn = false;
+          this.queueInfo = { status: 0 };
+          this.getQueueStatus();
+          // this.$common.toast({ title: '已离开队列' });
+        }
+      });
+    },
+    // 轮询队列状态
+    startPollQueueStatus () {
+      if (this.pollTimer) clearInterval(this.pollTimer);
+      this.pollTimer = setInterval(() => {
+        this.getQueueStatus();
+      }, 3000); // 每3秒刷新一次
+    },
+    // 获取队列状态
+    getQueueStatus () {
+      this.req({
+        url: '/v1/box/getQueueStatus',
+        data: {
+          box_id: this.boxInfo.id,
+          set_count: this.currentIndex + 1
+        },
+        success: res => {
+          if (res.code === 200) {
+            this.queueInfo = res.data;
+            if (res.data.status === 1) {
+              // 轮到我了
+              if (this.pollTimer) clearInterval(this.pollTimer);
+              this.isMyTurn = true;
+              this.startQueueTimer();
+            }
+          }
+        }
+      });
+    },
+    cancelQueue () {
+      this.leaveQueue();
+      if (this.pollTimer) clearInterval(this.pollTimer);
+    },
   },
 }
 </script>
 
 <style lang='scss' scoped>
+page {
+  background: #dbf7cb;
+}
+
 .kaixiang {
-  background: url("https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01unkdtT24NdWplMdw8_!!2200676927379.png") no-repeat;
-  background-size: 100vw 100%;
-  background-repeat: no-repeat;
-  min-height: calc(100vh - 50px);
-  // background: #222333;
+  background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN018eRR3Q24NdcYm6y4q_!!2200676927379.png") no-repeat 50%/110% 130%;
+  // background-size: cover;
+  // min-height: calc(100vh - 50px);
+  padding-bottom: 120rpx;
 
   .nav {
     ::v-deep .uni-navbar__header {
@@ -1173,6 +1783,7 @@ export default {
 
     ::v-deep .uni-nav-bar-text {
       font-size: 38rpx;
+      font-weight: 700;
       font-family: xcooo;
     }
 
@@ -1186,73 +1797,8 @@ export default {
   .banner {
     margin-top: 100rpx;
     height: 17.71875rem;
-    background: url(https://oyfiles.oss-cn-shanghai.aliyuncs.com/ouya-v2/blindBox/headerBg2.png) no-repeat 50% 0%/50rem auto;
-
+    background: url(https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01PYl5yI24Ndcpz1460_!!2200676927379.png) no-repeat 50% 0%/50rem auto;
     position: relative;
-
-    .free-play {
-      width: 62px;
-      height: 62px;
-      position: absolute;
-      right: 26px;
-      bottom: 0;
-      z-index: 2;
-
-      .free-play-bg {
-        width: 62px;
-        height: 62px;
-        -webkit-animation: xuanzhuan 3s linear infinite;
-        animation: xuanzhuan 3s linear infinite;
-
-        image {
-          width: 100%;
-          height: 100%;
-        }
-
-        @keyframes xuanzhuan {
-          0% {
-            -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
-          }
-
-          25% {
-            -webkit-transform: rotate(90deg);
-            transform: rotate(90deg);
-          }
-
-          50% {
-            -webkit-transform: rotate(180deg);
-            transform: rotate(180deg);
-          }
-
-          75% {
-            -webkit-transform: rotate(270deg);
-            transform: rotate(270deg);
-          }
-
-          100% {
-            -webkit-transform: rotate(1turn);
-            transform: rotate(1turn);
-          }
-        }
-
-      }
-
-      .free-play-img {
-        width: 41px;
-        height: 41px;
-        position: relative;
-        top: -46px;
-        left: 10px;
-
-        image {
-          width: 100%;
-          height: 100%;
-        }
-
-      }
-    }
-
   }
 
   .swiper {
@@ -1293,38 +1839,6 @@ export default {
           -webkit-transform: translateY(0);
           transform: translateY(0);
         }
-      }
-
-      .gif {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-      }
-
-
-      @keyframes bLine {
-        0% {
-          transform: translateY(0);
-        }
-
-        50% {
-          -webkit-transform: translateY(10px);
-          transform: translateY(10px);
-        }
-
-        100% {
-          -webkit-transform: translateY(0);
-          transform: translateY(0);
-        }
-      }
-
-      .card-num {
-        text-align: center;
-        margin-top: 10rpx;
       }
     }
   }
@@ -1376,7 +1890,7 @@ export default {
     padding-bottom: calc(env(safe-area-inset-bottom) + 78px);
 
     .tong {
-      background: url('https://img.alicdn.com/imgextra/i4/2215984279448/O1CN013awXSu2JfEvQyxnJA_!!2215984279448.png');
+      background: url("https://img.alicdn.com/imgextra/i4/2215984279448/O1CN013awXSu2JfEvQyxnJA_!!2215984279448.png");
       position: fixed;
       left: 0;
       top: 114px;
@@ -1401,8 +1915,6 @@ export default {
       }
     }
 
-
-
     .orderbox {
       background-color: #fff;
     }
@@ -1410,7 +1922,23 @@ export default {
     .orderbox-top {
       background-color: initial;
     }
+  }
 
+  .rule-btn-wrap {
+    position: fixed;
+    top: 30%;
+    right: 10rpx;
+    z-index: 10;
+
+    .rule-btn-item {
+      width: 100rpx;
+      margin-bottom: 40rpx;
+
+      image {
+        width: 100%;
+        height: 100%;
+      }
+    }
   }
 
   .luckbox {
@@ -1418,6 +1946,7 @@ export default {
     bottom: 0;
     left: 0;
     width: 100%;
+    z-index: 10;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1427,7 +1956,7 @@ export default {
     padding-bottom: env(safe-area-inset-bottom);
     padding-bottom: env(safe-area-inset-bottom);
     /*兼容 IOS>11.2*/
-    background: url("../../static/home/tabbar-bg.png") no-repeat 50%/100% 100%;
+    background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01Rhzmc824Ndcoy7ivj_!!2200676927379.png") no-repeat 50%/100% 100%;
     height: 200rpx;
 
     display: flex;
@@ -1477,7 +2006,6 @@ export default {
                 width: 150rpx;
                 height: 100rpx;
               }
-
             }
           }
         }
@@ -1491,10 +2019,48 @@ export default {
 
   .shop-list {
     box-sizing: border-box;
-    // background-color: #5b46c6;
-    // border-radius: 10px;
-    overflow: hidden;
     margin: 30rpx 20rpx;
+    margin-top: 0;
+
+    .open-nav {
+      display: flex;
+      align-items: center;
+
+      .open-nav-item {
+        color: #777;
+        font-size: 30rpx;
+        font-weight: 700;
+        margin-right: 20rpx;
+        text-align: center;
+        padding: 5rpx 15rpx;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.3s;
+        padding-bottom: 10rpx;
+        white-space: nowrap;
+        /* 确保文字不换行 */
+        position: relative;
+        /* 设置为相对定位，为伪元素提供定位上下文 */
+      }
+
+      .open-active-nav {
+        color: #333333;
+        text-shadow: -1px -1px #fff, 1px 1px #333;
+      }
+
+      .open-active-nav::after {
+        content: "";
+        display: block;
+        width: 60rpx;
+        height: 10rpx;
+        background-color: #333333;
+        position: absolute;
+        bottom: -5rpx;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
 
     .shop-list-rate {
       height: 78px;
@@ -1505,14 +2071,12 @@ export default {
       // padding: 15px 5rpx;
       border: 2rpx solid #3cbcc1;
 
-
       .recode-btn {
         color: #fff;
         font-size: 14px;
         padding: 10rpx 8rpx;
-        background-image: linear-gradient(180deg, #6a4dff, #0dd9ff)
+        background-image: linear-gradient(180deg, #6a4dff, #0dd9ff);
       }
-
 
       .list {
         text-align: center;
@@ -1556,45 +2120,65 @@ export default {
 
     .mh-goods-list {
       padding: 20rpx 0;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-start;
-      padding-bottom: 200rpx;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      column-gap: 30rpx;
+      row-gap: 40rpx;
+      margin-top: 40rpx;
 
       .mh-goods-list-item {
         position: relative;
-        flex: 1;
-        margin: 0 10px 15px 0;
-        background-color: rgba(0, 0, 0, .2);
-        width: calc((100% - 20px) / 3);
-        max-width: calc((100% - 20px) / 3);
+        background-color: rgba(0, 0, 0, 0.2);
+        background: #f0fbe3;
+        color: #333;
         text-align: center;
-        padding: 20rpx 3px;
-        border-radius: 5px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-        background-size: 100% 100%;
         font-size: 24rpx;
-        color: #fff;
+        padding: 20rpx 20rpx;
+        border-radius: 20rpx;
+        border-top-left-radius: 0;
 
-        &:nth-child(3n) {
-          margin-right: 0;
-        }
-
-        .mh-goods-rate {
-          width: 62px;
-          height: 62px;
+        .mh-goods-rate-wrap {
           position: absolute;
-          top: 1px;
-          left: 1px;
+          top: -15rpx;
+          left: 0rpx;
+          z-index: 5;
+
+          .mh-goods-rate-img {
+            width: 120rpx;
+          }
+
+          .mh-goods-rate-text {
+            position: absolute;
+            top: 6rpx;
+            left: 10rpx;
+            z-index: 1;
+            font-size: 28rpx;
+            font-weight: 700;
+            color: #000;
+          }
         }
 
         .mh-goods-img {
-          width: 93px;
-          height: 93px;
-          margin-top: 20rpx;
+          width: 100%;
+          position: relative;
+
+          .empty-quantity {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            color: #fff;
+            font-size: 38rpx;
+            font-weight: 700;
+            border-radius: 20rpx;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
         }
 
         .mh-title {
@@ -1603,21 +2187,19 @@ export default {
           -webkit-line-clamp: 1;
           overflow: hidden;
           text-overflow: ellipsis;
-          margin-top: 5rpx;
+          margin-top: 10rpx;
         }
 
-        .mh-num {
+        .mh-rate {
           margin: 10rpx 0;
         }
 
         .mh-sale {
-          background-color: rgba(0, 0, 0, 0.2);
-
+          // background-color: rgba(0, 0, 0, 0.2);
           width: 100%;
         }
 
         .mh-goods-name {
-          color: #fff;
           width: 100%;
           font-size: 12px;
           margin-top: 7px;
@@ -1667,15 +2249,95 @@ export default {
       height: 78px;
       font-weight: 700;
       color: #c92a1c;
-      background: url('https://img.alicdn.com/imgextra/i2/2215984279448/O1CN01sqNNxI2JfEvUzWn3Q_!!2215984279448.png') no-repeat;
+      background: url("https://img.alicdn.com/imgextra/i2/2215984279448/O1CN01sqNNxI2JfEvUzWn3Q_!!2215984279448.png") no-repeat;
       background-size: 100% 100%;
       background-position: top;
-
 
       .biankuan {}
     }
   }
+}
 
+.queue-status-wrapper {
+  padding: 30rpx;
+
+  .no-queue-box,
+  .my-turn-box,
+  .waiting-box {
+    background-color: #fff;
+    border-radius: 20rpx;
+    padding: 25rpx 20rpx;
+    box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.08);
+
+    .highlight {
+      color: #e91e63;
+      font-weight: bold;
+    }
+  }
+
+  .no-queue-text {
+    font-size: 30rpx;
+    color: #333;
+    text-align: center;
+  }
+
+  .my-turn-box {
+    font-size: 28rpx;
+    color: #333;
+  }
+
+  .waiting-box {
+    .user-row {
+      display: flex;
+      align-items: center;
+    }
+
+    .waiting-text {
+      font-size: 28rpx;
+      color: #666;
+      margin-right: 20rpx;
+      white-space: nowrap;
+    }
+
+    .user-info-wrap {
+      display: flex;
+      align-items: center;
+
+      .avatar {
+        width: 80rpx;
+        height: 80rpx;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 20rpx;
+      }
+
+      .user-info-right {
+        display: flex;
+        flex-direction: column;
+
+        .nickname {
+          font-size: 28rpx;
+          color: #333;
+          max-width: 200rpx;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+
+        .time-info {
+          font-size: 26rpx;
+          color: #999;
+
+          .highlight {
+            color: #e91e63;
+            font-size: 28rpx;
+            font-weight: bold;
+            margin-right: 5rpx;
+          }
+        }
+      }
+    }
+  }
 }
 </style>
 
@@ -1699,7 +2361,6 @@ export default {
     text-align: center;
     margin-top: 40rpx;
   }
-
 }
 
 .setAnimate {
@@ -1708,7 +2369,6 @@ export default {
   top: 200px;
   z-index: 8;
   color: #fff;
-
 
   .btn {
     bottom: 200px;
@@ -1726,7 +2386,7 @@ export default {
 }
 
 .bgbox {
-  background: url('https://www.img.xcooo.cn/uploads/2024/02/d969aa4534f6b91e.png') no-repeat;
+  background: url("https://www.img.xcooo.cn/uploads/2024/02/d969aa4534f6b91e.png") no-repeat;
   background-size: 100% 100%;
   width: 540rpx;
   height: 680rpx;
@@ -1796,20 +2456,18 @@ export default {
 
   .tiploginShow-view-3 {
     text-align: center;
-
   }
 }
 
-
-
 .order-pop {
   background: #222433;
+  // background: #fff;
+  color: #fff;
   border-radius: 10rpx 10rpx 0 0;
   padding: 1rpx 30rpx;
 
   border-top-left-radius: 40rpx;
   border-top-right-radius: 40rpx;
-
 
   &-hd {
     height: 100rpx;
@@ -1819,7 +2477,6 @@ export default {
     font-size: 28rpx;
     font-family: PingFang SC;
     font-weight: bold;
-    color: #fff;
 
     .close {
       width: 40rpx;
@@ -1844,7 +2501,6 @@ export default {
         font-size: 28rpx;
         font-family: PingFang SC;
         font-weight: bold;
-        color: #fff;
       }
 
       .right {
@@ -1895,12 +2551,10 @@ export default {
         font-size: 26rpx;
         font-family: PingFang SC;
         font-weight: bold;
-        color: #fff;
         margin-top: 20rpx;
 
         &.act {
           background: #000000;
-          color: #fff;
           border-color: #000000;
         }
       }
@@ -1922,7 +2576,6 @@ export default {
         .title {
           flex: 1;
           padding: 0 10rpx;
-          color: #fff;
         }
       }
     }
@@ -1937,7 +2590,6 @@ export default {
         font-size: 28rpx;
         font-family: PingFang SC;
         font-weight: 500;
-        color: #fff;
 
         text {
           color: #248da0;
@@ -1970,9 +2622,11 @@ export default {
     font-size: 26rpx;
     font-family: PingFang SC;
     font-weight: 500;
-    color: #ffffff;
-    background: url("../../static/home/btn-bg.png") no-repeat;
-    background-size: 100vw 100%;
+    color: #000;
+    // background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01AaUpOl24NdcnBy8sR_!!2200676927379.png") no-repeat;
+    // background-size: 100vw 100%;
+    background: linear-gradient(to right, #5dfda1, #baf828);
+    box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
 
     .money {
       font-weight: bold;
@@ -1987,18 +2641,21 @@ export default {
 
 .detail-pop {
   background: #f2f2f2;
-  border-radius: 10rpx 10rpx 0 0;
-  overflow: hidden;
+  background: linear-gradient(to right, #5dfda1, #baf828);
+  border-radius: 20rpx 20rpx 0 0;
+  padding: 20rpx;
 
   &-hd {
-    background: #f2f2f2;
+    background: #eefed9;
     position: relative;
-    // text-align: center;
     font-size: 32rpx;
     color: #333333;
     height: 80rpx;
     line-height: 80rpx;
     padding: 0 30rpx;
+    border-radius: 20rpx;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
 
     .close {
       width: 40rpx;
@@ -2013,15 +2670,41 @@ export default {
   &-bd {
     max-height: 60vh;
     min-height: 40vh;
+    background: #eefed9;
+    border-radius: 20rpx;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 
     .detail-pic {
-      width: 750rpx;
-      height: 750rpx;
+      padding: 20rpx 60rpx;
+      width: 100%;
+      height: 450rpx;
+    }
+
+    .detail-title {
+      padding: 30rpx 30rpx 0;
+
+      &-content {
+        text {
+          font-size: 28rpx;
+          font-family: PingFang SC;
+          font-weight: bold;
+          color: #fff;
+          background: #e4082c;
+          margin-right: 10rpx;
+          border-radius: 10rpx;
+          padding: 10rpx 20rpx;
+        }
+
+        font-size: 32rpx;
+        font-family: PingFang SC;
+        font-weight: bold;
+        color: #222222;
+      }
     }
 
     .detail-price {
-      background: #fff;
-      padding: 30rpx 30rpx 0;
+      padding: 30rpx;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -2054,29 +2737,6 @@ export default {
       }
     }
 
-    .detail-title {
-      padding: 30rpx;
-      background: #fff;
-
-      &-content {
-        text {
-          padding: 2rpx 6rpx;
-
-          font-size: 20rpx;
-          font-family: PingFang SC;
-          font-weight: bold;
-          color: #ffffff;
-          margin-right: 10rpx;
-        }
-
-        font-size: 26rpx;
-        font-family: PingFang SC;
-        font-weight: bold;
-        color: #222222;
-        line-height: 43rpx;
-      }
-    }
-
     .zheng-tag {
       width: 100%;
       height: 100rpx;
@@ -2084,7 +2744,6 @@ export default {
 
     .content-title {
       padding: 20rpx 30rpx;
-      background: #fff;
 
       font-size: 28rpx;
       font-family: PingFang SC;
@@ -2092,9 +2751,7 @@ export default {
       color: #333333;
     }
 
-    .content {
-      background: #fff;
-    }
+    .content {}
   }
 }
 
@@ -2152,26 +2809,26 @@ export default {
     text-align: center;
     margin: 50rpx;
   }
+}
 
-  .award-wrap {
-    padding: 0 20rpx;
-    padding-top: 120px;
-  }
+.award-wrap {
+  padding: 0 20rpx;
+  margin-top: 20rpx;
 
   .award-log-item {
-    color: #fff;
     width: 100%;
     display: flex;
     align-items: center;
     // background: url('@/static/web/319.png') no-repeat;
-    background: url('https://xlcwmax.oss-cn-beijing.aliyuncs.com/aliyun/92a69c867c922ec3dffc06612a0cbd62.jpg') no-repeat;
-    background-size: 100% 100%;
-    width: 100%;
-    height: 100px;
-    padding: 10px 20px;
-    padding-top: 25px;
+    // background: url('https://xlcwmax.oss-cn-beijing.aliyuncs.com/aliyun/92a69c867c922ec3dffc06612a0cbd62.jpg') no-repeat;
+    // background-size: 100% 100%;
     margin-bottom: 20rpx;
     position: relative;
+    border-radius: 20rpx;
+    padding: 20rpx;
+    background: linear-gradient(to right, #5dfda1, #baf828);
+    // background: linear-gradient(to right, #c1f721, #8dfa63, #62fc9b);
+    box-shadow: 2rpx 5rpx 2rpx 2rpx #209200;
 
     &:last-child {
       margin-bottom: 0;
@@ -2202,9 +2859,8 @@ export default {
         text-overflow: ellipsis;
 
         .award-name {
-          color: #face5e;
+          color: #8888e2;
           margin-left: 20rpx;
-
         }
       }
     }
@@ -2267,7 +2923,6 @@ export default {
   background-color: #999;
 }
 
-
 .youhuicon .couList .l .aa {
   font-size: 30rpx;
   color: #fff;
@@ -2319,7 +2974,6 @@ export default {
   color: #fff;
 }
 
-
 .youhuicon .couList .r .use {
   margin: 8rpx 0;
 }
@@ -2346,21 +3000,187 @@ export default {
   background-color: #999;
 }
 
-.rule-btn-wrap {
-  position: fixed;
-  top: 30%;
-  right: 10rpx;
-  z-index: 10;
+.card-top-wrap {
+  background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01tnIyCE24NdcYaYnty_!!2200676927379.png") no-repeat;
+  background-size: 100% 100%;
+  margin: 0 20rpx;
+  position: relative;
+  padding-bottom: 20rpx;
 
-  .rule-btn-item {
-    width: 100rpx;
-    margin-bottom: 40rpx;
+  .card-top-item {
+    display: flex;
+    padding: 80rpx 40rpx;
+    padding-bottom: 20rpx;
+
+    .card-top-left {
+      position: relative;
+
+      .card-top-left-img {
+        width: 150rpx;
+        height: 150rpx;
+        border-radius: 20rpx;
+        margin-right: 20rpx;
+      }
+
+      .gif {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      @keyframes bLine {
+        0% {
+          transform: translateY(0);
+        }
+
+        50% {
+          -webkit-transform: translateY(10px);
+          transform: translateY(10px);
+        }
+
+        100% {
+          -webkit-transform: translateY(0);
+          transform: translateY(0);
+        }
+      }
+
+      .card-num {
+        text-align: center;
+        margin-top: 10rpx;
+      }
+    }
+
+    .card-top-right {
+      flex: 1;
+      margin-top: 20rpx;
+
+      .card-title {
+        font-size: 32rpx;
+        font-weight: 700;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .card-price {
+        font-size: 28rpx;
+        font-weight: 700;
+        color: #fb3b7a;
+        margin: 20rpx 0;
+
+        .price {
+          font-size: 34rpx;
+        }
+      }
+
+      .card-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 40rpx;
+
+        .card-btn-img {
+          width: 140rpx;
+        }
+
+        .card-btn-text {
+          font-size: 30rpx;
+          font-weight: 700;
+          color: #000;
+          margin: 0 40rpx;
+          flex-shrink: 0;
+          padding: 10rpx 40rpx;
+          border-radius: 50rpx;
+          border: 2rpx solid #333;
+          background: linear-gradient(to right, #5dfda1, #baf828);
+        }
+      }
+    }
+  }
+
+  .card-count {
+    display: flex;
+    justify-content: center;
+    font-size: 30rpx;
+    font-weight: bold;
+    margin-bottom: 15rpx;
+
+    .count-num {
+      margin-left: 10rpx;
+    }
+  }
+}
+
+.free-play {
+  width: 62px;
+  height: 62px;
+  position: absolute;
+  right: 26px;
+  bottom: 40%;
+  z-index: 2;
+
+  .free-play-bg {
+    width: 62px;
+    height: 62px;
+    -webkit-animation: xuanzhuan 3s linear infinite;
+    animation: xuanzhuan 3s linear infinite;
+
+    image {
+      width: 100%;
+      height: 100%;
+    }
+
+    @keyframes xuanzhuan {
+      0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+      }
+
+      25% {
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+      }
+
+      50% {
+        -webkit-transform: rotate(180deg);
+        transform: rotate(180deg);
+      }
+
+      75% {
+        -webkit-transform: rotate(270deg);
+        transform: rotate(270deg);
+      }
+
+      100% {
+        -webkit-transform: rotate(1turn);
+        transform: rotate(1turn);
+      }
+    }
+  }
+
+  .free-play-img {
+    width: 41px;
+    height: 41px;
+    position: relative;
+    top: -46px;
+    left: 10px;
 
     image {
       width: 100%;
       height: 100%;
     }
   }
+}
+
+.empty-list {
+  min-height: 30vh;
+  margin-top: 200rpx;
 }
 
 .rule-pop {
@@ -2384,6 +3204,7 @@ export default {
     border-radius: 20rpx;
     height: 700rpx; // 改成固定高度
     overflow: hidden; // 防止外面内容溢出
+
     .rule-content {
       line-height: 50rpx;
       color: #696969;
@@ -2391,5 +3212,225 @@ export default {
       font-size: 28rpx;
     }
   }
+}
+
+.chou-btn-wrap {
+  position: fixed;
+  bottom: 4%;
+  z-index: 10;
+  width: 100%;
+  padding: 0 30rpx;
+
+  .chou-btn-item {
+    flex-shrink: 0;
+    font-size: 30rpx;
+    font-weight: 700;
+    color: #000;
+    padding: 20rpx 30rpx;
+    border-radius: 50rpx;
+    text-align: center;
+    border: 2rpx solid #333;
+    // background: linear-gradient(to right, #5dfda1, #baf828);
+    background: linear-gradient(to right, #c1f721, #8dfa63, #62fc9b);
+    text-shadow: -1px -1px #fff, 1px 1px #333;
+    box-shadow: 0px 5px 5px #888888;
+    box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
+  }
+
+  .chou-first-wrap {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 20rpx;
+
+    .chou-first-item {}
+
+    .chou-second-item {
+      background: #fffc30;
+      box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
+    }
+  }
+
+  .chou-second-wrap {
+    margin-top: 40rpx;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+
+    .chou-second-item {
+      width: 50%;
+      background: #fffc30;
+      box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
+    }
+  }
+
+  .queue-action-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .chou-action-item {
+      padding: 30rpx 20rpx;
+      width: 90%;
+      color: #fff;
+      text-align: center;
+      border-radius: 20rpx;
+      font-size: 30rpx;
+      background: #fc6e2c;
+    }
+  }
+}
+
+// 弹窗容器整体样式
+.box-content {
+  padding: 20rpx;
+
+  .box-popup-title {
+    font-size: 36rpx;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 15rpx;
+  }
+
+  .box-popup-desc {
+    font-size: 28rpx;
+    color: #666;
+    text-align: center;
+    margin-bottom: 25rpx;
+  }
+
+  .award-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    // gap: 15rpx;
+    padding: 0 10rpx;
+
+    .award-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 8rpx;
+
+      .award-img-container {
+        position: relative;
+        width: 140rpx; // 固定宽度
+        height: 140rpx; // 固定高度
+        border-radius: 16rpx;
+        overflow: hidden;
+        background-color: #f5f5f5;
+
+        .award-img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .award-tag {
+          position: absolute;
+          top: 8rpx;
+          left: 8rpx;
+          background: #fff;
+          color: #ff9900;
+          font-size: 20rpx;
+          padding: 2rpx 8rpx;
+          border-radius: 6rpx;
+          box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
+          z-index: 10;
+        }
+
+        .award-probability {
+          position: absolute;
+          bottom: 8rpx;
+          right: 8rpx;
+          font-size: 20rpx;
+          color: #fff;
+          background: rgba(0, 0, 0, 0.6);
+          padding: 2rpx 8rpx;
+          border-radius: 16rpx;
+          z-index: 10;
+        }
+      }
+
+      .award-info {
+        margin-top: 10rpx;
+        text-align: center;
+
+        .award-name {
+          font-size: 24rpx;
+          margin-bottom: 5rpx;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 140rpx; // 与图片宽度一致
+        }
+
+        .award-ref-price {
+          font-size: 20rpx;
+          color: #999;
+        }
+      }
+    }
+  }
+
+  .empty {
+    display: flex;
+    justify-content: center;
+  }
+
+  .close-btn-wrap {
+    display: flex;
+    justify-content: center;
+    margin: 30rpx 0 10rpx;
+
+    .box-popup-close-btn {
+      width: 70%;
+      max-width: 360rpx;
+      height: 70rpx;
+      line-height: 70rpx;
+      font-size: 28rpx;
+      color: #666;
+      background: #f5f5f5;
+      border: none;
+      border-radius: 35rpx;
+    }
+  }
+}
+
+.box-award-content {
+  background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN018eRR3Q24NdcYm6y4q_!!2200676927379.png") no-repeat 50%/110% 130%;
+  // background-size: cover;
+}
+</style>
+<style lang='scss' scoped>
+/* 排序 */
+.sort-controls {
+  margin: 0 10rpx;
+  margin-top: 20rpx;
+  display: flex;
+  padding: 12rpx 20rpx;
+  background-color: #fff;
+  border-bottom: 1px solid #f5f5f5;
+  border-radius: 20rpx;
+
+}
+
+.sort-btn {
+  display: flex;
+  align-items: center;
+  margin-right: 40rpx;
+  font-size: 28rpx;
+  color: #333;
+  padding: 8rpx 0;
+}
+
+.sort-btn .sort-icon {
+  margin-left: 8rpx;
+  color: #ff4d4f;
+  /* 排序状态图标颜色 */
+}
+
+/* 选中的排序类型可加深样式 */
+.sort-btn.active {
+  color: #ff4d4f;
+  font-weight: bold;
 }
 </style>

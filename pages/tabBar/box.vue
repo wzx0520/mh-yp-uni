@@ -78,8 +78,8 @@
         <!-- #endif -->
       </view>
       <view class="arrow n-flex-row n-justify-between">
-        <image @click="prev" src="../../static/image/arrow-left.png" mode=""></image>
-        <image @click="next" src="../../static/image/arrow-right.png" mode=""></image>
+        <image @click="prev" src="https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01BUo33924NdXd7QhGi_!!2200676927379.png" mode=""></image>
+        <image @click="next" src="https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01oFQ7D124NdXdmJ6Ee_!!2200676927379.png" mode=""></image>
       </view>
       <image src="https://www.img.xcooo.cn/uploads/2024/03/5efe7f06306d8164.png" mode="widthFix" class="shou"></image>
       <view class="dizuobox">
@@ -359,7 +359,7 @@
               <!-- #ifdef MP-WEIXIN -->
               <view class="rowitem payrow" @click="selectPay('wechat')">
                 <view class="l">
-                  <image src="../../static/image/weixinf.png" mode=""></image>
+                  <image src="https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01mfiDjv24NdXdrF5yS_!!2200676927379.png" mode=""></image>
                   微信
                 </view>
                 <u-radio name="wechat"></u-radio>
@@ -369,7 +369,7 @@
               <!-- #ifdef APP-PLUS || H5 -->
               <view class="rowitem payrow" @click="selectPay('alipay')">
                 <view class="l">
-                  <image src="../../static/image/zhifubao.png" mode=""></image>
+                  <image src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01hWRYEq24NdXdVa3cz_!!2200676927379.png" mode=""></image>
                   支付宝
                 </view>
                 <u-radio name="alipay"></u-radio>

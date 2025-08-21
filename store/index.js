@@ -1,6 +1,6 @@
 /*
  * @Date: 2022-05-14 18:25:15
- * @LastEditTime: 2024-01-10 11:29:21
+ * @LastEditTime: 2025-07-15 21:20:42
  * @Description: content
  */
 import Vue from 'vue'
@@ -17,7 +17,9 @@ const store = new Vuex.Store({
     ingMusic: null, // 抽奖中音效
     allMusic: null, // 全部开奖音效
     hasMusic: null, // 有重抽卡的开奖音效
-    noMusic: null // 没有重抽卡的开奖音效
+    noMusic: null, // 没有重抽卡的开奖音效
+    queueCountdown: 0, // 倒计时
+    queueTimer: null
   },
   getters: {
     appConfig: state => state.appConfig,
@@ -28,7 +30,8 @@ const store = new Vuex.Store({
     ingMusic: state => state.ingMusic,
     allMusic: state => state.allMusic,
     hasMusic: state => state.hasMusic,
-    noMusic: state => state.noMusic
+    noMusic: state => state.noMusic,
+    queueCountdown: state => state.queueCountdown
   },
   mutations: {
     /* 设置用户信息 */
@@ -61,6 +64,18 @@ const store = new Vuex.Store({
       state.ingMusic = uni.createInnerAudioContext()
       // state.ingMusic.src = Vue.prototype.imgBaseUrl + '/static/mp3/draw.mp3'
       state.ingMusic.src = 'https://www.img.xcooo.cn/uploads/2024/02/efa9b5a3ac2ae0cb.mp3'
+    },
+    setQueueCountdown (state, seconds) {
+      state.queueCountdown = seconds
+    },
+    decreaseQueueCountdown (state) {
+      state.queueCountdown--
+    },
+    clearQueueTimer (state) {
+      if (state.queueTimer) {
+        clearInterval(state.queueTimer)
+        state.queueTimer = null
+      }
     }
   },
   actions: {
@@ -129,6 +144,22 @@ const store = new Vuex.Store({
           }
         })
       })
+    },
+    startQueueCountdown ({ commit, state }, seconds) {
+      commit('clearQueueTimer')
+      commit('setQueueCountdown', seconds)
+
+      state.queueTimer = setInterval(() => {
+        if (state.queueCountdown > 0) {
+          commit('decreaseQueueCountdown')
+        } else {
+          commit('clearQueueTimer')
+        }
+      }, 1000)
+    },
+    stopQueueCountdown ({ commit }) {
+      commit('clearQueueTimer')
+      commit('setQueueCountdown', 0) // 再将倒计时设为0
     }
   }
 })

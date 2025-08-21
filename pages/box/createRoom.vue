@@ -4,7 +4,7 @@
       <uni-nav-bar color="#fff" leftIcon="left" backgroundColor="transparent" :border="false" :statusBar="true"
         :fixed="true" title="创建房间">
         <view slot="left" class="nav-left" @click="back">
-          <image class="" src="../../static/home/arrow.png" mode="widthFix" lazy-load="false" binderror="" bindload="" />
+          <image class="" src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01jY8IAu24Ndcpz30ga_!!2200676927379.png" mode="widthFix" lazy-load="false" binderror="" bindload="" />
         </view>
       </uni-nav-bar>
     </view>

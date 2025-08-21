@@ -12,7 +12,7 @@
           :class="MonetType == item.id ? 'money_item item_active' : 'money_item'" v-for="(item, index) in moneyList"
           :key="index">
           <view class="item_top">
-            <image src="../../static/mine/coin.png" mode=""></image>
+            <image src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01tXMf6P24NdcmZikNI_!!2200676927379.png" mode=""></image>
             <text>{{ item.money }}</text>
           </view>
           <view class="item_bottom">
@@ -82,7 +82,7 @@ export default {
         // #ifdef H5 || MP
         {
           id: '3',
-          icon: '../../static/mine/wechat.png',
+          icon: 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01mfiDjv24NdXdrF5yS_!!2200676927379.png',
           name: '微信支付'
         },
         // #endif
@@ -95,7 +95,7 @@ export default {
         // }
         // #endif
         // #ifndef MP-WEIXIN
-        // {icon:'../../../static/image/zhifubao.png',name:'支付宝支付',id:'1',type:'alipay'},
+        // {icon:'https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01hWRYEq24NdXdVa3cz_!!2200676927379.png',name:'支付宝支付',id:'1',type:'alipay'},
         // #endif
       ],
       // #ifdef H5
@@ -387,7 +387,7 @@ export default {
       color: #fff;
       margin: 0rpx auto;
       margin-top: 60rpx;
-      background: url("../../static/mine/btn-bg.png") no-repeat;
+      background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01AaUpOl24NdcnBy8sR_!!2200676927379.png") no-repeat;
       background-size: 100% 100%;
     }
 

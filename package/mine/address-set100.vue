@@ -1,6 +1,6 @@
 <!--
  * @Date: 2022-05-09 18:46:12
- * @LastEditTime: 2025-06-03 15:52:22
+ * @LastEditTime: 2025-06-03 15:40:31
  * @Description: 新建/修改收货地址
 -->
 <template>
@@ -28,23 +28,15 @@
         </view>
       </view>
     </view>
-
-    <!-- <view class="form-item">
-      <view class="form-item-content border">
-        <view class="label">所在地区</view>
-
-        <view class="right" @click="openAddress">
-          <view class="input-placeholder">{{ area || '选择地区' }}</view>
-          <uni-icons type="right" color="#999999" size="16" />
-        </view>
-      </view>
-    </view> -->
-
     <view class="form-item textarea">
       <view class="form-item-content border">
-        <view class="label">省份</view>
+        <view class="label">国家</view>
         <view class="right">
-          <input v-model="formData.province" placeholder="请输入省份" placeholder-class="textarea-placeholder" />
+          <picker :range="countryList" @change="onCountryChange">
+            <view class="picker-text">
+              {{ formData.province || '请选择国家' }}
+            </view>
+          </picker>
         </view>
       </view>
     </view>
@@ -58,14 +50,6 @@
       </view>
     </view>
 
-    <view class="form-item textarea">
-      <view class="form-item-content border">
-        <view class="label">区县</view>
-        <view class="right">
-          <input v-model="formData.area" placeholder="请输入区县" placeholder-class="textarea-placeholder" />
-        </view>
-      </view>
-    </view>
 
     <view class="form-item textarea">
       <view class="form-item-content border">
@@ -121,7 +105,8 @@ export default {
         status: 2
       },
       area: '',
-      areaList: []
+      areaList: [],
+      countryList: ['中国', '马来西亚'],
     }
   },
   onLoad (options) {
@@ -136,6 +121,9 @@ export default {
     uni.setNavigationBarTitle({ title: this.title })
   },
   methods: {
+    onCountryChange (e) {
+      this.formData.province = this.countryList[e.detail.value]
+    },
     /**
      * @description: 获取地址详情
      * @param {*}
@@ -181,8 +169,7 @@ export default {
       }
       if (
         this.formData.province == '' ||
-        this.formData.city == '' ||
-        this.formData.area == ''
+        this.formData.city == ''
       ) {
         uni.showToast({
           title: '请输入地址',

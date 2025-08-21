@@ -1,12 +1,36 @@
 <!--
  * @Date: 2022-12-06 10:53:50
- * @LastEditTime: 2025-04-27 17:04:09
+ * @LastEditTime: 2025-07-22 19:45:16
  * @Description: content
 -->
 <template>
   <view class="page-wrap">
     <uni-nav-bar title="支付订单" color="#fff" leftIcon="left" backgroundColor="#222333" :border="false" :statusBar="true"
       :fixed="true" @clickLeft="$common.back()"></uni-nav-bar>
+
+    <view class="delivery-card">
+      <view class="delivery-card-hd">发货信息</view>
+      <view class="delivery-card-bd">
+        <view class="item">
+          <text class="label">发货数量</text>
+          <text class="value">x{{ orderData.total_num }}</text>
+        </view>
+        <!-- <view class="item">
+          <text class="label">发货邮费</text>
+          <text class="value">￥ {{ deliveryData.postage }}</text>
+        </view> -->
+        <view class="item">
+          <text class="label">发货编号</text>
+          <text class="value">NO.{{ orderData.total_return_price }}</text>
+        </view>
+        <!-- <view class="item">
+          <text class="label">发货状态</text>
+          <text :class="['value', deliveryData.statusClass]">
+            {{ deliveryData.status }}
+          </text>
+        </view> -->
+      </view>
+    </view>
 
     <view @click="toChooseAddress" class="address-card">
       <template v-if="addressData">
@@ -47,9 +71,9 @@
             <view class="type">{{ item.sku_name }}</view>
 
             <view class="price-num">
-              <view class="price">¥{{ item.price }}</view>
+              <view class="price">¥{{ item.total_price }}</view>
 
-              <view class="num">×{{ item.num }}</view>
+              <view class="num">×{{ item.total_num }}</view>
             </view>
           </view>
         </view>
@@ -185,7 +209,8 @@ export default {
       addressData: '',
       ruleData: '',
       checkTimer: null,
-      cancelTimer: null
+      cancelTimer: null,
+      goodsList: [],
     }
   },
 
@@ -195,6 +220,9 @@ export default {
       this.confirmSubmit(0)
       // console.log(this.addressData)
     })
+    if (options.goods) {
+      this.goodsList = JSON.parse(decodeURIComponent(options.goods));
+    }
     this.optionsData = options
 
     await this.getDefAdd()
@@ -296,66 +324,82 @@ export default {
  * @param {*} e 0:确认订单,1:提交订单
  * @return {*}
  */
-    confirmSubmit (e, id = null) {
-      // let goods_id = []
-      // for (let i = 1; i <= this.optionsData.num; i++) {
-      //   goods_id.push(this.optionsData.goods_id)
-      // }
-      let goods_id = this.optionsData.goods_id
-      let num = this.optionsData.num
-      let data = {
-        // id: id ? id : this.optionsData.id,
-        goods_id: goods_id,
-        num: num,
-        type: 1,
-        ramk: this.note,
-        pay_type: 3,
-        submit: e
+    confirmSubmit (e) {
+      if (e === 1 && !this.addressData) {
+        this.$common.toast({
+          title: '未选择地址',
+          icon: 'none'
+        });
+        return;
       }
-      data.add_id = (this.addressData && this.addressData.id) || ''
 
-      if (e == 1) {
-        if (!this.addressData) {
-          this.$common.toast({
-            title: '未选择地址'
-          })
-          return
-        }
+      if (!Array.isArray(this.goodsList) || this.goodsList.length === 0) {
+        this.$common.toast({
+          title: '请选择提货商品',
+          icon: 'none'
+        });
+        return;
       }
+
+      const data = {
+        goods_list: this.goodsList.map(item => ({
+          goods_id: item.goods_id,
+          num: item.num,
+          id: item.id,
+          box_id: item.box_id || null
+        })),
+        type: 1,
+        remark: this.note || '',
+        pay_type: 3,
+        submit: e,
+        add_id: (this.addressData && this.addressData.id) || ''
+      };
 
       this.req({
         url: '/v1/user/ship/box',
         data,
         success: res => {
-          if (res.code == 200) {
-            if (e == 0) {
-              this.orderData = res.data
+          if (res.code === 200) {
+            if (e === 0) {
+              this.orderData = res.data;
             } else {
-              if (res.data.pay_money * 1 > 0) {
+              if (Number(res.data.pay_money) > 0) {
                 // #ifdef H5 || MP
-                const order_info = { order_sn: res.data.order_sn }
+                const order_info = { order_sn: res.data.order_sn };
                 uni.setStorageSync('order_info_ship', order_info);
-                this.checkPayStatus()
+                this.checkPayStatus();
                 // #endif
-                const params = { ...res.data, returnUrl: '/pages/tabBar/bag' }
+
+                const params = { ...res.data, returnUrl: '/pages/tabBar/bag' };
                 this.$common.orderPay(params).then(res1 => {
-                  if (res1 == 'success') {
-                    this.$common.back()
+                  if (res1 === 'success') {
+                    this.$common.back();
                   }
-                })
+                });
               } else {
                 this.$common.toast({
                   title: '支付成功',
                   duration: 500,
                   success: () => {
-                    this.$common.back()
+                    this.$common.back();
                   }
-                })
+                });
               }
             }
+          } else {
+            this.$common.toast({
+              title: res.message || '请求失败',
+              icon: 'none'
+            });
           }
+        },
+        fail: () => {
+          this.$common.toast({
+            title: '请求失败，请稍后重试',
+            icon: 'none'
+          });
         }
-      })
+      });
     },
     /**
      * @description: 获取规则
@@ -440,8 +484,46 @@ page {
   background: #222333;
 }
 
+
 .page-wrap {
   padding: 0 30rpx 150rpx;
+
+  .delivery-card {
+    background: #313131;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+    &-hd {
+      font-size: 16px;
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+
+    &-bd {
+      .item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+
+        .label {
+          color: #fff;
+          font-size: 14px;
+        }
+
+        .value {
+          color: #fff;
+          font-size: 14px;
+
+          &.unshipped {
+            color: #f90; // 未发货状态颜色，可自定义
+          }
+        }
+      }
+    }
+  }
 
   .address-card {
     border-radius: 10rpx;

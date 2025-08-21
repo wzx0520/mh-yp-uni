@@ -368,7 +368,7 @@
         <view class="zs-title">提示</view>
         <view class="zs-tip">
           很遗憾，您抽中了「滑落」赏品! 因该赏品位于您当前最高层记录的赏品，您将会从当前层数降低一层.是否消耗
-          <image class="diamond-img" src="../../static/image/xr.png" mode="widthFix" lazy-load="false" binderror=""
+          <image class="diamond-img" src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01EQWXag24NdcovcVo8_!!2200676927379.png" mode="widthFix" lazy-load="false" binderror=""
             bindload="" />{{ box_diamond }}颗维持当前层数?
           <view class="zs-de">当前拥有: 幸运石 {{ diamonds }} 颗</view>
         </view>
