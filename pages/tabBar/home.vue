@@ -172,7 +172,7 @@ export default {
           id: 4,
           title: '宝箱',
           type: 1,
-          box_type: 4
+          box_type: 5
         }
       ],
       is_new: '',
@@ -550,6 +550,13 @@ export default {
             case 1:
               this.$common.to({
                 url: '/pages/box/firstReward',
+                query: {
+                  id: item.id
+                }
+              })
+              case 5:
+                this.$common.to({
+                url: '/pages/box/treasureBox',
                 query: {
                   id: item.id
                 }

@@ -1,6 +1,6 @@
 {
-    "name" : "盲盒商城",
-    "appid" : "__UNI__EBDA30A",
+    "name" : "猫咪潮玩",
+    "appid" : "__UNI__125CA32",
     "description" : "",
     "versionName" : "1.0.2",
     "versionCode" : 1,
@@ -143,7 +143,7 @@
             "proxy" : {
                 "/api" : {
                     // "target" : "填写您的域名注意区分HTTPS",
-                    "target" : "https://www.mh-v6.com/",
+                    "target" : "https://box.bjkc010.com/",
                     "changeOrigin" : true,
                     "secure" : false,
                     "pathRewrite" : {

@@ -29,24 +29,24 @@ export default {
         {
           id: 0,
           path: '/pages/tabBar/home',
-          icon: '/static/tabbar/home.png',
-          selectIcon: '/static/tabbar/home-active.png',
+          icon: 'https://box.bjkc010.com/static/mini/tabbar/home.png',
+          selectIcon: 'https://box.bjkc010.com/static/mini/tabbar/home-active.png',
           text: '首页',
           centerItem: false
         },
         {
           id: 1,
           path: '/pages/tabBar/charts',
-          icon: '/static/tabbar/shop.png',
-          selectIcon: '/static/tabbar/shop-active.png',
+          icon: 'https://box.bjkc010.com/static/mini/tabbar/shop.png',
+          selectIcon: 'https://box.bjkc010.com/static/mini/tabbar/shop-active.png',
           text: '排行榜',
           centerItem: false
         },
         {
           id: 2,
           path: '/pages/index/index',
-          icon: '/static/tabbar/shop.png',
-          selectIcon: '/static/tabbar/shop-active.png',
+          icon: 'https://box.bjkc010.com/static/mini/tabbar/shop.png',
+          selectIcon: 'https://box.bjkc010.com/static/mini/tabbar/shop-active.png',
           text: '商城',
           centerItem: false
         },
@@ -54,16 +54,16 @@ export default {
         {
           id: 3,
           path: '/pages/tabBar/bag',
-          icon: '/static/tabbar/cangku.png',
-          selectIcon: '/static/tabbar/cangku-active.png',
+          icon: 'https://box.bjkc010.com/static/mini/tabbar/cangku.png',
+          selectIcon: 'https://box.bjkc010.com/static/mini/tabbar/cangku-active.png',
           text: '盒柜',
           centerItem: false
         },
         {
           id: 4,
           path: '/pages/tabBar/my',
-          icon: '/static/tabbar/my.png',
-          selectIcon: '/static/tabbar/my-active.png',
+          icon: 'https://box.bjkc010.com/static/mini/tabbar/my.png',
+          selectIcon: 'https://box.bjkc010.com/static/mini/tabbar/my-active.png',
           text: '我的',
           centerItem: false
         }

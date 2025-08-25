@@ -102,7 +102,7 @@
         :current="swiperCurrent" @change="changeIdx">
         <swiper-item @click="selectCard(idx)" class="cardItem" :class="swiperCurrent == idx ? 'active' : ''"
           v-for="(item, idx) in boxData" :key="idx">
-          <!-- <image src="../../static/image/float.jpg" mode="widthFix"></image> -->
+          <!-- <image src="https://box.bjkc010.com/static/mini/image/float.jpg" mode="widthFix"></image> -->
           <view class="car">
             <image :src="item.thumb" mode=""></image>
             <view class="boxname">{{ item.title }}</view>
@@ -191,7 +191,7 @@
       <view class="box11">
         <view class="daojubox">
           <view class="top">
-            <image :src="isCard ? '../../static/image/qp.png' : '../../static/image/qn.png'" mode="widthFix">
+            <image :src="isCard ? 'https://box.bjkc010.com/static/mini/image/qp.png' : 'https://box.bjkc010.com/static/mini/image/qn.png'" mode="widthFix">
             </image>
             <view class="rulebox" v-if="isCard" @click="isCard = false">
               <view class="wen">
@@ -234,7 +234,7 @@
 								<view>
 									<view class="nodata">
 										<view>
-											<image src="../../static/image/um.webp" mode=""></image>
+											<image src="https://box.bjkc010.com/static/mini/image/um.webp" mode=""></image>
 											<view class="tit"> 如何获取道具卡？ </view>
 											<view class="fun"> 参与平台活动有机会获得道具卡 </view>
 											<view class="fun"> 道具卡加持，更有机会获得心仪款哦~ </view>
@@ -245,7 +245,7 @@
 											<view class="list" v-for="(item,idx) in 6" :key="idx">
 												<view class="goods n-flex-row">
 													<view class="picbox">
-														<image src="../../static/image/xu.webp" mode=""></image>
+														<image src="https://box.bjkc010.com/static/mini/image/xu.webp" mode=""></image>
 													</view>
 													<view class="textbox">
 														<view class="tit">
@@ -272,7 +272,7 @@
 								<view>
 									<view class="nodata">
 										<view>
-											<image src="../../static/image/um.webp" mode=""></image>
+											<image src="https://box.bjkc010.com/static/mini/image/um.webp" mode=""></image>
 											<view class="tit"> 如何获取道具卡？ </view>
 											<view class="fun"> 参与平台活动有机会获得道具卡 </view>
 											<view class="fun"> 道具卡加持，更有机会获得心仪款哦~ </view>
@@ -331,7 +331,7 @@
             <view v-if="usedCoupon.length != 0" @click="goSelect" class="rowitem n-flex-row n-justify-between"
               style="margin-top: 10rpx;">
               <view class="l">
-                <!-- <image src="../../static/image/quanlogo.png" mode=""></image> -->
+                <!-- <image src="https://box.bjkc010.com/static/mini/image/quanlogo.png" mode=""></image> -->
                 优惠券
               </view>
               <u-icon label-pos="left" :label-color="youhuiNum == '0' ? '#999' : '#d81e06'" color="#999"
@@ -340,7 +340,7 @@
             </view>
             <view class="rowitem n-flex-row n-justify-between">
               <view class="l">
-                <!-- <image src="../../static/image/y2.png" mode=""></image> -->
+                <!-- <image src="https://box.bjkc010.com/static/mini/image/y2.png" mode=""></image> -->
                 星石
               </view>
               <view class="" style="color: #999;">

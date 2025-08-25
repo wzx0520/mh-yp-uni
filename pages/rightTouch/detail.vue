@@ -4,7 +4,7 @@
       <uni-nav-bar color="#fff" leftIcon="left" backgroundColor="transparent" :border="false" :statusBar="true"
         :fixed="true" :title="navTitle">
         <view slot="left" class="nav-left" @click="back">
-          <image class="" src="../../static/home/arrow.png" mode="widthFix" lazy-load="false" binderror="" bindload="" />
+          <image class="" src="https://box.bjkc010.com/static/mini/home/arrow.png" mode="widthFix" lazy-load="false" binderror="" bindload="" />
         </view>
       </uni-nav-bar>
     </view>
@@ -161,7 +161,7 @@
           确认订单
 
           <view @click="closeOrderPop" class="close icon">
-            <image src="../../static/home/close2.png" mode="scaleToFill" />
+            <image src="https://box.bjkc010.com/static/mini/home/close2.png" mode="scaleToFill" />
           </view>
         </view>
 
@@ -425,6 +425,7 @@ export default {
     return {
       muteBgMusic: false,
       optionsData: '',
+      getStaticFilePath,
       boxInfo: {},
       // 赏等级列表
       markList: [],
@@ -439,7 +440,7 @@ export default {
         // #ifdef H5 || MP
         {
           id: 3,
-          icon: '../../static/mine/wechat.png',
+          icon: 'https://box.bjkc010.com/static/mini/mine/wechat.png',
           title: '微信支付'
         },
         // {
@@ -847,19 +848,19 @@ export default {
             let newArr = res.data.data.map(item => {
               switch (item.mark_id) {
                 case 33:
-                  item.image = '../../static/home/200.png';
+                  item.image=getStaticFilePath('/home/200.png')
                   break;
                 case 34:
-                  item.image = '../../static/home/300.png';
+                  item.image = 'https://box.bjkc010.com/static/mini/home/300.png';
                   break;
                 case 35:
-                  item.image = '../../static/home/400.png';
+                  item.image = 'https://box.bjkc010.com/static/mini/home/400.png';
                   break;
                 case 36:
-                  item.image = '../../static/home/100.png';
+                  item.image = 'https://box.bjkc010.com/static/mini/home/100.png';
                   break;
                 default:
-                  item.image = '../../static/home/100.png';
+                  item.image = 'https://box.bjkc010.com/static/mini/home/100.png';
                   break;
               }
               return item;
@@ -1639,7 +1640,7 @@ export default {
     font-family: PingFang SC;
     font-weight: 500;
     color: #ffffff;
-    background: url("../../static/home/btn-bg.png") no-repeat;
+    background: url("https://box.bjkc010.com/static/mini/home/btn-bg.png") no-repeat;
     background-size: 100vw 100%;
 
     .money {

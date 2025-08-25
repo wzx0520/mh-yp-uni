@@ -54,10 +54,10 @@ if (process.env.NODE_ENV === 'development') {
   // #ifdef MP
   // baseURL = "https://www.mhxcx.tazz.laibinwl.cn";
   // imgURL = "https://www.mhxcx.tazz.laibinwl.cn";
-  baseURL = "https://www.fdmh.xcooo.cn";
-  imgURL = "https://www.fdmh.xcooo.cn";
-  baseURL = "https://www.gxmh.xcooo.cn";
-  imgURL = "https://www.gxmh.xcooo.cn";
+  baseURL = "https://box.bjkc010.com";
+  imgURL = "https://box.bjkc010.com";
+  baseURL = "https://box.bjkc010.com";
+  imgURL = "https://box.bjkc010.com";
   // #endif
   // baseURL = "https://www.mh-v6.xcooo.cn";
   // imgURL = "https://www.mh-v6.xcooo.cn";
@@ -68,11 +68,14 @@ if (process.env.NODE_ENV === 'development') {
   imgURL = window.location.protocol + "//" + window.location.host;
   // #endif
   // #ifdef MP
-  baseURL = "http://www.mh-v7.xcooo.cn";
-  imgURL = "http://www.mh-v7.xcooo.cn";
+  baseURL = "https://box.bjkc010.com";
+  imgURL = "https://box.bjkc010.com";
   // #endif
 }
-
+Vue.prototype.staticDir="https://box.bjkc010.com/static/mini/"
+Vue.prototype.getStaticFilePath = function (url) {
+    return Vue.prototype.staticDir + url;  
+}
 Vue.prototype.siteBaseUrl = baseURL + '/api'
 Vue.prototype.imgBaseUrl = imgURL + '/static/index'
 Vue.prototype.imgBaseUrl1 = function () {
