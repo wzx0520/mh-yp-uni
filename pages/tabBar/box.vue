@@ -53,8 +53,6 @@
       <view class="qipao">
         <!-- #ifndef MP-WEIXIN -->
         <!-- 气泡 -->
-        <prize-flying ref="qipao" v-if="boxData[this.swiperCurrent]" :key="`flying-${flyingKey}`"
-          :box-id="boxData[this.swiperCurrent].id"></prize-flying>
         <!-- #endif -->
 
         <!-- #ifdef MP-WEIXIN -->
@@ -699,7 +697,6 @@
 <script>
 import kefu from '@/components/kefu.vue'
 import colorGradient from 'uview-ui/libs/function/colorGradient';
-import prizeFlying from "@/components/prize-flying.vue"
 const switchMp3 = 'https://www.img.xcooo.cn/uploads/2024/02/17887756404cea30.mp3'
 // const bg_music = 'https://img.50api.cn/dingdang/music.mp3'
 const bg_music = ''
@@ -901,7 +898,6 @@ export default {
   },
   components: {
     kefu,
-    prizeFlying
   },
   // onShow() {
   // 	this.getCard()

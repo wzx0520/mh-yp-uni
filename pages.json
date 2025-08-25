@@ -297,25 +297,6 @@
   },
   "subPackages": [
     {
-      "root": "package/rightTouch",
-      "pages": [
-        {
-          "path": "list",
-          "style": {
-            "navigationBarTitleText": "",
-            "enablePullDownRefresh": false
-          }
-        },
-        {
-          "path": "detail",
-          "style": {
-            "navigationBarTitleText": "",
-            "enablePullDownRefresh": false
-          }
-        }
-      ]
-    },
-    {
       "root": "package/index",
       "pages": [
         {

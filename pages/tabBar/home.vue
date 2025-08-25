@@ -579,25 +579,18 @@ export default {
                   id: item.id
                 }
               })
-            case 6:
-              this.$common.to({
-                url: '/pages/box/treasureBox',
-                query: {
-                  id: item.id
-                }
-              })
               break
           }
           break
         // 对对碰
-        case 4:
-          this.$common.to({
-            url: '/package/rightTouch/detail',
-            query: {
-              id: item.id
-            }
-          })
-          break
+        // case 4:
+        //   this.$common.to({
+        //     url: '/package/rightTouch/detail',
+        //     query: {
+        //       id: item.id
+        //     }
+        //   })
+        //   break
 
       }
 
