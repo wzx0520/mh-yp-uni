@@ -67,20 +67,6 @@
       }
     },
     {
-      "path": "pages/box/roomlist",
-      "style": {
-        "enablePullDownRefresh": false,
-        "navigationBarTextStyle": "white"
-      }
-    },
-    {
-      "path": "pages/box/tower",
-      "style": {
-        "enablePullDownRefresh": false,
-        "navigationBarTextStyle": "white"
-      }
-    },
-    {
       "path": "pages/box/lotteryBag",
       "style": {
         "enablePullDownRefresh": false,
@@ -88,49 +74,7 @@
       }
     },
     {
-      "path": "pages/box/treasureBox",
-      "style": {
-        "enablePullDownRefresh": false,
-        "navigationBarTextStyle": "white"
-      }
-    },
-    {
-      "path": "pages/box/test",
-      "style": {
-        "enablePullDownRefresh": false,
-        "navigationBarTextStyle": "white"
-      }
-    },
-    {
-      "path": "pages/box/towerDetail",
-      "style": {
-        "enablePullDownRefresh": false,
-        "navigationBarTextStyle": "white"
-      }
-    },
-    {
-      "path": "pages/box/towerDraw",
-      "style": {
-        "enablePullDownRefresh": false,
-        "navigationBarTextStyle": "white"
-      }
-    },
-    {
       "path": "pages/box/rank",
-      "style": {
-        "enablePullDownRefresh": false,
-        "navigationBarTextStyle": "white"
-      }
-    },
-    {
-      "path": "pages/box/createRoom",
-      "style": {
-        "enablePullDownRefresh": false,
-        "navigationBarTextStyle": "white"
-      }
-    },
-    {
-      "path": "pages/box/roomDetail",
       "style": {
         "enablePullDownRefresh": false,
         "navigationBarTextStyle": "white"
@@ -159,13 +103,6 @@
     },
     {
       "path": "pages/box/firstReward",
-      "style": {
-        "navigationBarTextStyle": "black",
-        "enablePullDownRefresh": false
-      }
-    },
-    {
-      "path": "pages/box/firstDraw",
       "style": {
         "navigationBarTextStyle": "black",
         "enablePullDownRefresh": false

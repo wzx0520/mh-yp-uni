@@ -137,6 +137,9 @@
         },
         "usingComponents" : true,
         "permission" : {},
+        "optimization" : {
+            "subPackages" : true
+        },
         "devServer" : {
             "port" : 8080,
             "disableHostCheck" : true,

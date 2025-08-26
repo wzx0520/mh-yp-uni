@@ -2,7 +2,7 @@
   <view class="kaixiang">
     <view class="nav">
       <uni-nav-bar color="#000" leftIcon="left" backgroundColor="transparent" :border="false" :statusBar="true"
-        :fixed="true" title="一番赏">
+        :fixed="true" :title="titleName">
         <view slot="left" class="nav-left" @click="back">
           <u-icon name="arrow-left" color="#333" size="40"></u-icon>
         </view>
@@ -32,7 +32,8 @@
           </view>
 
           <!-- 原图片元素 -->
-          <image class="card-top-left-img" :src="cardThumb" mode="aspectFit" lazy-load="false" binderror="" bindload="" />
+          <image class="card-top-left-img" :src="cardThumb" mode="aspectFit" lazy-load="false" binderror=""
+            bindload="" />
 
           <!-- 原箱数信息 -->
           <view class="card-num">
@@ -211,7 +212,8 @@
                           <!-- 普通奖品/宝箱 -->
                           <view class="flex flex-acenter">
                             <image class="award-single-img" :src="item.thumb" mode="widthFix" lazy-load="false" />
-                            <view class="award-name"><text class="box-title" v-if="item.is_box==1">[宝箱]</text>{{ item.title }}</view>
+                            <view class="award-name"><text class="box-title" v-if="item.is_box == 1">[宝箱]</text>{{
+                              item.title }}</view>
                           </view>
                         </template>
                         <!-- 宝箱奖品 -->
@@ -506,7 +508,8 @@
         <view class="zsbox-top">
           <view class="zs-title">
             <view>中赏记录</view>
-            <view class="zs-icon" @click="zsPop = false"><uni-icons type="closeempty" color="#fff" size="20"></uni-icons>
+            <view class="zs-icon" @click="zsPop = false"><uni-icons type="closeempty" color="#fff"
+                size="20"></uni-icons>
             </view>
           </view>
 
@@ -625,7 +628,8 @@
             <view class="award-card" v-for="(award, index) in curDetail.box_awards" :key="index">
               <view class="award-img-container">
                 <!-- <image :src="award.thumb" class="award-img" mode="aspectFill" @click="previewImage(award)"></image> -->
-                <xc-image :src="award.thumb" :showBg="true" ratio="1:1" borderRadius="10" @click="previewImage(award)" />
+                <xc-image :src="award.thumb" :showBg="true" ratio="1:1" borderRadius="10"
+                  @click="previewImage(award)" />
                 <view class="award-tag">{{ award.mark_title || 'A' }}</view>
                 <view class="award-probability">{{ award.show_rate }}%</view>
               </view>
@@ -722,7 +726,7 @@ export default {
   components: {
 
   },
-  data () {
+  data() {
     return {
       muteBgMusic: false,
       kefushow: false,
@@ -850,6 +854,7 @@ export default {
         avatar: '',
         nickName: ''
       },
+      titleName: '',
       is_user_limited: false,
       countdownSecond: 30 * 24 * 60 * 60,
       remainingStock: 0,
@@ -864,7 +869,10 @@ export default {
       sortOrder: 'desc', // 排序方向：desc（降序）、asc（升序）
     }
   },
-  onLoad (options) {
+  onLoad(options) {
+  console.log(options,'111');
+  
+    this.titleName = options.title
     if (options.scene) {
       let arr = options.scene.split('_')
       this.optionsData = {
@@ -893,7 +901,7 @@ export default {
     // #endif
     this.getData()
   },
-  onShow () {
+  onShow() {
     this.$store.dispatch('getUserInfo').then(res => {
       console.log(res)
     })
@@ -911,7 +919,7 @@ export default {
     this.coupon_info = {}
   },
   watch: {
-    'queueInfo.remainingTime' (val) {
+    'queueInfo.remainingTime'(val) {
       this.remainingTime = val;
       if (this.timer) clearInterval(this.timer);
 
@@ -927,7 +935,7 @@ export default {
       }
     }
   },
-  onUnload () {
+  onUnload() {
     console.log('移除事件')
     clearInterval(this.barrageTimer)
     clearInterval(this.checkTimer)
@@ -942,7 +950,7 @@ export default {
   },
   computed: {
     ...mapGetters(['sysConfig', 'userInfo']),
-    cardThumb () {
+    cardThumb() {
       let img
       // if (this.currentIndex == 0) {
       //   img = this.boxInfo.thumb
@@ -956,7 +964,7 @@ export default {
   },
   methods: {
     // 切换排序方式
-    changeSort (type) {
+    changeSort(type) {
       // type: 'time' 时间排序, 'value' 价值排序
       if (type === 'time') {
         if (this.sortType === 'created_at') {
@@ -985,12 +993,12 @@ export default {
     },
 
     // 下拉刷新回调
-    downCallback () {
+    downCallback() {
       // 刷新时使用当前排序参数重新加载第一页
       this.getList({ num: 1, size: this.pageSize });
       this.mescroll.endDownScroll(); // 结束下拉刷新
     },
-    getList ({
+    getList({
       num,
       size
     }) {
@@ -1021,7 +1029,7 @@ export default {
         }
       })
     },
-    prev () {
+    prev() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1033,7 +1041,7 @@ export default {
       }
       this.getData()
     },
-    next () {
+    next() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1045,7 +1053,7 @@ export default {
       }
       this.getData()
     },
-    changeNum () {
+    changeNum() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1055,7 +1063,7 @@ export default {
       this.currentIndex = Math.floor(Math.random() * num)
       this.getData()
     },
-    setAnimate () {
+    setAnimate() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1063,7 +1071,7 @@ export default {
       })
       this.setShow = true
     },
-    closeSet () {
+    closeSet() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1071,7 +1079,7 @@ export default {
       })
       this.setShow = false
     },
-    changeAnimate (e) {
+    changeAnimate(e) {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1080,17 +1088,17 @@ export default {
       this.animateSet = !!e
       uni.setStorageSync('animateSet', this.animateSet)
     },
-    useCouPon (item) {
+    useCouPon(item) {
       this.coupon_info = item
       // 请求订单信息
       this.confirmSubmit(0)
       this.couponPop = false
     },
-    goCoupon () {
+    goCoupon() {
       this.couponPop = true
       this.getUserCoupon()
     },
-    getUserCoupon () {
+    getUserCoupon() {
       this.req({
         url: '/v1/coupon/order_coupons',
         data: {
@@ -1111,13 +1119,13 @@ export default {
         }
       })
     },
-    zsCu (index) {
+    zsCu(index) {
       this.currentItems = index
       this.boxLogList = []
       this.mescroll.resetUpScroll()
       this.mescroll.scrollTo(0, 0)
     },
-    zs () {
+    zs() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1127,7 +1135,7 @@ export default {
       this.getTab()
     },
 
-    getBoxLogList ({
+    getBoxLogList({
       num,
       size
     }) {
@@ -1169,7 +1177,7 @@ export default {
         }
       })
     },
-    getTab () {
+    getTab() {
       return new Promise((resolve, reject) => {
         this.req({
           url: '/v1/box/mark',
@@ -1195,7 +1203,7 @@ export default {
         })
       })
     },
-    handleSwiperChange (event) {
+    handleSwiperChange(event) {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1204,7 +1212,7 @@ export default {
       const current = event.detail.current;
       this.currentBanner = current;
     },
-    checkPayStatus () {
+    checkPayStatus() {
       const _this = this
 
       const order_info = uni.getStorageSync('order_info_box')
@@ -1228,13 +1236,6 @@ export default {
                 }
                 this.$common.toast({
                   title: '支付成功', icon: 'success', duration: 1500, success: () => {
-                    // this.$common.to({
-                    //   type: 1, url: '/pages/box/firstDraw', query: {
-                    //     id: res.data.id,
-                    //     order_sn: order_info.order_sn,
-                    //     drawNum: res.data.box_num
-                    //   }
-                    // })
                     this.openBox(order_info.order_sn)
                   }
                 })
@@ -1254,13 +1255,8 @@ export default {
         _this.cancelCheckPayStatus();
       }, 60 * 1000)
     },
-    cancelCheckPayStatus () {
+    cancelCheckPayStatus() {
       uni.removeStorageSync('order_info_box')
-      // this.$common.toast({
-      // 	title: '支付超时',
-      // 	icon: 'none',
-      // 	duration: 500
-      // })
       if (this.checkTimer) {
         clearTimeout(this.checkTimer)
       }
@@ -1270,7 +1266,7 @@ export default {
       }
     },
     // 取消支付
-    cancelOrderPay () {
+    cancelOrderPay() {
       const order_info = uni.getStorageSync('order_info_box')
       if (order_info.order_sn) {
         this.req({
@@ -1289,7 +1285,7 @@ export default {
 * @description: 获取数据
 * @return {*}
 */
-    getData () {
+    getData() {
       return new Promise((resolve, reject) => {
         this.req({
           url: '/v1/box/info',
@@ -1311,20 +1307,6 @@ export default {
                 loaded: false
               }));
 
-              // this.awardList = res.data.awardList.map(item => {
-              //   if (item.mark_id == 1) {
-              //     item.image = 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01wmdjUN24NdcqIPVsW_!!2200676927379.png'
-              //   } else if (item.mark_id == 2) {
-              //     item.image = 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01tfLPbl24NdcpT2yp2_!!2200676927379.png'
-              //   }
-              //   else if (item.mark_id == 3) {
-              //     item.image = 'https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01JWsQ7M24NdcoKUk8K_!!2200676927379.png'
-              //   } else if (item.mark_id == 4) {
-              //     item.image = 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01cgJHsL24NdcoKTXJP_!!2200676927379.png'
-              //   }
-              //   return item
-              // })
-
               this.markList = res.data.box ? res.data.box.markList : []
               this.getDraw()
               this.getQueueStatus();
@@ -1339,7 +1321,7 @@ export default {
 * @description: 获取抽奖方式
 * @return {*}
 */
-    getDraw () {
+    getDraw() {
       return new Promise((resolve, reject) => {
         this.req({
           url: '/v1/box/draw',
@@ -1354,17 +1336,17 @@ export default {
         })
       })
     },
-    changePayType (e) {
+    changePayType(e) {
       this.payTypeCur = e
     },
-    changeBuyType (e) {
+    changeBuyType(e) {
       this.btnCur = e
       this.confirmSubmit(0)
     },
-    openBox () {
+    openBox() {
       this.confirmSubmit(0)
     },
-    async confirmSubmit (e) {
+    async confirmSubmit(e) {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1427,23 +1409,6 @@ export default {
                       duration: 1500,
                       success: () => {
                         this.openBox(res.data.order_sn)
-                        // 表示全收
-                        // if (res.data.draw_num == -1) {
-                        //   uni.switchTab({
-                        //     url: '/pages/tabBar/bag',
-                        //   });
-                        // } else {
-                        //   this.$common.to({
-                        //     type: 1,
-                        //     url: '/pages/box/firstDraw',
-                        //     query: {
-                        //       id: this.boxInfo.id,
-                        //       order_sn: res.data.order_sn,
-                        //       drawNum: this.orderData.box.num,
-                        //       set_no: this.currentIndex + 1
-                        //     }
-                        //   })
-                        // }
 
                       }
                     })
@@ -1457,24 +1422,6 @@ export default {
                   title: '支付成功',
                   duration: 1500,
                   success: () => {
-                    // 表示全收
-                    // if (res.data.draw_num == -1) {
-                    //   uni.switchTab({
-                    //     url: '/pages/tabBar/bag',
-                    //   });
-                    // } else {
-                    //   this.$common.to({
-                    //     type: 1,
-                    //     url: '/pages/box/firstDraw',
-                    //     query: {
-                    //       id: this.boxInfo.id,
-                    //       order_sn: res.data.order_sn,
-                    //       drawNum: this.orderData.box.num,
-                    //       set_no: this.currentIndex + 1
-                    //     }
-                    //   })
-
-                    // }
                     this.openBox(res.data.order_sn)
                   }
                 })
@@ -1495,7 +1442,7 @@ export default {
         }
       })
     },
-    openBox (order_sn) {
+    openBox(order_sn) {
       let url = '/v1/box/order/mergeAward'
       let data = {
         order_sn: order_sn
@@ -1513,16 +1460,16 @@ export default {
         }
       })
     },
-    openOrderPop () {
+    openOrderPop() {
       this.agree = true
 
       this.$refs.orderPop.open()
     },
-    closeOrderPop () {
+    closeOrderPop() {
       this.$refs.orderPop.close()
     },
 
-    tryPlay () {
+    tryPlay() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1537,7 +1484,7 @@ export default {
         }
       })
     },
-    goMall () {
+    goMall() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1558,7 +1505,7 @@ export default {
       // console.log(e)
       this.scrollTop = e.detail.scrollTop
     },
-    goInvite () {
+    goInvite() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1584,7 +1531,7 @@ export default {
       })
     },
     // 玩法
-    goRule () {
+    goRule() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1593,7 +1540,7 @@ export default {
       this.$common.to({ url: '/pages/index/rule?id=3' })
     },
     // 联系客服
-    lxkefu () {
+    lxkefu() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1601,7 +1548,7 @@ export default {
       })
       this.kefushow = true
     },
-    openDetailPop (e) {
+    openDetailPop(e) {
       if (e.award_type == 2) {
         this.curDetail = e
         this.isBoxPopupShow = true;
@@ -1618,10 +1565,10 @@ export default {
       }
 
     },
-    closeDetailPop () {
+    closeDetailPop() {
       this.detailPop = false
     },
-    playMusic () {
+    playMusic() {
       this.muteBgMusic = !this.muteBgMusic;
       this.$nextTick(() => {
         if (switchMusic) {
@@ -1634,16 +1581,16 @@ export default {
         bgMusic.pause()
       }
     },
-    noticeEnd (e) {
+    noticeEnd(e) {
       console.log('123', e)
     },
-    changeCurrentCate (index) {
+    changeCurrentCate(index) {
       this.currentCate = index
       if (index == 1) {
         this.getList({ num: 1, size: 20 })
       }
     },
-    fresh () {
+    fresh() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1656,7 +1603,7 @@ export default {
       })
       this.getData()
     },
-    tobag () {
+    tobag() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1667,7 +1614,7 @@ export default {
         url: '/pages/tabBar/bag',
       });
     },
-    openRule () {
+    openRule() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1676,11 +1623,11 @@ export default {
       this.rulePop = true
     },
     // 图片预览方法
-    previewImage (previewInfo) {
+    previewImage(previewInfo) {
       this.previewInfo = previewInfo;  // 把要预览的图片添加到数组中
       this.isPreviewVisible = true;     // 显示图片预览弹窗
     },
-    back () {
+    back() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1707,7 +1654,7 @@ export default {
       });
     },
     // 离开页面
-    levelPage () {
+    levelPage() {
       this.req({
         url: '/v1/box/leaveQueue',
         data: {
@@ -1726,7 +1673,7 @@ export default {
       });
     },
     // 加入队列
-    joinQueue () {
+    joinQueue() {
       this.req({
         url: '/v1/box/joinQueue',
         data: {
@@ -1755,7 +1702,7 @@ export default {
       });
     },
     // 切换队列
-    switchQueue () {
+    switchQueue() {
       // 用户确认切换队列
       this.req({
         url: '/v1/box/switchQueue',
@@ -1782,7 +1729,7 @@ export default {
       });
     },
     // 重置倒计时
-    resetTimer () {
+    resetTimer() {
       this.req({
         url: '/v1/box/resetTimer',
         data: {
@@ -1807,7 +1754,7 @@ export default {
       });
     },
     // 开始倒计时
-    startQueueTimer () {
+    startQueueTimer() {
       if (this.queueTimer) clearInterval(this.queueTimer);
       this.queueTimer = setInterval(() => {
         if (this.queueInfo.remainingTime > 0) {
@@ -1819,7 +1766,7 @@ export default {
       }, 1000);
     },
     // 离开队列
-    leaveQueue () {
+    leaveQueue() {
       this.req({
         url: '/v1/box/leaveQueue',
         data: {
@@ -1835,14 +1782,14 @@ export default {
       });
     },
     // 轮询队列状态
-    startPollQueueStatus () {
+    startPollQueueStatus() {
       if (this.pollTimer) clearInterval(this.pollTimer);
       this.pollTimer = setInterval(() => {
         this.getQueueStatus();
       }, 3000); // 每3秒刷新一次
     },
     // 获取队列状态
-    getQueueStatus () {
+    getQueueStatus() {
       this.req({
         url: '/v1/box/getQueueStatus',
         data: {
@@ -1864,7 +1811,7 @@ export default {
         }
       });
     },
-    cancelQueue () {
+    cancelQueue() {
       this.leaveQueue();
       if (this.pollTimer) clearInterval(this.pollTimer);
     },

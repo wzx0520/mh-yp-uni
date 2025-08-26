@@ -1191,14 +1191,6 @@ export default {
           switchMusic.play()
         }
       })
-      this.$common.to({
-        url: '/pages/box/firstDraw',
-        query: {
-          id: this.boxInfo.id,
-          drawNum: 1,
-          type: 'play'
-        }
-      })
     },
     goMall () {
       this.$nextTick(() => {

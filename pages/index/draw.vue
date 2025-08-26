@@ -274,12 +274,6 @@
                 </view>
               </view>
             </view>
-            <!-- <view class="dissolve_btn" @click="duihuan(item.order_list_id)"
-              v-if="!item.is_hs && optionsData.type != 'play'">
-              <view class="dissolve-title">退货</view>
-              <view class="dissolve-price">余额: {{ item.return_price }}</view>
-            </view>
-            <view class="dissolve_btn dissolve_has_btn" v-if="item.is_hs" disabled>已退货</view> -->
           </view>
 
           <view class="ft-btn">

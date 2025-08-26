@@ -1206,13 +1206,6 @@ export default {
                 }
                 this.$common.toast({
                   title: '支付成功', icon: 'success', duration: 1500, success: () => {
-                    // this.$common.to({
-                    //   type: 1, url: '/pages/box/firstDraw', query: {
-                    //     id: res.data.id,
-                    //     order_sn: order_info.order_sn,
-                    //     drawNum: res.data.box_num
-                    //   }
-                    // })
                     this.openBox(order_info.order_sn)
                   }
                 })
@@ -1460,14 +1453,6 @@ export default {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
-        }
-      })
-      this.$common.to({
-        url: '/pages/box/firstDraw',
-        query: {
-          id: this.boxInfo.id,
-          drawNum: 1,
-          type: 'play'
         }
       })
     },

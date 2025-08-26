@@ -25,15 +25,6 @@
           <view class="card-price">
             <text>￥</text> <text class="price">{{ boxInfo.price }}/抽</text>
           </view>
-          <!-- <view class="card-btn">
-            <image class="card-btn-img"
-              src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01Wtg27c24NdcZ9jUng_!!2200676927379.png"
-              mode="widthFix" lazy-load="false" binderror="" bindload="" @click="prev" />
-            <view class="card-btn-text" @click="changeNum">换箱</view>
-            <image class="card-btn-img"
-              src="https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01Ho6HBV24NdcZCytvN_!!2200676927379.png"
-              mode="widthFix" lazy-load="false" binderror="" bindload="" @click="next" />
-          </view> -->
         </view>
       </view>
       <view class="card-count">累计已抽:<text class="count-num">{{ boxInfo.sales }}</text></view>
@@ -1195,24 +1186,6 @@ export default {
                 loaded: false
               }));
 
-              // this.awardList = res.data.awardList.map(item => {
-              //   if (item.mark_id == 33) {
-              //     item.mark_title = 'A赏'
-              //     // item.image = 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01wmdjUN24NdcqIPVsW_!!2200676927379.png'
-              //   } else if (item.mark_id == 34) {
-              //     item.mark_title = 'B赏'
-              //     // item.image = 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01tfLPbl24NdcpT2yp2_!!2200676927379.png'
-              //   }
-              //   else if (item.mark_id == 35) {
-              //     item.mark_title = 'C赏'
-              //     // item.image = 'https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01JWsQ7M24NdcoKUk8K_!!2200676927379.png'
-              //   } else if (item.mark_id == 36) {
-              //     item.mark_title = 'D赏'
-              //     // item.image = 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01cgJHsL24NdcoKTXJP_!!2200676927379.png'
-              //   }
-              //   return item
-              // })
-
               this.markList = res.data.box ? res.data.box.markList : []
               this.getDraw()
               this.getQueueStatus();
@@ -1426,14 +1399,6 @@ export default {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
-        }
-      })
-      this.$common.to({
-        url: '/pages/box/firstDraw',
-        query: {
-          id: this.boxInfo.id,
-          drawNum: 1,
-          type: 'play'
         }
       })
     },

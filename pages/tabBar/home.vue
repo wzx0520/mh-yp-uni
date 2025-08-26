@@ -551,17 +551,20 @@ export default {
               this.$common.to({
                 url: '/pages/box/firstReward',
                 query: {
-                  id: item.id
+                  id: item.id,
+                  title:'一番赏'
                 }
               })
-              case 5:
+              break 
+            case 5:
                 this.$common.to({
-                url: '/pages/box/treasureBox',
+                url: '/pages/box/firstReward',
                 query: {
-                  id: item.id
+                  id: item.id,
+                  title:'宝箱'
                 }
               })
-              break
+              break  
             // 无限赏
             case 2:
               this.$common.to({
