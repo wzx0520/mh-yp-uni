@@ -25,7 +25,9 @@
             }
         },
         /* 模块配置 */
-        "modules" : {},
+        "modules" : {
+            "OAuth" : {}
+        },
         /* 应用发布信息 */
         "distribute" : {
             /* android打包配置 */
@@ -55,7 +57,11 @@
             /* SDK配置 */
             "sdkConfigs" : {
                 "oauth" : {
-                    "univerify" : {}
+                    "univerify" : {},
+                    "weixin" : {
+                        "appid" : "wxe0b96b8c6867034f",
+                        "UniversalLinks" : ""
+                    }
                 },
                 "payment" : {
                     "alipay" : {
@@ -130,7 +136,7 @@
     "mp-weixin" : {
         "appid" : "wxe0b96b8c6867034f",
         "setting" : {
-            "urlCheck" : false,
+            "urlCheck" : true,
             "es6" : true,
             "minified" : true,
             "postcss" : true
@@ -195,3 +201,5 @@
         "title" : ""
     }
 }
+// "target" : "填写您的域名注意区分HTTPS",
+

@@ -1,6 +1,6 @@
 <template>
   <view class="touch-page">
-    <uni-nav-bar title="银票好物" color="#333" leftIcon="left" backgroundColor="#fff" :border="false" :statusBar="true"
+    <uni-nav-bar title="猫咪好物" color="#333" leftIcon="left" backgroundColor="#fff" :border="false" :statusBar="true"
       :fixed="true" @clickLeft="back()"></uni-nav-bar>
 
     <mescroll-body ref="mescrollRef" height="400" @init="mescrollInit" @down="downCallback" @up="getList"

@@ -16,7 +16,6 @@
             indicator-color="#ccc" indicator-active-color="#fff" previous-margin="0rpx" next-margin="0rpx"
             :duration="duration" v-if="swiperList.length > 0">
             <swiper-item v-for="(item, index) in swiperList" :key="index" @click="$common.bannerTo(item)">
-
               <image :src="item.thumb" mode="aspectFill" lazy-load="false" binderror="" bindload=""
                 class="carousel-img" />
               <!-- <image class="" src="" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload="" /> -->
@@ -196,7 +195,7 @@ export default {
         },
         {
           type: 4, thumb: 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01U2cPtq24Nde2Dtdt4_!!2200676927379.png',
-          title: '银票好物',
+          title: '猫咪好物',
           url: '/pages/box/yinpiao'
         }
       ],
