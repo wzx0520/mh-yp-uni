@@ -798,7 +798,7 @@ export default {
         {
           id: 2,
           icon: '/static/icon/he_gui_ti_huo.png',
-          title: '盒柜提货',
+          title: '猫窝领养',
           url: '/package/mine/bag'
         },
         {

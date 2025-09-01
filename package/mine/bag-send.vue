@@ -335,7 +335,7 @@ export default {
 
       if (!Array.isArray(this.goodsList) || this.goodsList.length === 0) {
         this.$common.toast({
-          title: '请选择提货商品',
+          title: '请选择领养商品',
           icon: 'none'
         });
         return;

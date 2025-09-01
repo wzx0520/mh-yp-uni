@@ -154,7 +154,7 @@ export default {
           activeIcon: 'https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01nQZ7O924NdcpAMQxD_!!2200676927379.png',
         },
         {
-          name: '提货免邮费',
+          name: '领养免邮费',
           icon: 'https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01dK6eTR24NdcpyVqVd_!!2200676927379.png',
           activeIcon: 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01qrwVVe24Ndcn7y8rC_!!2200676927379.png',
         },

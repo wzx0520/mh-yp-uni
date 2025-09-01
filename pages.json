@@ -222,7 +222,7 @@
         "pagePath": "pages/tabBar/bag",
         "iconPath": "static/tabbar/tabd.png",
         "selectedIconPath": "static/tabbar/tabd_o.png",
-        "text": "盒柜"
+        "text": "猫窝"
       },
       {
         "pagePath": "pages/tabBar/my",

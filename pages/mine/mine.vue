@@ -55,7 +55,7 @@
 
     <view class="order-menu">
       <view @click="$common.to({ url: '/package/mine/bag' })" class="order-menu-hd">
-        我的盒柜
+        我的猫窝
 
         <uni-icons :style="{
           fontWeight: 'normal'
@@ -123,7 +123,7 @@ export default {
       sdkshow: false,
       menuList: [{
         id: 1,
-        title: '待提货',
+        title: '待领养',
         icon: '/static/icon/he_zi.png',
         url: '/package/mine/bag',
         type: 0

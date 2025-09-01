@@ -376,8 +376,8 @@ export default {
 
 
 .sign-btn {
-  background: linear-gradient(to right, #c6f71a, #90fa61, #55fdac);
-  box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
+  // background: linear-gradient(to right, #c6f71a, #90fa61, #55fdac);
+  // box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
   color: #000;
   font-weight: 700;
   padding: 25rpx 0;

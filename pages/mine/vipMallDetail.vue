@@ -89,7 +89,7 @@ export default {
           `
         },
         {
-          name: '提货免邮费',
+          name: '领养免邮费',
           icon: 'https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01yAzkng24Ndcot3AB8_!!2200676927379.png',
           content: `<p>1.VIP用户享受包邮福利</p>
                   <p>2.包邮福利将在用户成功升级VIP后自动发放至账户, 用户可在提货页面查看相应权益。</p>

@@ -60,7 +60,13 @@
           </view>
         </view>
       </view>
-      <view class="card-count">本套剩余:<text class="count-num">{{ remainingStock }}/{{ totalStock }}</text></view>
+      <view class="uni-padding-wrap uni-common-mt">
+        <view class="progress-box">
+          <progress :percent="remainingStock / totalStock * 100" border-radius=100 stroke-width="30"
+            active-color="#B39DFA" />
+          <view class="card-count">本套剩余:<text class="count-num">{{ remainingStock }}/{{ totalStock }}</text></view>
+        </view>
+      </view>
     </view>
 
     <view class="rule-btn-wrap">
@@ -116,9 +122,11 @@
 
     <view class="shop-list">
       <view class="open-nav">
-        <view class="open-nav-item" :class="[currentCate == index ? 'open-active-nav' : '']"
-          v-for="(item, index) in navList" :key="index" @click="changeCurrentCate(index)">
-          {{ item.name }}
+        <view class="open-nav-con">
+          <view class="open-nav-item" :class="[currentCate == index ? 'open-active-nav' : '']"
+            v-for="(item, index) in navList" :key="index" @click="changeCurrentCate(index)">
+            {{ item.name }}
+          </view>
         </view>
       </view>
       <template v-if="currentCate == 0">
@@ -685,6 +693,7 @@
         </template>
         <view class="close-btn-wrap">
           <button class="box-popup-close-btn" @click="tobag">去背包</button>
+          <button class="box-popup-close-btn" @click="tocontinue">继续抽奖</button>
         </view>
       </view>
     </u-popup>
@@ -870,8 +879,8 @@ export default {
     }
   },
   onLoad(options) {
-  console.log(options,'111');
-  
+    console.log(options, '111');
+
     this.titleName = options.title
     if (options.scene) {
       let arr = options.scene.split('_')
@@ -1610,9 +1619,13 @@ export default {
         }
       })
 
+
       uni.switchTab({
         url: '/pages/tabBar/bag',
       });
+    },
+    tocontinue() {
+      this.awardShow = false
     },
     openRule() {
       this.$nextTick(() => {
@@ -1821,11 +1834,10 @@ export default {
 
 <style lang='scss' scoped>
 page {
-  background: #dbf7cb;
+  background: #fff;
 }
 
 .kaixiang {
-  background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN018eRR3Q24NdcYm6y4q_!!2200676927379.png") no-repeat 50%/110% 130%;
   // background-size: cover;
   // min-height: calc(100vh - 50px);
   padding-bottom: 120rpx;
@@ -2079,12 +2091,19 @@ page {
     .open-nav {
       display: flex;
       align-items: center;
+      justify-content: center;
+
+      .open-nav-con{
+        display: flex;
+        padding: 10rpx;
+        background: #F0E9FF;
+        border-radius: 30rpx;
+      }
 
       .open-nav-item {
         color: #777;
         font-size: 30rpx;
         font-weight: 700;
-        margin-right: 20rpx;
         text-align: center;
         padding: 5rpx 15rpx;
         display: flex;
@@ -2096,23 +2115,14 @@ page {
         /* 确保文字不换行 */
         position: relative;
         /* 设置为相对定位，为伪元素提供定位上下文 */
+        padding: 10rpx 50rpx;
+        border-radius: 40px;
+        color: #8466CF;
       }
 
       .open-active-nav {
-        color: #333333;
-        text-shadow: -1px -1px #fff, 1px 1px #333;
-      }
-
-      .open-active-nav::after {
-        content: "";
-        display: block;
-        width: 60rpx;
-        height: 10rpx;
-        background-color: #333333;
-        position: absolute;
-        bottom: -5rpx;
-        left: 50%;
-        transform: translateX(-50%);
+        background: #fff;
+        // text-shadow: -1px -1px #fff, 1px 1px #333;
       }
     }
 
@@ -2679,8 +2689,8 @@ page {
     color: #000;
     // background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01AaUpOl24NdcnBy8sR_!!2200676927379.png") no-repeat;
     // background-size: 100vw 100%;
-    background: linear-gradient(to right, #5dfda1, #baf828);
-    box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
+    // background: linear-gradient(to right, #5dfda1, #baf828);
+    // box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
 
     .money {
       font-weight: bold;
@@ -2878,9 +2888,9 @@ page {
     position: relative;
     border-radius: 20rpx;
     padding: 20rpx;
-    background: linear-gradient(to right, #5dfda1, #baf828);
+    // background: linear-gradient(to right, #5dfda1, #baf828);
     // background: linear-gradient(to right, #c1f721, #8dfa63, #62fc9b);
-    box-shadow: 2rpx 5rpx 2rpx 2rpx #209200;
+    // box-shadow: 2rpx 2rpx 2rpx 2rpx #929492;
 
     &:last-child {
       margin-bottom: 0;
@@ -3246,7 +3256,7 @@ page {
 }
 
 .card-top-wrap {
-  background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01tnIyCE24NdcYaYnty_!!2200676927379.png") no-repeat;
+  // background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01tnIyCE24NdcYaYnty_!!2200676927379.png") no-repeat;
   background-size: 100% 100%;
   margin: 0 20rpx;
   position: relative;
@@ -3437,15 +3447,12 @@ page {
   }
 
   .card-count {
-    display: flex;
-    justify-content: center;
-    font-size: 30rpx;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 26rpx;
     font-weight: bold;
-    margin-bottom: 15rpx;
-
-    .count-num {
-      margin-left: 10rpx;
-    }
   }
 }
 
@@ -3566,7 +3573,7 @@ page {
     background: linear-gradient(to right, #c1f721, #8dfa63, #62fc9b);
     text-shadow: -1px -1px #fff, 1px 1px #333;
     box-shadow: 0px 5px 5px #888888;
-    box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
+    // box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
   }
 
   .chou-first-wrap {
@@ -3577,8 +3584,8 @@ page {
     .chou-first-item {}
 
     .chou-second-item {
-      background: #fffc30;
-      box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
+      // background: #fffc30;
+      // box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
     }
   }
 
@@ -3590,8 +3597,8 @@ page {
 
     .chou-second-item {
       width: 50%;
-      background: #fffc30;
-      box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
+      // background: #fffc30;
+      // box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
     }
   }
 
@@ -3727,10 +3734,7 @@ page {
   }
 }
 
-.box-award-content {
-  background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN018eRR3Q24NdcYm6y4q_!!2200676927379.png") no-repeat 50%/110% 130%;
-  // background-size: cover;
-}
+
 
 /* 图片预览弹窗的样式 */
 .image-preview-content {
@@ -3794,5 +3798,33 @@ page {
 .sort-btn.active {
   color: #ff4d4f;
   font-weight: bold;
+}
+
+.uni-common-mt {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.uni-progress {
+  overflow: hidden;
+  border-radius: 50rpx;
+}
+
+.progress-box {
+  position: relative;
+  width: 60%;
+}
+
+.uni-icon {
+  line-height: 1.5;
+}
+
+.progress-cancel {
+  margin-left: 40rpx;
+}
+
+.progress-control button {
+  margin-top: 20rpx;
 }
 </style>

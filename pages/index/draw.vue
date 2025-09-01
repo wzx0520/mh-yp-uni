@@ -278,7 +278,7 @@
 
           <view class="ft-btn">
             <view v-if="optionsData.type != 'play'" @click="toBag" class="btn">
-              立即提货
+              立即领养
             </view>
             <view v-if="optionsData.type != 'play'" @click="duihuan('-1')" class="btn" disabled>
               <view class="">{{ is_hsa != false ? '退货成功' : '全部退货' }}</view>
@@ -387,7 +387,7 @@ export default {
     },
 
     /**
-     * @description: 去提货
+     * @description: 去领养
      * @return {*}
      */
     toBag () {

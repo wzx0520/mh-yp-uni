@@ -10,7 +10,7 @@
         <view class="icon">
           <cimage src="/static/icon/bag.png" mode="scaleToFill" />
         </view>
-        盒柜
+        猫窝
       </view>
       <view @click="$common.toRule(2)" class="rule-btn">活动规则</view>
       <view class="fhsm" v-if="ggao[0]">

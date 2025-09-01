@@ -5,7 +5,7 @@
 -->
 <template>
   <view class="page-wrap">
-    <uni-nav-bar title="盒柜" color="#000" backgroundColor="#fff" :border="false" :statusBar="true" :fixed="true">
+    <uni-nav-bar title="猫窝" color="#000" backgroundColor="#fff" :border="false" :statusBar="true" :fixed="true">
       <!-- <block slot="left">
         <view @click="$common.to({
           url: '/package/mine/zz',
@@ -54,12 +54,12 @@
 
               <view class="info">
                 <view class="title hang2">{{ item.title }}</view>
-                <!-- 可分解余额（仅 currentTab == 0 显示） -->
+                <!-- 可放生余额（仅 currentTab == 0 显示） -->
                 <view class="title return_wrap" v-if="currentTab === 0">
                   <view class="return_price">
                     <image class="return-img" src="https://www.img.xcooo.cn/uploads/2024/02/231fcebf5c7a968d.png"
                       mode="widthFix" />
-                    可分解余额: {{ item.total_return_price }}
+                    可放生余额: {{ item.total_return_price }}
                   </view>
                 </view>
 
@@ -75,11 +75,11 @@
             <!-- 操作按钮区 -->
             <view class="list-item-bd">
               <template v-if="tabCur === 0">
-                <!-- 分解 -->
+                <!-- 放生 -->
                 <view @click="openDhModel(item)" v-if="item.type === 1 || item.type === 5 || item.type === 6" class="btn">
-                  分解</view>
-                <!-- 提货 -->
-                <view @click="toSend(item)" class="btn" v-if="currentTab === 0">提货</view>
+                  放生</view>
+                <!-- 领养 -->
+                <view @click="toSend(item)" class="btn" v-if="currentTab === 0">领养</view>
                 <!-- 宝箱详情 -->
                 <view @click="openBoxDetail(item)" class="btn" v-if="currentTab === 1">宝箱详情</view>
                 <!-- 开宝箱 -->
@@ -198,7 +198,7 @@
       </view>
       <view class="btn-bootm">
         <view class="btn btn-04" :style="{ 'background-image': 'url(' + `${imgBaseUrl}/static/web/06.png` + ')' }"
-          @click="rongjie">分解</view>
+          @click="rongjie">放生</view>
       </view>
       <view class="btn-bootm" v-if="currentTab == 1">
         <view class="btn btn-05" :style="{ 'background-image': 'url(' + `${imgBaseUrl}/static/web/06.png` + ')' }"
@@ -206,7 +206,7 @@
       </view>
       <view class="btn-bootm" v-if="currentTab == 0">
         <view class="btn btn-03" :style="{ 'background-image': 'url(' + `${imgBaseUrl}/static/web/06.png` + ')' }"
-          @click="tihuo">提货</view>
+          @click="tihuo">领养</view>
       </view> -->
     </template>
 
@@ -232,13 +232,13 @@
       <!-- 操作按钮区域 -->
       <view class="toolbar-btns">
         <view class="toolbar-btn btn-boder" @click="rongjie" v-if="currentTab == 0">
-          分解
+          放生
         </view>
         <!-- <view class="toolbar-btn lock-btn" @click="handleLock">
           锁定
         </view> -->
         <view class="toolbar-btn deliver-btn" @click="tihuo" v-if="currentTab == 0">
-          提货
+          领养
         </view>
         <view class="toolbar-btn openall-btn" @click="allOpen" v-if="currentTab == 1" :class="{ disabled: isRequesting }"
           :style="{ pointerEvents: isRequesting ? 'none' : 'auto' }">
@@ -271,13 +271,13 @@
     <u-modal v-model="showModel" :title="'提示'" :content="'请确认是否已收到货'" :show-cancel-button="true"
       @confirm="submitGet"></u-modal>
 
-    <u-modal v-model="showRj" :title="'提示'" @confirm="duihuan" content="分解根据市场成本变化，一经分解无法撤销，请确认是否分解？"
+    <u-modal v-model="showRj" :title="'提示'" @confirm="duihuan" content="放生根据市场成本变化，一经放生无法撤销，请确认是否放生？"
       :show-cancel-button="true"></u-modal>
 
     <u-popup v-model="rjShow" mode="bottom" border-radius="16" height="50%" :closeable="true" @close="closeRj">
       <view class="rj-wrap">
-        <view class="rj-title">分解确认单</view>
-        <view class="rj-desc">确定要分解选中的赏品吗?</view>
+        <view class="rj-title">放生确认单</view>
+        <view class="rj-desc">确定要放生选中的赏品吗?</view>
         <view class="rj-mall">
           <view class="rj-shop">
             <view class="rj-shop-title">
@@ -296,7 +296,7 @@
                 </view>
                 <view class="rj-shop-num">x{{ item.num }}</view>
                 <view class="rj-shop-title">{{ item.title }}</view>
-                <view class="rj-shop-money">可分解余额: {{ item.total_return_price }}</view>
+                <view class="rj-shop-money">可放生余额: {{ item.total_return_price }}</view>
               </view>
 
             </view>
@@ -305,10 +305,10 @@
         <view class="rj-bottom">
           <view class="rj-money">
             <image class="ri-bottom-img" src="https://www.img.xcooo.cn/uploads/2024/02/231fcebf5c7a968d.png"
-              mode="widthFix" lazy-load="false" binderror="" bindload="" />可分解余额: {{ totalPrice.toFixed(2) }}
+              mode="widthFix" lazy-load="false" binderror="" bindload="" />可放生余额: {{ totalPrice.toFixed(2) }}
           </view>
           <view class="rj-btn" @click="duihuan">
-            确认分解
+            确认放生
           </view>
         </view>
       </view>
@@ -414,7 +414,7 @@ export default {
       selectedCount: 0, // 选中数量
       tabList: [{
         id: 0,
-        title: '待提货'
+        title: '待领养'
       },
       {
         id: 1,
@@ -479,7 +479,7 @@ export default {
     statusColor () {
       // 根据 tabCur 对应的状态设置不同背景色
       const statusColorMap = {
-        0: '#FFA500', // 待提货 - 橙色
+        0: '#FFA500', // 待领养 - 橙色
         1: '#FFD700', // 待发货 - 金色 
         2: '#32CD32', // 已发货 - 绿色
         4: '#90EE90'  // 已完成 - 浅绿
@@ -624,7 +624,7 @@ export default {
       let flag = this.listData.some(item => item.checked)
       if (!flag) {
         this.$common.toast({
-          title: '请选择要分解的赏品',
+          title: '请选择要放生的赏品',
           icon: 'none',
           duration: 1500,
         })
@@ -635,7 +635,7 @@ export default {
       this.checkedList.forEach(v => {
         // 计算总数
         this.totalNum = this.preciseAdd(this.totalNum, v.num)
-        // 计算总分解价格
+        // 计算总放生价格
         let itemPrice = this.preciseMultiply(v.num, v.return_price)
         this.totalPrice = this.preciseAdd(this.totalPrice, itemPrice)
       })
@@ -712,7 +712,7 @@ export default {
 
       if (items.length === 0) {
         this.$common.toast({
-          title: '暂无可提货商品',
+          title: '暂无可领养商品',
           icon: 'none',
           duration: 1500,
         });
@@ -735,14 +735,14 @@ export default {
         }
       });
 
-      console.log('跳转同箱子提货', goodsArray);
+      console.log('跳转同箱子领养', goodsArray);
     },
 
     tihuo () {
       const checkedItems = this.listData.filter(item => item.checked);
       if (checkedItems.length === 0) {
         this.$common.toast({
-          title: '暂无可提货商品',
+          title: '暂无可领养商品',
           icon: 'none',
           duration: 1500,
         });
@@ -766,7 +766,7 @@ export default {
         }
       });
 
-      console.log('多商品提货:', goodsArray);
+      console.log('多商品领养:', goodsArray);
     },
     buyAgain (item) {
       this.$common.to({

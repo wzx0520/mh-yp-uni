@@ -115,9 +115,11 @@
 
     <view class="shop-list">
       <view class="open-nav">
-        <view class="open-nav-item" :class="[currentCate == index ? 'open-active-nav' : '']"
-          v-for="(item, index) in navList" :key="index" @click="changeCurrentCate(index)">
-          {{ item.name }}
+        <view class="open-nav-con">
+          <view class="open-nav-item" :class="[currentCate == index ? 'open-active-nav' : '']"
+            v-for="(item, index) in navList" :key="index" @click="changeCurrentCate(index)">
+            {{ item.name }}
+          </view>
         </view>
       </view>
       <template v-if="currentCate == 0">
@@ -610,10 +612,10 @@
             2、购买福袋及盲盒类商品具有随机性，付款后即完成在线拆盒知晓具体款式，依据《消费者权益保障法》第二十五条第二款和《网络购买商品七日无理由退货暂行办法》第七条规定，不适用七天无理由退货。售后请在签收7日内凭开箱视频联系客服售后，所有公仔挂件及周边不包官瑕，不支持挑脸中古款不包牌损。
           </view>
           <view class="rule-content">
-            3、购买商品在盒柜页面可供查，用户可自行对商品选择发货操作，商品一件包邮，下单后15天内按顺序发货，商品发货时间有特别说明的则以该商品特别说明时间为准。
+            3、购买商品在猫窝页面可供查，用户可自行对商品选择发货操作，商品一件包邮，下单后15天内按顺序发货，商品发货时间有特别说明的则以该商品特别说明时间为准。
           </view>
           <view class="rule-content">
-            4、.商品盒柜寄存期限为30天，商品到期后将发货至默认收货地址，请确保默认收货地址准确真实有效，如因收件信息有误导致的所有损失，将由您自行承担。已过期超过7天的商品若无有效默认地址，视为主动放弃，放弃后商品将不可找回。对于以上提示，请您认真阅读，购买即表示认可以上条款，感谢您的支持。
+            4、.商品猫窝寄存期限为30天，商品到期后将发货至默认收货地址，请确保默认收货地址准确真实有效，如因收件信息有误导致的所有损失，将由您自行承担。已过期超过7天的商品若无有效默认地址，视为主动放弃，放弃后商品将不可找回。对于以上提示，请您认真阅读，购买即表示认可以上条款，感谢您的支持。
           </view>
           <view class="rule-content">
             5、本平台保证发出的货品内容全新未拆，请多多支持！
@@ -687,6 +689,7 @@
         </template>
         <view class="close-btn-wrap">
           <button class="box-popup-close-btn" @click="tobag">去背包</button>
+          <button class="box-popup-close-btn" @click="tocontinue">继续抽奖</button>
         </view>
       </view>
     </u-popup>
@@ -1615,6 +1618,9 @@ export default {
         url: '/pages/tabBar/bag',
       });
     },
+    tocontinue() {
+      this.awardShow = false
+    },
     openRule () {
       this.$nextTick(() => {
         if (switchMusic) {
@@ -1822,11 +1828,10 @@ export default {
 
 <style lang='scss' scoped>
 page {
-  background: #dbf7cb;
+  background: #fff;
 }
 
 .kaixiang {
-  background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN018eRR3Q24NdcYm6y4q_!!2200676927379.png") no-repeat 50%/110% 130%;
   // background-size: cover;
   // min-height: calc(100vh - 50px);
   padding-bottom: 150rpx;
@@ -2080,12 +2085,19 @@ page {
     .open-nav {
       display: flex;
       align-items: center;
+      justify-content: center;
+
+      .open-nav-con{
+        display: flex;
+        padding: 10rpx;
+        background: #F0E9FF;
+        border-radius: 30rpx;
+      }
 
       .open-nav-item {
         color: #777;
         font-size: 30rpx;
         font-weight: 700;
-        margin-right: 20rpx;
         text-align: center;
         padding: 5rpx 15rpx;
         display: flex;
@@ -2097,23 +2109,14 @@ page {
         /* 确保文字不换行 */
         position: relative;
         /* 设置为相对定位，为伪元素提供定位上下文 */
+        padding: 10rpx 50rpx;
+        border-radius: 40px;
+        color: #8466CF;
       }
 
       .open-active-nav {
-        color: #333333;
-        text-shadow: -1px -1px #fff, 1px 1px #333;
-      }
-
-      .open-active-nav::after {
-        content: "";
-        display: block;
-        width: 60rpx;
-        height: 10rpx;
-        background-color: #333333;
-        position: absolute;
-        bottom: -5rpx;
-        left: 50%;
-        transform: translateX(-50%);
+        background: #fff;
+        // text-shadow: -1px -1px #fff, 1px 1px #333;
       }
     }
 
@@ -2680,8 +2683,8 @@ page {
     color: #000;
     // background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01AaUpOl24NdcnBy8sR_!!2200676927379.png") no-repeat;
     // background-size: 100vw 100%;
-    background: linear-gradient(to right, #5dfda1, #baf828);
-    box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
+    // background: linear-gradient(to right, #5dfda1, #baf828);
+    // box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
 
     .money {
       font-weight: bold;
@@ -2879,9 +2882,9 @@ page {
     position: relative;
     border-radius: 20rpx;
     padding: 20rpx;
-    background: linear-gradient(to right, #5dfda1, #baf828);
+    // background: linear-gradient(to right, #5dfda1, #baf828);
     // background: linear-gradient(to right, #c1f721, #8dfa63, #62fc9b);
-    box-shadow: 2rpx 5rpx 2rpx 2rpx #209200;
+    // box-shadow: 2rpx 5rpx 2rpx 2rpx #209200;
 
     &:last-child {
       margin-bottom: 0;
@@ -3169,7 +3172,7 @@ page {
 }
 
 .card-top-wrap {
-  background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01tnIyCE24NdcYaYnty_!!2200676927379.png") no-repeat;
+  // background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01tnIyCE24NdcYaYnty_!!2200676927379.png") no-repeat;
   background-size: 100% 100%;
   margin: 0 20rpx;
   position: relative;
@@ -3509,18 +3512,18 @@ page {
     text-align: center;
     border: 2rpx solid #333;
     // background: linear-gradient(to right, #5dfda1, #baf828);
-    background: linear-gradient(to right, #c1f721, #8dfa63, #62fc9b);
+    // background: linear-gradient(to right, #c1f721, #8dfa63, #62fc9b);
     text-shadow: -1px -1px #fff, 1px 1px #333;
-    box-shadow: 0px 5px 5px #888888;
-    box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
+    // box-shadow: 0px 5px 5px #888888;
+    // box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
   }
 
   .chou-first-wrap {
     display: flex;
 
     .chou-second-item {
-      background: #fffc30;
-      box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
+      // background: #fffc30;
+      // box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
     }
   }
 
@@ -3662,10 +3665,6 @@ page {
   }
 }
 
-.box-award-content {
-  background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN018eRR3Q24NdcYm6y4q_!!2200676927379.png") no-repeat 50%/110% 130%;
-  // background-size: cover;
-}
 
 /* 图片预览弹窗的样式 */
 .image-preview-content {
@@ -3845,4 +3844,32 @@ page {
     }
   }
 }
+
+.uni-common-mt{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.uni-progress{
+  overflow: hidden;
+  border-radius: 50rpx;
+}
+
+.progress-box {
+    position: relative;
+    width: 60%;
+	}
+
+	.uni-icon {
+		line-height: 1.5;
+	}
+
+	.progress-cancel {
+		margin-left: 40rpx;
+	}
+
+	.progress-control button {
+		margin-top: 20rpx;
+	}
 </style>

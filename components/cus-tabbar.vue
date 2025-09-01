@@ -56,7 +56,7 @@ export default {
           path: '/pages/tabBar/bag',
           icon: 'https://box.bjkc010.com/static/mini/tabbar/cangku.png',
           selectIcon: 'https://box.bjkc010.com/static/mini/tabbar/cangku-active.png',
-          text: '盒柜',
+          text: '猫窝',
           centerItem: false
         },
         {

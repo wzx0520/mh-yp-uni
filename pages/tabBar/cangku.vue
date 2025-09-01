@@ -5,7 +5,7 @@
 -->
 <template>
   <view class="page-wrap">
-    <uni-nav-bar title="我的盒柜" color="#333" leftIcon="left" backgroundColor="#fff" :border="false" :statusBar="true"
+    <uni-nav-bar title="我的猫窝" color="#333" leftIcon="left" backgroundColor="#fff" :border="false" :statusBar="true"
       :fixed="true" @clickLeft="$common.back()"></uni-nav-bar>
 
     <view class="tab-list" :style="{
@@ -62,7 +62,7 @@
                 溶解
               </view>
 
-              <view @click="toSend(item)" class="btn">提货</view>
+              <view @click="toSend(item)" class="btn">领养</view>
             </template>
 
             <view @click="toDetail(item)" v-if="tabCur == 1 || tabCur == 4" class="btn">
@@ -124,7 +124,7 @@ export default {
       listData: [],
       tabList: [{
         id: 0,
-        title: '待提货'
+        title: '待领养'
       },
       {
         id: 1,

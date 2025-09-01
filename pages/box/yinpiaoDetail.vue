@@ -1478,11 +1478,10 @@ export default {
 
 <style lang='scss' scoped>
 page {
-  background: #dbf7cb;
+  background: #fff;
 }
 
 .kaixiang {
-  background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN018eRR3Q24NdcYm6y4q_!!2200676927379.png") no-repeat 50%/110% 130%;
   // background-size: cover;
   // min-height: calc(100vh - 50px);
   padding-bottom: 120rpx;
@@ -1736,12 +1735,19 @@ page {
     .open-nav {
       display: flex;
       align-items: center;
+      justify-content: center;
+
+      .open-nav-con{
+        display: flex;
+        padding: 10rpx;
+        background: #F0E9FF;
+        border-radius: 30rpx;
+      }
 
       .open-nav-item {
         color: #777;
         font-size: 30rpx;
         font-weight: 700;
-        margin-right: 20rpx;
         text-align: center;
         padding: 5rpx 15rpx;
         display: flex;
@@ -1753,23 +1759,14 @@ page {
         /* 确保文字不换行 */
         position: relative;
         /* 设置为相对定位，为伪元素提供定位上下文 */
+        padding: 10rpx 50rpx;
+        border-radius: 40px;
+        color: #8466CF;
       }
 
       .open-active-nav {
-        color: #333333;
-        text-shadow: -1px -1px #fff, 1px 1px #333;
-      }
-
-      .open-active-nav::after {
-        content: "";
-        display: block;
-        width: 60rpx;
-        height: 10rpx;
-        background-color: #333333;
-        position: absolute;
-        bottom: -5rpx;
-        left: 50%;
-        transform: translateX(-50%);
+        background: #fff;
+        // text-shadow: -1px -1px #fff, 1px 1px #333;
       }
     }
 
@@ -2336,8 +2333,8 @@ page {
     color: #000;
     // background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01AaUpOl24NdcnBy8sR_!!2200676927379.png") no-repeat;
     // background-size: 100vw 100%;
-    background: linear-gradient(to right, #5dfda1, #baf828);
-    box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
+    // background: linear-gradient(to right, #5dfda1, #baf828);
+    // box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
 
     .money {
       font-weight: bold;
@@ -2535,9 +2532,9 @@ page {
     position: relative;
     border-radius: 20rpx;
     padding: 20rpx;
-    background: linear-gradient(to right, #5dfda1, #baf828);
+    // background: linear-gradient(to right, #5dfda1, #baf828);
     // background: linear-gradient(to right, #c1f721, #8dfa63, #62fc9b);
-    box-shadow: 2rpx 5rpx 2rpx 2rpx #209200;
+    // box-shadow: 2rpx 5rpx 2rpx 2rpx #209200;
 
     &:last-child {
       margin-bottom: 0;
@@ -2710,7 +2707,7 @@ page {
 }
 
 .card-top-wrap {
-  background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01tnIyCE24NdcYaYnty_!!2200676927379.png") no-repeat;
+  // background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01tnIyCE24NdcYaYnty_!!2200676927379.png") no-repeat;
   background-size: 100% 100%;
   margin: 0 20rpx;
   position: relative;
@@ -2935,10 +2932,10 @@ page {
     text-align: center;
     border: 2rpx solid #333;
     // background: linear-gradient(to right, #5dfda1, #baf828);
-    background: linear-gradient(to right, #c1f721, #8dfa63, #62fc9b);
+    // background: linear-gradient(to right, #c1f721, #8dfa63, #62fc9b);
     text-shadow: -1px -1px #fff, 1px 1px #333;
-    box-shadow: 0px 5px 5px #888888;
-    box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
+    // box-shadow: 0px 5px 5px #888888;
+    // box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
   }
 
   .chou-first-wrap {
@@ -2949,8 +2946,8 @@ page {
     .chou-first-item {}
 
     .chou-second-item {
-      background: #fffc30;
-      box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
+      // background: #fffc30;
+      // box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
     }
   }
 
@@ -2962,8 +2959,8 @@ page {
 
     .chou-second-item {
       width: 50%;
-      background: #fffc30;
-      box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
+      // background: #fffc30;
+      // box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
     }
   }
 

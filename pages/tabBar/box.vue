@@ -551,7 +551,7 @@
     <uni-popup ref="orderPop" type="bottom">
       <view v-if="orderData" class="order-pop">
         <view class="order-pop-hd">
-          支付后请在“我的-盒柜”内进行手动发货
+          支付后请在“我的-猫窝”内进行手动发货
 
           <view @click="closeOrderPop" class="close icon">
             <cimage src="/static/icon/close2.png" mode="scaleToFill" />

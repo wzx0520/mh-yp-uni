@@ -12,7 +12,8 @@
     <view class="card-top-wrap">
       <view class="card-top-item">
         <view class="card-top-left">
-          <image class="card-top-left-img" :src="cardThumb" mode="aspectFit" lazy-load="false" binderror="" bindload="" />
+          <image class="card-top-left-img" :src="cardThumb" mode="aspectFit" lazy-load="false" binderror=""
+            bindload="" />
           <view class="card-num">
             <!-- 第{{ currentIndex + 1 }}/{{ boxInfo.set_count }}箱 -->
             <!-- 第{{ currentIndex + 1 }}/1箱 -->
@@ -83,9 +84,11 @@
 
     <view class="shop-list">
       <view class="open-nav">
-        <view class="open-nav-item" :class="[currentCate == index ? 'open-active-nav' : '']"
-          v-for="(item, index) in navList" :key="index" @click="changeCurrentCate(index)">
-          {{ item.name }}
+        <view class="open-nav-con">
+          <view class="open-nav-item" :class="[currentCate == index ? 'open-active-nav' : '']"
+            v-for="(item, index) in navList" :key="index" @click="changeCurrentCate(index)">
+            {{ item.name }}
+          </view>
         </view>
       </view>
       <template v-if="currentCate == 0">
@@ -408,7 +411,8 @@
         <view class="zsbox-top">
           <view class="zs-title">
             <view>中赏记录</view>
-            <view class="zs-icon" @click="zsPop = false"><uni-icons type="closeempty" color="#fff" size="20"></uni-icons>
+            <view class="zs-icon" @click="zsPop = false"><uni-icons type="closeempty" color="#fff"
+                size="20"></uni-icons>
             </view>
           </view>
 
@@ -560,6 +564,7 @@
         </template>
         <view class="close-btn-wrap">
           <button class="box-popup-close-btn" @click="tobag">去背包</button>
+          <button class="box-popup-close-btn" @click="tocontinue">继续抽奖</button>
         </view>
       </view>
     </u-popup>
@@ -616,7 +621,7 @@ export default {
   components: {
 
   },
-  data () {
+  data() {
     return {
       muteBgMusic: false,
       kefushow: false,
@@ -749,7 +754,7 @@ export default {
       sortOrder: 'desc', // 排序方向：desc（降序）、asc（升序）
     }
   },
-  onLoad (options) {
+  onLoad(options) {
     if (options.scene) {
       let arr = options.scene.split('_')
       this.optionsData = {
@@ -775,7 +780,7 @@ export default {
     // #endif
     this.getData()
   },
-  onShow () {
+  onShow() {
     this.$store.dispatch('getUserInfo').then(res => {
       console.log(res)
     })
@@ -793,7 +798,7 @@ export default {
     this.coupon_info = {}
   },
   watch: {
-    'queueInfo.remainingTime' (val) {
+    'queueInfo.remainingTime'(val) {
       this.remainingTime = val;
       if (this.timer) clearInterval(this.timer);
 
@@ -809,7 +814,7 @@ export default {
       }
     }
   },
-  onUnload () {
+  onUnload() {
     console.log('移除事件')
     clearInterval(this.barrageTimer)
     clearInterval(this.checkTimer)
@@ -824,7 +829,7 @@ export default {
   },
   computed: {
     ...mapGetters(['sysConfig', 'userInfo']),
-    cardThumb () {
+    cardThumb() {
       let img
       // if (this.currentIndex == 0) {
       //   img = this.boxInfo.thumb
@@ -838,7 +843,7 @@ export default {
   },
   methods: {
     // 切换排序方式
-    changeSort (type) {
+    changeSort(type) {
       // type: 'time' 时间排序, 'value' 价值排序
       if (type === 'time') {
         if (this.sortType === 'created_at') {
@@ -867,12 +872,12 @@ export default {
     },
 
     // 下拉刷新回调
-    downCallback () {
+    downCallback() {
       // 刷新时使用当前排序参数重新加载第一页
       this.getList({ num: 1, size: this.pageSize });
       this.mescroll.endDownScroll(); // 结束下拉刷新
     },
-    getList ({
+    getList({
       num,
       size
     }) {
@@ -903,7 +908,7 @@ export default {
         }
       })
     },
-    prev () {
+    prev() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -915,7 +920,7 @@ export default {
       }
       this.getData()
     },
-    next () {
+    next() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -927,7 +932,7 @@ export default {
       }
       this.getData()
     },
-    changeNum () {
+    changeNum() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -937,7 +942,7 @@ export default {
       this.currentIndex = Math.floor(Math.random() * num)
       this.getData()
     },
-    setAnimate () {
+    setAnimate() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -945,7 +950,7 @@ export default {
       })
       this.setShow = true
     },
-    closeSet () {
+    closeSet() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -953,7 +958,7 @@ export default {
       })
       this.setShow = false
     },
-    changeAnimate (e) {
+    changeAnimate(e) {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -962,17 +967,17 @@ export default {
       this.animateSet = !!e
       uni.setStorageSync('animateSet', this.animateSet)
     },
-    useCouPon (item) {
+    useCouPon(item) {
       this.coupon_info = item
       // 请求订单信息
       this.confirmSubmit(0)
       this.couponPop = false
     },
-    goCoupon () {
+    goCoupon() {
       this.couponPop = true
       this.getUserCoupon()
     },
-    getUserCoupon () {
+    getUserCoupon() {
       this.req({
         url: '/v1/coupon/order_coupons',
         data: {
@@ -993,13 +998,13 @@ export default {
         }
       })
     },
-    zsCu (index) {
+    zsCu(index) {
       this.currentItems = index
       this.boxLogList = []
       this.mescroll.resetUpScroll()
       this.mescroll.scrollTo(0, 0)
     },
-    zs () {
+    zs() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1009,7 +1014,7 @@ export default {
       this.getTab()
     },
 
-    getBoxLogList ({
+    getBoxLogList({
       num,
       size
     }) {
@@ -1048,7 +1053,7 @@ export default {
         }
       })
     },
-    getTab () {
+    getTab() {
       return new Promise((resolve, reject) => {
         this.req({
           url: '/v1/box/mark',
@@ -1074,7 +1079,7 @@ export default {
         })
       })
     },
-    handleSwiperChange (event) {
+    handleSwiperChange(event) {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1083,7 +1088,7 @@ export default {
       const current = event.detail.current;
       this.currentBanner = current;
     },
-    checkPayStatus () {
+    checkPayStatus() {
       const _this = this
 
       const order_info = uni.getStorageSync('order_info_box')
@@ -1133,7 +1138,7 @@ export default {
         _this.cancelCheckPayStatus();
       }, 60 * 1000)
     },
-    cancelCheckPayStatus () {
+    cancelCheckPayStatus() {
       uni.removeStorageSync('order_info_box')
       // this.$common.toast({
       // 	title: '支付超时',
@@ -1149,7 +1154,7 @@ export default {
       }
     },
     // 取消支付
-    cancelOrderPay () {
+    cancelOrderPay() {
       const order_info = uni.getStorageSync('order_info_box')
       if (order_info.order_sn) {
         this.req({
@@ -1168,7 +1173,7 @@ export default {
 * @description: 获取数据
 * @return {*}
 */
-    getData () {
+    getData() {
       return new Promise((resolve, reject) => {
         this.req({
           url: '/v1/box/info',
@@ -1199,7 +1204,7 @@ export default {
 * @description: 获取抽奖方式
 * @return {*}
 */
-    getDraw () {
+    getDraw() {
       return new Promise((resolve, reject) => {
         this.req({
           url: '/v1/box/draw',
@@ -1214,17 +1219,17 @@ export default {
         })
       })
     },
-    changePayType (e) {
+    changePayType(e) {
       this.payTypeCur = e
     },
-    changeBuyType (e) {
+    changeBuyType(e) {
       this.btnCur = e
       this.confirmSubmit(0)
     },
-    openBox () {
+    openBox() {
       this.confirmSubmit(0)
     },
-    async confirmSubmit (e) {
+    async confirmSubmit(e) {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1355,7 +1360,7 @@ export default {
         }
       })
     },
-    openBox (order_sn) {
+    openBox(order_sn) {
       let url = '/v1/box/order/mergeAward'
       let data = {
         order_sn: order_sn
@@ -1386,23 +1391,23 @@ export default {
         }
       })
     },
-    openOrderPop () {
+    openOrderPop() {
       this.agree = true
 
       this.$refs.orderPop.open()
     },
-    closeOrderPop () {
+    closeOrderPop() {
       this.$refs.orderPop.close()
     },
 
-    tryPlay () {
+    tryPlay() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
         }
       })
     },
-    goMall () {
+    goMall() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1423,7 +1428,7 @@ export default {
       // console.log(e)
       this.scrollTop = e.detail.scrollTop
     },
-    goInvite () {
+    goInvite() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1449,7 +1454,7 @@ export default {
       })
     },
     // 玩法
-    goRule () {
+    goRule() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1458,7 +1463,7 @@ export default {
       this.$common.to({ url: '/pages/index/rule?id=3' })
     },
     // 联系客服
-    lxkefu () {
+    lxkefu() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1466,7 +1471,7 @@ export default {
       })
       this.kefushow = true
     },
-    openDetailPop (e) {
+    openDetailPop(e) {
       if (e.award_type == 2) {
         this.curDetail = e
         this.isBoxPopupShow = true;
@@ -1483,10 +1488,10 @@ export default {
       }
 
     },
-    closeDetailPop () {
+    closeDetailPop() {
       this.detailPop = false
     },
-    playMusic () {
+    playMusic() {
       this.muteBgMusic = !this.muteBgMusic;
       this.$nextTick(() => {
         if (switchMusic) {
@@ -1499,16 +1504,16 @@ export default {
         bgMusic.pause()
       }
     },
-    noticeEnd (e) {
+    noticeEnd(e) {
       console.log('123', e)
     },
-    changeCurrentCate (index) {
+    changeCurrentCate(index) {
       this.currentCate = index
       if (index == 1) {
         this.getList({ num: 1, size: 20 })
       }
     },
-    fresh () {
+    fresh() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1521,7 +1526,7 @@ export default {
       })
       this.getData()
     },
-    tobag () {
+    tobag() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1532,7 +1537,10 @@ export default {
         url: '/pages/tabBar/bag',
       });
     },
-    openRule () {
+    tocontinue() {
+      this.awardShow = false
+    },
+    openRule() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1540,7 +1548,7 @@ export default {
       })
       this.rulePop = true
     },
-    back () {
+    back() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1567,7 +1575,7 @@ export default {
       });
     },
     // 离开页面
-    levelPage () {
+    levelPage() {
       this.req({
         url: '/v1/box/leaveQueue',
         data: {
@@ -1586,7 +1594,7 @@ export default {
       });
     },
     // 加入队列
-    joinQueue () {
+    joinQueue() {
       this.req({
         url: '/v1/box/joinQueue',
         data: {
@@ -1615,7 +1623,7 @@ export default {
       });
     },
     // 切换队列
-    switchQueue () {
+    switchQueue() {
       // 用户确认切换队列
       this.req({
         url: '/v1/box/switchQueue',
@@ -1642,7 +1650,7 @@ export default {
       });
     },
     // 重置倒计时
-    resetTimer () {
+    resetTimer() {
       this.req({
         url: '/v1/box/resetTimer',
         data: {
@@ -1667,7 +1675,7 @@ export default {
       });
     },
     // 开始倒计时
-    startQueueTimer () {
+    startQueueTimer() {
       if (this.queueTimer) clearInterval(this.queueTimer);
       this.queueTimer = setInterval(() => {
         if (this.queueInfo.remainingTime > 0) {
@@ -1679,7 +1687,7 @@ export default {
       }, 1000);
     },
     // 离开队列
-    leaveQueue () {
+    leaveQueue() {
       this.req({
         url: '/v1/box/leaveQueue',
         data: {
@@ -1695,14 +1703,14 @@ export default {
       });
     },
     // 轮询队列状态
-    startPollQueueStatus () {
+    startPollQueueStatus() {
       if (this.pollTimer) clearInterval(this.pollTimer);
       this.pollTimer = setInterval(() => {
         this.getQueueStatus();
       }, 3000); // 每3秒刷新一次
     },
     // 获取队列状态
-    getQueueStatus () {
+    getQueueStatus() {
       this.req({
         url: '/v1/box/getQueueStatus',
         data: {
@@ -1722,7 +1730,7 @@ export default {
         }
       });
     },
-    cancelQueue () {
+    cancelQueue() {
       this.leaveQueue();
       if (this.pollTimer) clearInterval(this.pollTimer);
     },
@@ -1732,11 +1740,10 @@ export default {
 
 <style lang='scss' scoped>
 page {
-  background: #dbf7cb;
+  background: #fff;
 }
 
 .kaixiang {
-  background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN018eRR3Q24NdcYm6y4q_!!2200676927379.png") no-repeat 50%/110% 130%;
   // background-size: cover;
   // min-height: calc(100vh - 50px);
   padding-bottom: 120rpx;
@@ -1990,12 +1997,19 @@ page {
     .open-nav {
       display: flex;
       align-items: center;
+      justify-content: center;
+
+      .open-nav-con{
+        display: flex;
+        padding: 10rpx;
+        background: #F0E9FF;
+        border-radius: 30rpx;
+      }
 
       .open-nav-item {
         color: #777;
         font-size: 30rpx;
         font-weight: 700;
-        margin-right: 20rpx;
         text-align: center;
         padding: 5rpx 15rpx;
         display: flex;
@@ -2007,23 +2021,14 @@ page {
         /* 确保文字不换行 */
         position: relative;
         /* 设置为相对定位，为伪元素提供定位上下文 */
+        padding: 10rpx 50rpx;
+        border-radius: 40px;
+        color: #8466CF;
       }
 
       .open-active-nav {
-        color: #333333;
-        text-shadow: -1px -1px #fff, 1px 1px #333;
-      }
-
-      .open-active-nav::after {
-        content: "";
-        display: block;
-        width: 60rpx;
-        height: 10rpx;
-        background-color: #333333;
-        position: absolute;
-        bottom: -5rpx;
-        left: 50%;
-        transform: translateX(-50%);
+        background: #fff;
+        // text-shadow: -1px -1px #fff, 1px 1px #333;
       }
     }
 
@@ -2590,8 +2595,8 @@ page {
     color: #000;
     // background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01AaUpOl24NdcnBy8sR_!!2200676927379.png") no-repeat;
     // background-size: 100vw 100%;
-    background: linear-gradient(to right, #5dfda1, #baf828);
-    box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
+    // background: linear-gradient(to right, #5dfda1, #baf828);
+    // box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
 
     .money {
       font-weight: bold;
@@ -2791,9 +2796,9 @@ page {
     position: relative;
     border-radius: 20rpx;
     padding: 20rpx;
-    background: linear-gradient(to right, #5dfda1, #baf828);
+    // background: linear-gradient(to right, #5dfda1, #baf828);
     // background: linear-gradient(to right, #c1f721, #8dfa63, #62fc9b);
-    box-shadow: 2rpx 5rpx 2rpx 2rpx #209200;
+    // box-shadow: 2rpx 5rpx 2rpx 2rpx #209200;
 
     &:last-child {
       margin-bottom: 0;
@@ -2966,7 +2971,7 @@ page {
 }
 
 .card-top-wrap {
-  background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01tnIyCE24NdcYaYnty_!!2200676927379.png") no-repeat;
+  // background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01tnIyCE24NdcYaYnty_!!2200676927379.png") no-repeat;
   background-size: 100% 100%;
   margin: 0 20rpx;
   position: relative;
@@ -3196,10 +3201,10 @@ page {
     text-align: center;
     border: 2rpx solid #333;
     // background: linear-gradient(to right, #5dfda1, #baf828);
-    background: linear-gradient(to right, #c1f721, #8dfa63, #62fc9b);
+    // background: linear-gradient(to right, #c1f721, #8dfa63, #62fc9b);
     text-shadow: -1px -1px #fff, 1px 1px #333;
-    box-shadow: 0px 5px 5px #888888;
-    box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
+    // box-shadow: 0px 5px 5px #888888;
+    // box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
   }
 
   .chou-first-wrap {
@@ -3210,8 +3215,8 @@ page {
     .chou-first-item {}
 
     .chou-second-item {
-      background: #fffc30;
-      box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
+      // background: #fffc30;
+      // box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
     }
   }
 
@@ -3223,8 +3228,8 @@ page {
 
     .chou-second-item {
       width: 50%;
-      background: #fffc30;
-      box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
+      // background: #fffc30;
+      // box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
     }
   }
 
@@ -3358,11 +3363,6 @@ page {
       border-radius: 35rpx;
     }
   }
-}
-
-.box-award-content {
-  background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN018eRR3Q24NdcYm6y4q_!!2200676927379.png") no-repeat 50%/110% 130%;
-  // background-size: cover;
 }
 </style>
 <style lang='scss' scoped>

@@ -67,8 +67,8 @@ export default {
     height: 41px;
     // background: linear-gradient(90deg, #f6d181 0%, #d0749d 100%);
     // background-color: #d0749d;
-    background: linear-gradient(to right, #5dfda1, #baf828);
-    box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
+    // background: linear-gradient(to right, #5dfda1, #baf828);
+    // box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
 
     color: #000;
     display: flex;
