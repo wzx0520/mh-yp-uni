@@ -2596,10 +2596,10 @@ page {
     font-family: PingFang SC;
     font-weight: 500;
     color: #000;
-    // background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01AaUpOl24NdcnBy8sR_!!2200676927379.png") no-repeat;
-    // background-size: 100vw 100%;
-    // background: linear-gradient(to right, #5dfda1, #baf828);
-    // box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
+    background: url("https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01AaUpOl24NdcnBy8sR_!!2200676927379.png") no-repeat;
+    background-size: 100vw 100%;
+    background: linear-gradient(to right, #5dfda1, #baf828);
+    box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
 
     .money {
       font-weight: bold;
@@ -3206,10 +3206,10 @@ page {
     text-align: center;
     border: 2rpx solid #333;
     // background: linear-gradient(to right, #5dfda1, #baf828);
-    // background: linear-gradient(to right, #c1f721, #8dfa63, #62fc9b);
+    background: linear-gradient(to right, #c1f721, #8dfa63, #62fc9b);
     text-shadow: -1px -1px #fff, 1px 1px #333;
     // box-shadow: 0px 5px 5px #888888;
-    // box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
+    box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
   }
 
   .chou-first-wrap {

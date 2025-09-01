@@ -1209,7 +1209,7 @@ page {
       // background: rgba(0, 0, 0, 0.6);
       // border: 1rpx solid #999;
       // background: linear-gradient(to right, #5dfda1, #baf828);
-      box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+      // box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 
       .list-item-wrap {
         // background: #e1fee9;
