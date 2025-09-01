@@ -543,8 +543,12 @@ export default {
 
       // #ifdef MP
       // 微信小程序获取 TabBar 高度
-      const res = uni.getMenuButtonBoundingClientRect();
-      this.tabBarHeight = info.screenHeight - res.bottom + res.height + 30;
+      // const res = uni.getMenuButtonBoundingClientRect();
+      // console.log(info,'22222222222');
+      
+      // console.log(res,'lwqelwqeqwo');
+      
+      // this.tabBarHeight = info.statusBarHeight - res.bottom + res.height;
       // #endif
     },
     // 全选/反选主逻辑

@@ -1747,6 +1747,8 @@ page {
   // background-size: cover;
   // min-height: calc(100vh - 50px);
   padding-bottom: 120rpx;
+  background: #f7f7f7;
+  
 
   .nav {
     ::v-deep .uni-navbar__header {
@@ -2028,6 +2030,7 @@ page {
 
       .open-active-nav {
         background: #fff;
+        color: #5D3FD3;
         // text-shadow: -1px -1px #fff, 1px 1px #333;
       }
     }
@@ -2099,7 +2102,7 @@ page {
       .mh-goods-list-item {
         position: relative;
         background-color: rgba(0, 0, 0, 0.2);
-        background: #f0fbe3;
+        background: #fff;
         color: #333;
         text-align: center;
         font-size: 24rpx;
@@ -2981,6 +2984,8 @@ page {
     display: flex;
     padding: 80rpx 40rpx;
     padding-bottom: 20rpx;
+    background: #fff;
+    border-radius: 20rpx;
 
     .card-top-left {
       position: relative;
