@@ -1290,7 +1290,7 @@ export default {
         })
       }
     },
-    /**
+    /*** 
 * @description: 获取数据
 * @return {*}
 */
@@ -2094,7 +2094,7 @@ page {
       align-items: center;
       justify-content: center;
 
-      .open-nav-con{
+      .open-nav-con {
         display: flex;
         padding: 10rpx;
         background: #F0E9FF;

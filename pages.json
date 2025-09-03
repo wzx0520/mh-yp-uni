@@ -116,6 +116,13 @@
       }
     },
     {
+      "path": "pages/tabBar/test",
+      "style": {
+        "navigationBarTitleText": "测试",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
       "path": "pages/mall/mall",
       "style": {
         "enablePullDownRefresh": false

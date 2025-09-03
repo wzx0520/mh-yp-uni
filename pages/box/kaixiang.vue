@@ -57,6 +57,7 @@
         <text class="no-queue-text">当前无人排队，快来抢购！</text>
       </view>
 
+
       <!-- 轮到我 -->
       <view v-else-if="queueInfo.status == 1" class="my-turn-box">
         排到你了，拥有专属时间 <text class="highlight">{{ remainingTime }}</text>s，
@@ -139,24 +140,56 @@
         </template>
       </template>
       <template v-else>
-        <template v-if="boxLogList.length">
-          <!-- 中赏记录排序控件 -->
-          <view class="sort-controls">
-            <view class="sort-btn" @click="changeSort('time')">
-              <text>按时间排序</text>
-              <!-- 显示当前排序状态图标 -->
-              <text class="sort-icon" v-if="sortType === 'created_at'">
-                {{ sortOrder === 'asc' ? '↑' : '↓' }}
-              </text>
-            </view>
-            <view class="sort-btn" @click="changeSort('value')">
-              <text>按物品价值排序</text>
-              <text class="sort-icon" v-if="sortType === 'return_price'">
-                {{ sortOrder === 'asc' ? '↑' : '↓' }}
-              </text>
+        <template v-if="tabList.length">
+
+          <view class="open-card" v-for="(item, index) in tabList" :key="index">
+            <view class="award-wrap">
+              <view class="award-log-item">
+                <view class="award-log-left">
+                  <view class="award-log-time">
+                    {{ item.data[0].created_at }}
+                  </view>
+                  <view class="award-log-info">
+                    {{ item.data[0].nickName }} 获得 <text class="award-name">{{ item.data[0].title }}</text>
+                  </view>
+                </view>
+                <view class="award-log-right">
+                  <view>{{ item.data[0].mark_title }}</view>
+                  <image class="award-log-img" :src="item.data[0].thumb" mode="widthFix" lazy-load="false" binderror=""
+                    bindload="" />
+                </view>
+              </view>
+              <view v-if="item.mark_id === currentId">
+                <view class="award-log-item" v-for="(item, index) in sortList" :key="index">
+                  <view class="award-log-left">
+                    <view class="award-log-time">
+                      {{ item.created_at }}
+                    </view>
+                    <view class="award-log-info">
+                      {{ item.nickName }} 获得 <text class="award-name">{{ item.title }}</text>
+                    </view>
+                  </view>
+                  <view class="award-log-right">
+                    <view>{{ item.mark_title }}</view>
+                    <image class="award-log-img" :src="item.thumb" mode="widthFix" lazy-load="false" binderror=""
+                      bindload="" />
+                  </view>
+                </view>
+                <view v-if="sortList.length" class="up-btn">
+                  <view class="up-text" @click="clearList()">收起</view>
+                  <uni-icons type="arrow-up" size="20"></uni-icons>
+                </view>
+              </view>
+              <view>
+                <view class="more-btn">
+                  <view class="more-text" @click="getSortList(item)">展开查看更多</view>
+                  <uni-icons type="arrow-down" size="20"></uni-icons>
+                </view>
+              </view>
             </view>
           </view>
-          <mescroll-body ref="mescrollRef" height="400" @init="mescrollInit" @down="downCallback" @up="getList"
+
+          <!-- <mescroll-body ref="mescrollRef" height="400" @init="mescrollInit" @down="downCallback" @up="getList"
             :down="downOption" :up="upOption">
             <view class="award-wrap">
               <view class="award-log-item" v-for="(item, index) in boxLogList" :key="index">
@@ -174,7 +207,7 @@
                 </view>
               </view>
             </view>
-          </mescroll-body>
+          </mescroll-body> -->
         </template>
         <template v-else>
           <view class="empty-list">
@@ -688,6 +721,12 @@ export default {
       is_epay: 0,
       currentBanner: 0,
       zsPop: false,
+      nextPage: true,
+      pageNum: 1,
+      currentId: '',
+      tabList: [],
+      sortData: {},
+      sortList: [],
       boxLogList: [],
       btnLists: [
       ],
@@ -864,49 +903,81 @@ export default {
           this.sortOrder = 'desc';
         }
       }
-
-      // 重新获取第一页数据
-      if (this.$refs.mescrollRef) {
-        this.getList({ num: 1, size: this.pageSize });
-      }
     },
-
-    // 下拉刷新回调
-    downCallback() {
-      // 刷新时使用当前排序参数重新加载第一页
-      this.getList({ num: 1, size: this.pageSize });
-      this.mescroll.endDownScroll(); // 结束下拉刷新
-    },
-    getList({
+    getTabs(
       num,
       size
-    }) {
+    ) {
       this.req({
-        url: '/v1/box/boxLogList',
+        url: '/v1/box/boxLogList88',
         data: {
           id: this.optionsData.id,
-          mark_id: this.btnLists.length ? this.btnLists[this.currentItems].id : 0,
           setNo: this.currentIndex + 1,
+          mark_id: this.btnLists.length ? this.btnLists[this.currentItems].id : 0,
           page: num,
           per_page: size,
           sort_by: this.sortType, // 新增：排序字段
           sort_order: this.sortOrder // 新增：排序方向
-        },
-        Loading: true,
+        }, Loading: true,
         success: res => {
           if (res.code == 200) {
             if (num == 1) {
-              this.boxLogList = []
+              this.tabList = []
             }
-            if (res.data.data.length) {
-              this.boxLogList = [...this.boxLogList, ...res.data.data]
-              this.mescroll.endBySize(res.data.data.length, res.data.total)
+            if (res.data.length) {
+              console.log(111);
+              this.tabList = [...this.tabList, ...res.data]
+
+              // this.boxLogList = [...this.boxLogList, ...res.data.data]
             }
           } else {
             this.mescroll.endBySize(0, 0)
           }
         }
       })
+    },
+    getSortList(e) {
+
+      // console.log(this.currentId,'423412');
+      if (e.mark_id === this.currentId) {
+        if (!this.nextPage) {
+          uni.showToast({
+            title: '没有更多了',
+            icon:"none"
+          })
+          return
+        }
+        this.pageNum++
+      } else {
+        this.pageNum = 1
+      }
+      uni.showLoading({ title: "加载中" })
+
+      this.req({
+        url: '/v1/box/boxLogList88',
+        data: {
+          id: this.boxInfo.id,
+          mark_id: e.mark_id,
+          page: this.pageNum,
+          per_page: 20
+        },
+        Loading: true,
+        success: res => {
+          if (res.code === 200) {
+            this.sortData = res.data.find(v => v.mark_id === e.mark_id),
+              this.pageNum === 1 ? this.sortList = this.sortData.data : this.sortList = [...this.sortList, ...this.sortData.data];
+            this.nextPage = this.sortData.next_page
+            this.currentId = e.mark_id
+            uni.hideLoading();
+          }
+        }
+      })
+
+    },
+    clearList() {
+      this.sortList = []
+      this.nextPage = true
+      this.pageNum = 0
     },
     prev() {
       this.$nextTick(() => {
@@ -1510,7 +1581,7 @@ export default {
     changeCurrentCate(index) {
       this.currentCate = index
       if (index == 1) {
-        this.getList({ num: 1, size: 20 })
+        this.getTabs({ num: 1, size: 20 })
       }
     },
     fresh() {
@@ -1734,6 +1805,9 @@ export default {
       this.leaveQueue();
       if (this.pollTimer) clearInterval(this.pollTimer);
     },
+    changeTabs(e) {
+      this.tabCur = e
+    }
   },
 }
 </script>
@@ -1748,7 +1822,7 @@ page {
   // min-height: calc(100vh - 50px);
   padding-bottom: 120rpx;
   background: #f7f7f7;
-  
+
 
   .nav {
     ::v-deep .uni-navbar__header {
@@ -2001,7 +2075,7 @@ page {
       align-items: center;
       justify-content: center;
 
-      .open-nav-con{
+      .open-nav-con {
         display: flex;
         padding: 10rpx;
         background: #F0E9FF;
@@ -2784,6 +2858,13 @@ page {
   }
 }
 
+.open-card {
+  background: #fff;
+  padding: 20rpx;
+  border-radius: 20rpx;
+  margin-top: 20rpx;
+}
+
 .award-wrap {
   padding: 0 20rpx;
   margin-top: 20rpx;
@@ -2797,7 +2878,6 @@ page {
     // background-size: 100% 100%;
     margin-bottom: 20rpx;
     position: relative;
-    border-radius: 20rpx;
     padding: 20rpx;
     // background: linear-gradient(to right, #5dfda1, #baf828);
     // background: linear-gradient(to right, #c1f721, #8dfa63, #62fc9b);
@@ -3402,5 +3482,24 @@ page {
 .sort-btn.active {
   color: #ff4d4f;
   font-weight: bold;
+}
+
+.up-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20rpx;
+}
+
+.no-text {
+  margin-top: 20rpx;
+  text-align: center;
+}
+
+.more-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20rpx;
 }
 </style>
