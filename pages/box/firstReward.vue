@@ -635,9 +635,9 @@
           <view class="award-grid">
             <view class="award-card" v-for="(award, index) in curDetail.box_awards" :key="index">
               <view class="award-img-container">
-                <!-- <image :src="award.thumb" class="award-img" mode="aspectFill" @click="previewImage(award)"></image> -->
-                <xc-image :src="award.thumb" :showBg="true" ratio="1:1" borderRadius="10"
-                  @click="previewImage(award)" />
+                <view :class="award.mark_title==='H赏'?'':'animate-img'">
+                  <xc-image :src="award.thumb" :showBg="true" ratio="1:1" borderRadius="10" @click="previewImage(award)"/>
+                </view>
                 <view class="award-tag">{{ award.mark_title || 'A' }}</view>
                 <view class="award-probability">{{ award.show_rate }}%</view>
               </view>
@@ -669,7 +669,9 @@
           <view class="award-grid">
             <view class="award-card" v-for="(award, index) in prizeResult" :key="index">
               <view class="award-img-container">
-                <xc-image :src="award.thumb" :showBg="true" ratio="1:1" borderRadius="10" />
+                <view :class="award.mark_title==='H赏'?'':'animate-img'">
+                  <xc-image :src="award.thumb" :showBg="true" ratio="1:1" borderRadius="10" />
+                </view>
                 <view class="award-tag">
                   <template v-if="award.is_box == 1">
                     BX赏
@@ -3657,14 +3659,30 @@ page {
         position: relative;
         width: 140rpx; // 固定宽度
         height: 140rpx; // 固定高度
-        border-radius: 16rpx;
-        overflow: hidden;
         background-color: #f5f5f5;
+
+        .animate-img {
+          width: 140rpx; // 固定宽度
+          height: 140rpx; // 固定高度
+          animation: starFlick 0.6s ease-out infinite;
+          -webkit-animation: starFlick 0.6s ease-out infinite;
+          border-radius: 16rpx;
+        }
 
         .award-img {
           width: 100%;
           height: 100%;
           object-fit: cover;
+        }
+
+        @keyframes starFlick {
+          from {
+            box-shadow: 0 0 10rpx 10rpx rgba(255, 255, 0, 0.8);
+          }
+
+          to {
+            box-shadow: 0 0 3rpx 3rpx rgba(240, 236, 5, 0.2);
+          }
         }
 
         .award-tag {

@@ -11,12 +11,6 @@
       }
     },
     {
-      "path": "pages/tabBar/charts",
-      "style": {
-        "enablePullDownRefresh": false
-      }
-    },
-    {
       "path": "pages/index/sign",
       "style": {
         "enablePullDownRefresh": false
@@ -68,13 +62,6 @@
     },
     {
       "path": "pages/box/lotteryBag",
-      "style": {
-        "enablePullDownRefresh": false,
-        "navigationBarTextStyle": "white"
-      }
-    },
-    {
-      "path": "pages/box/rank",
       "style": {
         "enablePullDownRefresh": false,
         "navigationBarTextStyle": "white"
@@ -212,12 +199,6 @@
         "iconPath": "static/tabbar/taba.png",
         "selectedIconPath": "static/tabbar/taba_o.png",
         "text": "首页"
-      },
-      {
-        "pagePath": "pages/tabBar/charts",
-        "iconPath": "static/tabbar/tabb.png",
-        "selectedIconPath": "static/tabbar/tabb_o.png",
-        "text": "排行榜"
       },
       {
         "pagePath": "pages/index/index",

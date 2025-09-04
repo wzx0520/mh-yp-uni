@@ -145,6 +145,9 @@
           <view class="open-card" v-for="(item, index) in tabList" :key="index">
             <view class="award-wrap">
               <view class="award-log-item">
+                <view>
+                  <image :src="item.data[0].avatar" class="user-avatar" mode="widthFix" />
+                </view>
                 <view class="award-log-left">
                   <view class="award-log-time">
                     {{ item.data[0].created_at }}
@@ -160,18 +163,21 @@
                 </view>
               </view>
               <view v-if="item.mark_id === currentId">
-                <view class="award-log-item" v-for="(item, index) in sortList" :key="index">
+                <view class="award-log-item" v-for="(info, index) in sortList" :key="info.id">
+                  <view>
+                    <image :src="info.avatar" class="user-avatar" mode="widthFix" />
+                  </view>
                   <view class="award-log-left">
                     <view class="award-log-time">
-                      {{ item.created_at }}
+                      {{ info.created_at }}
                     </view>
                     <view class="award-log-info">
-                      {{ item.nickName }} 获得 <text class="award-name">{{ item.title }}</text>
+                      {{ info.nickName }} 获得 <text class="award-name">{{ info.title }}</text>
                     </view>
                   </view>
                   <view class="award-log-right">
-                    <view>{{ item.mark_title }}</view>
-                    <image class="award-log-img" :src="item.thumb" mode="widthFix" lazy-load="false" binderror=""
+                    <view>{{ info.mark_title }}</view>
+                    <image class="award-log-img" :src="info.thumb" mode="widthFix" lazy-load="false" binderror=""
                       bindload="" />
                   </view>
                 </view>
@@ -188,26 +194,6 @@
               </view>
             </view>
           </view>
-
-          <!-- <mescroll-body ref="mescrollRef" height="400" @init="mescrollInit" @down="downCallback" @up="getList"
-            :down="downOption" :up="upOption">
-            <view class="award-wrap">
-              <view class="award-log-item" v-for="(item, index) in boxLogList" :key="index">
-                <view class="award-log-left">
-                  <view class="award-log-time">
-                    {{ item.created_at }}
-                  </view>
-                  <view class="award-log-info">
-                    {{ item.nickName }} 获得 <text class="award-name">{{ item.title }}</text>
-                  </view>
-                </view>
-                <view class="award-log-right">
-                  <image class="award-log-img" :src="item.thumb" mode="widthFix" lazy-load="false" binderror=""
-                    bindload="" />
-                </view>
-              </view>
-            </view>
-          </mescroll-body> -->
         </template>
         <template v-else>
           <view class="empty-list">
@@ -578,7 +564,9 @@
           <view class="award-grid">
             <view class="award-card" v-for="(award, index) in prizeResult" :key="index">
               <view class="award-img-container">
-                <xc-image :src="award.thumb" :showBg="true" ratio="1:1" borderRadius="10" />
+                <view :class="award.mark_title==='H赏'?'':'animate-img'">
+                  <xc-image :src="award.thumb" :showBg="true" ratio="1:1" borderRadius="10" />
+                </view>
                 <view class="award-tag">
                   {{ award.mark_title }}
                 </view>
@@ -601,38 +589,6 @@
         </view>
       </view>
     </u-popup>
-
-    <!-- 宝箱物品 -->
-    <!-- <u-popup v-model="isBoxPopupShow" mode="center" border-radius="20" width="90%">
-      <view class="box-content">
-        <view class="box-popup-title">宝箱物品</view>
-        <view class="box-popup-desc">打开后随机获得一个赏品</view>
-        <template v-if="curDetail && curDetail.box_awards.length">
-          <view class="award-grid">
-
-            <view class="award-card" v-for="(award, index) in curDetail.box_awards" :key="index">
-              <view class="award-img-container">
-                <image :src="award.thumb" class="award-img" mode="aspectFill"></image>
-                <view class="award-tag">{{ award.mark_title || 'A' }}</view>
-                <view class="award-probability">{{ award.real_rate }}%</view>
-              </view>
-              <view class="award-info">
-                <view class="award-name">{{ award.title }}</view>
-                <view class="award-ref-price">参考价{{ award.price }}</view>
-              </view>
-            </view>
-          </view>
-        </template>
-        <template v-else>
-          <view class="empty">
-            <u-empty text="暂无数据" mode="list"></u-empty>
-          </view>
-        </template>
-        <view class="close-btn-wrap">
-          <button class="box-popup-close-btn" @click="isBoxPopupShow = false">关闭</button>
-        </view>
-      </view>
-    </u-popup> -->
     <u-modal v-model="switchQueueShow" content="您已在其他队列中，是否切换到当前队列" show-cancel-button cancel-text="取消"
       confirm-text="确认切换" @confirm="switchQueue"></u-modal>
 
@@ -937,13 +893,11 @@ export default {
       })
     },
     getSortList(e) {
-
-      // console.log(this.currentId,'423412');
       if (e.mark_id === this.currentId) {
         if (!this.nextPage) {
           uni.showToast({
             title: '没有更多了',
-            icon:"none"
+            icon: "none"
           })
           return
         }
@@ -952,7 +906,6 @@ export default {
         this.pageNum = 1
       }
       uni.showLoading({ title: "加载中" })
-
       this.req({
         url: '/v1/box/boxLogList88',
         data: {
@@ -2798,7 +2751,6 @@ page {
       color: #333333;
     }
 
-    .content {}
   }
 }
 
@@ -2866,7 +2818,6 @@ page {
 }
 
 .award-wrap {
-  padding: 0 20rpx;
   margin-top: 20rpx;
 
   .award-log-item {
@@ -2887,6 +2838,11 @@ page {
       margin-bottom: 0;
     }
 
+    .user-avatar {
+      width: 100rpx;
+      border-radius: 50rpx;
+    }
+
     .qishu {
       position: absolute;
       left: 0;
@@ -2899,6 +2855,7 @@ page {
     .award-log-left {
       flex: 1;
       width: 50%;
+      padding: 0 20rpx;
 
       .award-log-time {
         margin-bottom: 10px;
@@ -3370,13 +3327,32 @@ page {
         width: 140rpx; // 固定宽度
         height: 140rpx; // 固定高度
         border-radius: 16rpx;
-        overflow: hidden;
+        // overflow: hidden;
         background-color: #f5f5f5;
+        // box-shadow: 0 0 10rpx 10rpx rgba(216, 213, 11, 0.8);
+
+        .animate-img {
+          width: 140rpx; // 固定宽度
+          height: 140rpx; // 固定高度
+          animation: starFlick 0.6s ease-out infinite;
+          -webkit-animation: starFlick 0.6s ease-out infinite;
+          border-radius: 16rpx;
+        }
 
         .award-img {
           width: 100%;
           height: 100%;
           object-fit: cover;
+        }
+
+        @keyframes starFlick {
+          from {
+            box-shadow: 0 0 10rpx 10rpx rgba(255, 255, 0, 0.8);
+          }
+
+          to {
+            box-shadow: 0 0 3rpx 3rpx rgba(240, 236, 5, 0.2);
+          }
         }
 
         .award-tag {

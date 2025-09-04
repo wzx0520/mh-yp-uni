@@ -5,30 +5,6 @@
 -->
 <template>
   <view class="page-wrap">
-    <!-- <uni-nav-bar
-      color="#333"
-      leftIcon="left"
-      backgroundColor="transparent"
-      :border="false"
-      :statusBar="true"
-      :fixed="true"
-    >
-      <view slot="left" class="nav-left">
-        <uni-icons
-          @click="$common.back()"
-          :style="{
-            fontWeight: 'normal'
-          }"
-          type="left"
-          color="#333"
-          size="20"
-        />
-
-        <view @click="toHome" class="icon">
-          <cimage src="/static/icon/home.png" mode="scaleToFill" />
-        </view>
-      </view>
-    </uni-nav-bar> -->
 
     <view class="nav-bar">
       <view :style="{

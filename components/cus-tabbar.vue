@@ -35,14 +35,6 @@ export default {
           centerItem: false
         },
         {
-          id: 1,
-          path: '/pages/tabBar/charts',
-          icon: 'https://box.bjkc010.com/static/mini/tabbar/shop.png',
-          selectIcon: 'https://box.bjkc010.com/static/mini/tabbar/shop-active.png',
-          text: '排行榜',
-          centerItem: false
-        },
-        {
           id: 2,
           path: '/pages/index/index',
           icon: 'https://box.bjkc010.com/static/mini/tabbar/shop.png',
