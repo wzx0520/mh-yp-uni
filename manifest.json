@@ -152,7 +152,7 @@
             "proxy" : {
                 "/api" : {
                     // "target" : "填写您的域名注意区分HTTPS",
-                    "target" : "https://box.bjkc010.com/",
+                    "target" : "https://box.miaomicw.com.cn/",
                     "changeOrigin" : true,
                     "secure" : false,
                     "pathRewrite" : {
@@ -161,7 +161,8 @@
                 }
             },
             "https" : false
-        }
+        },
+        "lazyCodeLoading" : "requiredComponents"
     },
     "mp-alipay" : {
         "usingComponents" : true

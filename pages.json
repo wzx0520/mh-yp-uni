@@ -54,48 +54,6 @@
       }
     },
     {
-      "path": "pages/box/box",
-      "style": {
-        "enablePullDownRefresh": false,
-        "navigationBarTextStyle": "white"
-      }
-    },
-    {
-      "path": "pages/box/lotteryBag",
-      "style": {
-        "enablePullDownRefresh": false,
-        "navigationBarTextStyle": "white"
-      }
-    },
-    {
-      "path": "pages/box/kaixiang",
-      "style": {
-        "navigationBarTextStyle": "black",
-        "enablePullDownRefresh": false
-      }
-    },
-    {
-      "path": "pages/box/yinpiao",
-      "style": {
-        "navigationBarTextStyle": "black",
-        "enablePullDownRefresh": false
-      }
-    },
-    {
-      "path": "pages/box/yinpiaoDetail",
-      "style": {
-        "navigationBarTextStyle": "black",
-        "enablePullDownRefresh": false
-      }
-    },
-    {
-      "path": "pages/box/firstReward",
-      "style": {
-        "navigationBarTextStyle": "black",
-        "enablePullDownRefresh": false
-      }
-    },
-    {
       "path": "pages/index/index",
       "style": {
         "navigationBarTitleText": "商城",
@@ -311,6 +269,48 @@
           "path": "log-invite",
           "style": {
             "navigationBarTitleText": "",
+            "enablePullDownRefresh": false
+          }
+        },
+        {
+          "path": "box",
+          "style": {
+            "enablePullDownRefresh": false,
+            "navigationBarTextStyle": "white"
+          }
+        },
+        {
+          "path": "lotteryBag",
+          "style": {
+            "enablePullDownRefresh": false,
+            "navigationBarTextStyle": "white"
+          }
+        },
+        {
+          "path": "kaixiang",
+          "style": {
+            "navigationBarTextStyle": "black",
+            "enablePullDownRefresh": false
+          }
+        },
+        {
+          "path": "yinpiao",
+          "style": {
+            "navigationBarTextStyle": "black",
+            "enablePullDownRefresh": false
+          }
+        },
+        {
+          "path": "yinpiaoDetail",
+          "style": {
+            "navigationBarTextStyle": "black",
+            "enablePullDownRefresh": false
+          }
+        },
+        {
+          "path": "firstReward",
+          "style": {
+            "navigationBarTextStyle": "black",
             "enablePullDownRefresh": false
           }
         }

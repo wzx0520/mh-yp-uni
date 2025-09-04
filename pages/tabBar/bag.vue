@@ -1088,7 +1088,7 @@ export default {
       // 一番赏
       if (this.userQueueInfo.box_type == 1) {
         this.$common.to({
-          url: '/pages/box/firstReward',
+          url: '/package/box/firstReward',
           query: {
             id: this.userQueueInfo.box_id,
             set_count: this.userQueueInfo.set_count
@@ -1096,7 +1096,7 @@ export default {
         })
       } else if (this.userQueueInfo.box_type == 4) {
         this.$common.to({
-          url: '/pages/box/lotteryBag',
+          url: '/package/box/lotteryBag',
           query: {
             id: this.userQueueInfo.box_id,
             set_count: this.userQueueInfo.set_count
@@ -1106,7 +1106,7 @@ export default {
       else {
         // 无限赏
         this.$common.to({
-          url: '/pages/box/kaixiang',
+          url: '/package/box/kaixiang',
           query: {
             id: this.userQueueInfo.box_id
           }

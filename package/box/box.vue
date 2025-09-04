@@ -261,7 +261,7 @@ export default {
   onShareAppMessage () {
     return {
       title: `开盲盒 赢好礼!`,
-      path: `/pages/box/box`
+      path: `/package/box/box`
     }
   },
   onShow () {

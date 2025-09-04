@@ -226,7 +226,7 @@ export default {
       }
       return {
         title: '邀请好友得豪礼',
-        path: '/pages/box/box?invite_code=' + this.share_ma
+        path: '/package/box/box?invite_code=' + this.share_ma
       }
     },
   }

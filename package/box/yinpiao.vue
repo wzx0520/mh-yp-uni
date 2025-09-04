@@ -85,7 +85,7 @@ export default {
     },
     toDetail (item) {
       this.$common.to({
-        url: '/pages/box/yinpiaoDetail',
+        url: '/package/box/yinpiaoDetail',
         query: {
           id: item.id
         }

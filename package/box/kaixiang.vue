@@ -2,7 +2,7 @@
   <view class="kaixiang">
     <view class="nav">
       <uni-nav-bar color="#000" leftIcon="left" backgroundColor="transparent" :border="false" :statusBar="true"
-        :fixed="true" title="猫咪好物">
+        :fixed="true" title="无限赏">
         <view slot="left" class="nav-left" @click="back">
           <u-icon name="arrow-left" color="#333" size="40"></u-icon>
         </view>
@@ -12,9 +12,11 @@
     <view class="card-top-wrap">
       <view class="card-top-item">
         <view class="card-top-left">
-          <image class="card-top-left-img" :src="cardThumb" mode="aspectFit" lazy-load="false" binderror="" bindload="" />
+          <image class="card-top-left-img" :src="cardThumb" mode="aspectFit" lazy-load="false" binderror=""
+            bindload="" />
           <view class="card-num">
             <!-- 第{{ currentIndex + 1 }}/{{ boxInfo.set_count }}箱 -->
+            <!-- 第{{ currentIndex + 1 }}/1箱 -->
           </view>
         </view>
         <view class="card-top-right">
@@ -24,20 +26,9 @@
           <view class="card-price">
             <text>￥</text> <text class="price">{{ boxInfo.price }}/抽</text>
           </view>
-          <view class="card-price card-money">
-            <text>可获得平台币</text> <text class="price">{{ boxInfo.money }}</text>
-          </view>
-          <!-- <view class="card-btn">
-            <image class="card-btn-img"
-              src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01Wtg27c24NdcZ9jUng_!!2200676927379.png"
-              mode="widthFix" lazy-load="false" binderror="" bindload="" @click="prev" />
-            <view class="card-btn-text" @click="changeNum">换箱</view>
-            <image class="card-btn-img"
-              src="https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01Ho6HBV24NdcZCytvN_!!2200676927379.png"
-              mode="widthFix" lazy-load="false" binderror="" bindload="" @click="next" />
-          </view> -->
         </view>
       </view>
+      <view class="card-count">累计已抽:<text class="count-num">{{ boxInfo.sales }}</text></view>
     </view>
 
     <view class="rule-btn-wrap">
@@ -51,87 +42,56 @@
           src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01WJw25c24NdcXfR5bK_!!2200676927379.png"
           mode="widthFix" lazy-load="false" binderror="" bindload="" />
       </view>
-    </view>
-
-    <view class="gd-desc">当前为特殊赏品，可兑换平台币 <text @click="goRule">发货须知</text></view>
-
-    <view class="desc-content">
-      <view class="zheng-pin">
-        <cimage src="/static/img/zheng_pin.png" mode="scaleToFill" />
-      </view>
-
-      <view class="goods-tag">
-        <view class="goods-tag-item">
-          <view class="icon">
-            <cimage src="/static/icon/check2_act.png" mode="scaleToFill" />
-          </view>
-
-          假一罚三
-        </view>
-
-        <view class="goods-tag-item">
-          <view class="icon">
-            <cimage src="/static/icon/check2_act.png" mode="scaleToFill" />
-          </view>
-
-          正品保障
-        </view>
-
-        <view class="goods-tag-item">
-          <view class="icon">
-            <cimage src="/static/icon/check2_act.png" mode="scaleToFill" />
-          </view>
-
-          全新正品
-        </view>
-
-        <view class="goods-tag-item">
-          <view class="icon">
-            <cimage src="/static/icon/check2_act.png" mode="scaleToFill" />
-          </view>
-
-          超时赔付
-        </view>
-      </view>
-
-      <!-- 新增的文字说明 -->
-      <view class="description-section">
-        <view class="description-title">产品优势</view>
-        <view class="description-content">
-          1. 精心挑选，确保每一件商品都是高质量、值得信赖的好物。<br />
-          2. 所有商品享有正品保障，让您购物无忧。<br />
-          3. 提供快速的发货服务，确保您的购物体验高效便捷。
-        </view>
-      </view>
-
-      <view class="description-section">
-        <view class="description-title">购买须知</view>
-        <view class="description-content">
-          1. 每次购买均可兑换平台币，积分累计使用。<br />
-          2. 如果您对商品有任何疑问，欢迎随时联系客服。<br />
-          3. 产品一旦售出，恕不退换，除非遇到质量问题。
-        </view>
-      </view>
-
-      <view class="description-section">
-        <view class="description-title">注意事项</view>
-        <view class="description-content">
-          1. 请确认收货地址无误，避免因地址错误导致发货延误。<br />
-          2. 特殊情况下，如遇节假日，可能会影响发货速度。<br />
-          3. 使用平台币支付时，请确保账户余额充足。
-        </view>
+      <view class="rule-btn-item" @click="tobag">
+        <image class="rule-btn-item-img"
+          src="https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01YjcRcT24NddntRZ8e_!!2200676927379.png"
+          mode="widthFix" lazy-load="false" binderror="" bindload="" />
       </view>
     </view>
 
+    <view class="gd-desc">抽赏存在概率性, 请谨慎购买 <text @click="goRule">发货须知</text></view>
 
+    <view class="queue-status-wrapper">
+      <!-- 无人排队 -->
+      <view v-if="queueInfo.status == 0" class="no-queue-box">
+        <text class="no-queue-text">当前无人排队，快来抢购！</text>
+      </view>
+
+
+      <!-- 轮到我 -->
+      <view v-else-if="queueInfo.status == 1" class="my-turn-box">
+        排到你了，拥有专属时间 <text class="highlight">{{ remainingTime }}</text>s，
+        后面有 <text class="highlight">{{ queueInfo.behind }}</text> 人在排队
+      </view>
+
+      <!-- 等待他人 -->
+      <view v-else-if="queueInfo.status == 2 || queueInfo.status == 3" class="waiting-box">
+        <view class="user-row">
+          <view class="waiting-text">
+            前面还有 <text class="highlight">{{ queueInfo.ahead }}</text> 人，当前排到用户：
+          </view>
+          <view class="user-info-wrap">
+            <image :src="queueInfo.avatar" class="avatar" mode="aspectFill" />
+            <view class="user-info-right">
+              <view class="nickname">{{ queueInfo.nickname || '微信用户' }}</view>
+              <view class="time-info">
+                <text class="highlight">{{ remainingTime }}</text>s
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
 
     <view class="shop-list">
-      <!-- <view class="open-nav">
-        <view class="open-nav-item" :class="[currentCate == index ? 'open-active-nav' : '']"
-          v-for="(item, index) in navList" :key="index" @click="changeCurrentCate(index)">
-          {{ item.name }}
+      <view class="open-nav">
+        <view class="open-nav-con">
+          <view class="open-nav-item" :class="[currentCate == index ? 'open-active-nav' : '']"
+            v-for="(item, index) in navList" :key="index" @click="changeCurrentCate(index)">
+            {{ item.name }}
+          </view>
         </view>
-      </view> -->
+      </view>
       <template v-if="currentCate == 0">
         <template v-if="awardList.length">
           <view class="mh-goods-list">
@@ -144,7 +104,7 @@
                   mode="widthFix" lazy-load="false" binderror="" bindload="" />
                 <view class="mh-goods-rate-text">
                   <template v-if="item.award_type == 2">
-                    BX赏
+                    宝箱
                   </template>
                   <template v-else>
                     {{ item.mark_title }}
@@ -166,41 +126,74 @@
                 v-if="item.mark_id == 1 || item.mark_id == 2 || item.mark_id == 3 || item.mark_id == 4 || item.mark_id == 5">
                 只赠不售
               </view>
-              <view class="mh-rate" v-else>概率: {{ item.real_rate }}%</view>
+              <view class="mh-rate" v-else>概率: {{ item.show_rate }}%</view>
 
-              <view class="mh-sale">{{ item.remaining_quantity }}/{{ item.initial_quantity }}</view>
+              <!-- <view class="mh-sale">{{ item.remaining_quantity }}/{{ item.initial_quantity }}</view> -->
               <view class="mh-sale">￥{{ item.price }}</view>
             </view>
           </view>
         </template>
         <template v-else>
           <view class="empty-list">
-            <!-- <u-empty text="暂无赏品数据~" mode="list"></u-empty> -->
-
+            <u-empty text="暂无赏品数据~" mode="list"></u-empty>
           </view>
         </template>
       </template>
       <template v-else>
-        <template v-if="boxLogList.length">
-          <mescroll-body ref="mescrollRef" height="400" @init="mescrollInit" @down="downCallback" @up="getList"
-            :down="downOption" :up="upOption">
+        <template v-if="tabList.length">
+
+          <view class="open-card" v-for="(item, index) in tabList" :key="index">
             <view class="award-wrap">
-              <view class="award-log-item" v-for="(item, index) in boxLogList" :key="index">
+              <view class="award-log-item">
+                <view>
+                  <image :src="item.data[0].avatar" class="user-avatar" mode="widthFix" />
+                </view>
                 <view class="award-log-left">
                   <view class="award-log-time">
-                    {{ item.created_at }}
+                    {{ item.data[0].created_at }}
                   </view>
                   <view class="award-log-info">
-                    {{ item.nickName }} 获得 <text class="award-name">{{ item.title }}</text>
+                    {{ item.data[0].nickName }} 获得 <text class="award-name">{{ item.data[0].title }}</text>
                   </view>
                 </view>
                 <view class="award-log-right">
-                  <image class="award-log-img" :src="item.thumb" mode="widthFix" lazy-load="false" binderror=""
+                  <view>{{ item.data[0].mark_title }}</view>
+                  <image class="award-log-img" :src="item.data[0].thumb" mode="widthFix" lazy-load="false" binderror=""
                     bindload="" />
                 </view>
               </view>
+              <view v-if="item.mark_id === currentId">
+                <view class="award-log-item" v-for="(info, index) in sortList" :key="info.id">
+                  <view>
+                    <image :src="info.avatar" class="user-avatar" mode="widthFix" />
+                  </view>
+                  <view class="award-log-left">
+                    <view class="award-log-time">
+                      {{ info.created_at }}
+                    </view>
+                    <view class="award-log-info">
+                      {{ info.nickName }} 获得 <text class="award-name">{{ info.title }}</text>
+                    </view>
+                  </view>
+                  <view class="award-log-right">
+                    <view>{{ info.mark_title }}</view>
+                    <image class="award-log-img" :src="info.thumb" mode="widthFix" lazy-load="false" binderror=""
+                      bindload="" />
+                  </view>
+                </view>
+                <view v-if="sortList.length" class="up-btn">
+                  <view class="up-text" @click="clearList()">收起</view>
+                  <uni-icons type="arrow-up" size="20"></uni-icons>
+                </view>
+              </view>
+              <view>
+                <view class="more-btn">
+                  <view class="more-text" @click="getSortList(item)">展开查看更多</view>
+                  <uni-icons type="arrow-down" size="20"></uni-icons>
+                </view>
+              </view>
             </view>
-          </mescroll-body>
+          </view>
         </template>
         <template v-else>
           <view class="empty-list">
@@ -211,9 +204,33 @@
     </view>
 
     <view class="chou-btn-wrap">
-      <view class="queue-action-wrap">
-        <view class="chou-action-item" @click="openBox">
-          立即购买
+      <!-- 状态 1：轮到我，展示购买按钮组 -->
+      <view v-if="queueInfo.status === 1" class="chou-first-wrap">
+        <view class="chou-btn-item chou-first-item" @click="changeBuyType(1)">
+          冲一发
+        </view>
+        <view class="chou-btn-item chou-first-item" @click="changeBuyType(5)">
+          冲五发
+        </view>
+        <view class="chou-btn-item chou-first-item" @click="changeBuyType(10)">
+          冲十发
+        </view>
+        <!-- <view class="chou-btn-item chou-second-item" @click="changeBuyType(-1)">
+          全收
+        </view> -->
+      </view>
+
+      <!-- 状态 0：未加入队列，展示立即排队按钮 -->
+      <view v-else-if="queueInfo.status === 0 || queueInfo.status == 3" class="queue-action-wrap">
+        <view class="chou-action-item" @click="joinQueue">
+          立即排队
+        </view>
+      </view>
+
+      <!-- 状态 2：等待他人，展示取消排队按钮 -->
+      <view v-else-if="queueInfo.status === 2" class="queue-action-wrap">
+        <view class="chou-action-item" @click="cancelQueue">
+          取消排队
         </view>
       </view>
     </view>
@@ -243,7 +260,7 @@
           </view>
 
           <view class="row">
-            <view class="title">星币抵扣</view>
+            <view class="title">抵扣金额</view>
 
             <view class="right">
               <view class="price red">
@@ -253,7 +270,7 @@
             </view>
           </view>
 
-          <!-- <view class="row">
+          <view class="row">
             <view class="title">优惠券</view>
 
             <view class="right">
@@ -267,13 +284,13 @@
                 暂无可用 <u-icon name="arrow-right" color="#d5b644" size="28"></u-icon>
               </view>
             </view>
-          </view> -->
+          </view>
 
           <view class="row">
-            <view class="title">获得平台币</view>
+            <view class="title">获得数量</view>
 
             <view class="right">
-              <view class="gray">获得{{ orderData.money }}平台币</view>
+              <view class="gray">随机获得{{ orderData.box.num }}件商品</view>
             </view>
           </view>
 
@@ -393,7 +410,7 @@
                 <text>参考价</text>
               </text>
             </view>
-            <view class="rate">概率{{ curDetail.real_rate }}%</view>
+            <view class="rate">概率{{ curDetail.show_rate }}%</view>
           </view>
 
           <u-gap height="20"></u-gap>
@@ -413,7 +430,8 @@
         <view class="zsbox-top">
           <view class="zs-title">
             <view>中赏记录</view>
-            <view class="zs-icon" @click="zsPop = false"><uni-icons type="closeempty" color="#fff" size="20"></uni-icons>
+            <view class="zs-icon" @click="zsPop = false"><uni-icons type="closeempty" color="#fff"
+                size="20"></uni-icons>
             </view>
           </view>
 
@@ -476,56 +494,84 @@
       </view>
     </u-popup>
 
+    <!-- 开盒动画 -->
+    <u-popup v-model="setShow" mode="center" border-radius="16" :closeable="true" @close="closeSet">
+      <view class="setbox">
+        <view class="set-title">设置</view>
+        <view class="set-tip">
+          <view>
+            跳过动画
+          </view>
+          <u-switch @change="changeAnimate" active-color="#7768d5" v-model="animateSet"></u-switch>
+        </view>
+      </view>
+    </u-popup>
+
     <!-- 规则说明 -->
     <u-popup v-model="rulePop" mode="center" width="93%" border-radius="20">
       <view class="rule-pop">
         <view class="rule-title">
-          平台币使用规则
+          玩法说明
         </view>
         <scroll-view class="rule-pop-bd" scroll-y>
-          <view class="rule-content">1、购买本商品后，可按平台规定比例将商品兑换为平台币，兑换比例以商品详情页公示为准；</view>
           <view class="rule-content">
-            2、兑换后的平台币可用于平台内各类商品的购买，包括但不限于"一番赏"等开赏类商品；
+            “无限赏”的所有商品均有图文展示及数量说明，购买赏品具有盲盒的特点，您购买所得赏品可能与您预期不符，您需要根据个人的消费需求对自己消费行为负责，请理性消费，未成年人不得购买。
+          </view>
+          <view class="rule-content"> 1、“无限赏”为开赏类商品，一经购买不可退货，请谨慎、理性购买;</view>
+          <view class="rule-content">
+            2、未成年人禁止购买;
           </view>
           <view class="rule-content">
-            3、平台币不设有效期，可长期存放使用，且不支持兑换为现金；
+            3、用户根据需求点击[抽1发][抽3发]或[抽5发]等购买按钮;
           </view>
           <view class="rule-content">
-            4、使用平台币购买商品时，遵循"优先抵扣平台币，不足部分补差价"的原则；
+            4、本平台只保证发出的货品内容物全新未拆，不保任何商品的运输
           </view>
           <view class="rule-content">
-            5、通过商品兑换的平台币，不可转赠给其他用户，仅限本人账号使用；
+            5、若收到的商品出现涂装瑕疵、零件错误等官方瑕疵情况，则不包售后，不予退换(如有特殊情况请联系客服);
           </view>
           <view class="rule-content">
-            6、若购买后已将商品兑换为平台币，该商品将不再支持退货退款；
+            6、收到商品后请先确认封条、外箱完整，并全程拍摄开箱验货视频(照片无效)，该视频将会是定责的唯一证据，若出现运输损坏情况，请联系承运快递发起索赔，或联系客服索要索赔所需的相关材料;
           </view>
           <view class="rule-content">
-            7、用户可通过"我的-平台币"查看余额及收支明细，如有疑问可联系客服咨询；
+            7、部分3C电子产品，发货后必须激活产品。本平台保证预激活时间在发货日前后的5-7天内，全新未使用，商品激活无拆封，不接受因商品本身质量问题以外的退换货要求;
           </view>
           <view class="rule-content">
-            8、平台有权根据运营需求调整兑换规则，如有变动将提前3天在平台公告栏公示。
+            8、无限赏概率解释:每一次打开盲盒都是从剩下的赏品中提取1个赏品，根据赏品剩余数量，系统会测算出，剩余赏品抽赏概率。
+          </view>
+          <view class="rule-content">
+            9、无限赏不提供任何形式的物品交易和回收渠道，为保障您的资金安全，亦不建议用户进行任何形式的私下交易;
+          </view>
+          <view class="rule-content">
+            10、禁止从事任何形式的赌博/欺诈/作弊/诈骗行为，若有发现，将封禁您的账号并交由相关部门处理:
+          </view>
+          <view class="rule-content">
+            11、无限赏概率解释:例如: 传说概率设置的是0.01%，并不是1万次里有1次出现传说,而是每一次打开盲盒概率都是按照公示概率数值进行抽奖，无论任意次数，也有可能1万次里多次出现或者不出。
+          </view>
+          <view class="rule-content">
+            12、无限赏说明。
           </view>
         </scroll-view>
       </view>
     </u-popup>
 
-    <!-- 宝箱物品 -->
-    <u-popup v-model="isBoxPopupShow" mode="center" border-radius="20" width="90%">
-      <view class="box-content">
-        <view class="box-popup-title">宝箱物品</view>
-        <view class="box-popup-desc">打开后随机获得一个赏品</view>
-        <template v-if="curDetail && curDetail.box_awards.length">
+    <!-- 中奖赏品 -->
+    <u-popup v-model="awardShow" mode="center" border-radius="20" width="90%">
+      <view class="box-content box-award-content">
+        <view class="box-popup-title">中奖赏品</view>
+        <view class="box-popup-desc">恭喜你获得获得以下赏品</view>
+        <template v-if="prizeResult && prizeResult.length">
           <view class="award-grid">
-
-            <view class="award-card" v-for="(award, index) in curDetail.box_awards" :key="index">
+            <view class="award-card" v-for="(award, index) in prizeResult" :key="index">
               <view class="award-img-container">
-                <image :src="award.thumb" class="award-img" mode="aspectFill"></image>
-                <view class="award-tag">{{ award.mark_title || 'A' }}</view>
-                <view class="award-probability">{{ award.real_rate }}%</view>
+                <xc-image :src="award.thumb" :showBg="true" ratio="1:1" borderRadius="10" />
+                <view class="award-tag">
+                  {{ award.mark_title }}
+                </view>
+                <view class="award-probability">x{{ award.total }}</view>
               </view>
               <view class="award-info">
                 <view class="award-name">{{ award.title }}</view>
-                <view class="award-ref-price">参考价{{ award.price }}</view>
               </view>
             </view>
           </view>
@@ -536,10 +582,16 @@
           </view>
         </template>
         <view class="close-btn-wrap">
-          <button class="box-popup-close-btn" @click="isBoxPopupShow = false">关闭</button>
+          <button class="box-popup-close-btn" @click="tobag">去背包</button>
+          <button class="box-popup-close-btn" @click="tocontinue">继续抽奖</button>
         </view>
       </view>
     </u-popup>
+    <u-modal v-model="switchQueueShow" content="您已在其他队列中，是否切换到当前队列" show-cancel-button cancel-text="取消"
+      confirm-text="确认切换" @confirm="switchQueue"></u-modal>
+
+    <u-modal v-model="levelQueueShow" content="退出页面, 则视为主动放弃当前拥有的专属抽盒时间，是否继续退出" show-cancel-button cancel-text="取消"
+      confirm-text="退出" @confirm="levelPage"></u-modal>
   </view>
 </template>
 
@@ -556,7 +608,7 @@ export default {
   components: {
 
   },
-  data () {
+  data() {
     return {
       muteBgMusic: false,
       kefushow: false,
@@ -623,6 +675,12 @@ export default {
       is_epay: 0,
       currentBanner: 0,
       zsPop: false,
+      nextPage: true,
+      pageNum: 1,
+      currentId: '',
+      tabList: [],
+      sortData: {},
+      sortList: [],
       boxLogList: [],
       btnLists: [
       ],
@@ -651,7 +709,8 @@ export default {
       couponPop: false,
       couponShow: false,
       coupon_info: {},
-      animateSet: uni.getStorageSync('animateSet') ? uni.getStorageSync('animateSet') : false,
+      // animateSet: uni.getStorageSync('animateSet') ? uni.getStorageSync('animateSet') : false,
+      animateSet: true,
       setShow: false,
       currentIndex: 0,
       navList: [
@@ -677,10 +736,18 @@ export default {
       isMyTurn: false,       // 是否轮到我
       pollTimer: null,       // 轮询定时器
       timer: null,
-      remainingTime: 0   // 队首用户的剩余时间，不是当前用户的。
+      remainingTime: 0,   // 队首用户的剩余时间，不是当前用户的。
+      // 中赏物品
+      awardShow: false,
+      prizeResult: [],
+      switchQueueShow: false,
+      levelQueueShow: false,
+      // 排序
+      sortType: 'created_at', // 排序字段：created_at（时间）、price（价值）
+      sortOrder: 'desc', // 排序方向：desc（降序）、asc（升序）
     }
   },
-  onLoad (options) {
+  onLoad(options) {
     if (options.scene) {
       let arr = options.scene.split('_')
       this.optionsData = {
@@ -706,7 +773,7 @@ export default {
     // #endif
     this.getData()
   },
-  onShow () {
+  onShow() {
     this.$store.dispatch('getUserInfo').then(res => {
       console.log(res)
     })
@@ -724,7 +791,7 @@ export default {
     this.coupon_info = {}
   },
   watch: {
-    'queueInfo.remainingTime' (val) {
+    'queueInfo.remainingTime'(val) {
       this.remainingTime = val;
       if (this.timer) clearInterval(this.timer);
 
@@ -740,7 +807,7 @@ export default {
       }
     }
   },
-  onUnload () {
+  onUnload() {
     console.log('移除事件')
     clearInterval(this.barrageTimer)
     clearInterval(this.checkTimer)
@@ -755,7 +822,7 @@ export default {
   },
   computed: {
     ...mapGetters(['sysConfig', 'userInfo']),
-    cardThumb () {
+    cardThumb() {
       let img
       // if (this.currentIndex == 0) {
       //   img = this.boxInfo.thumb
@@ -768,7 +835,102 @@ export default {
     }
   },
   methods: {
-    prev () {
+    // 切换排序方式
+    changeSort(type) {
+      // type: 'time' 时间排序, 'value' 价值排序
+      if (type === 'time') {
+        if (this.sortType === 'created_at') {
+          // 同一字段，切换排序方向
+          this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+        } else {
+          // 切换到时间排序，默认降序（最新在前）
+          this.sortType = 'created_at';
+          this.sortOrder = 'desc';
+        }
+      } else if (type === 'value') {
+        if (this.sortType === 'return_price') {
+          // 同一字段，切换排序方向
+          this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+        } else {
+          // 切换到价值排序，默认降序（价值高在前）
+          this.sortType = 'return_price';
+          this.sortOrder = 'desc';
+        }
+      }
+    },
+    getTabs(
+      num,
+      size
+    ) {
+      this.req({
+        url: '/v1/box/boxLogList88',
+        data: {
+          id: this.optionsData.id,
+          setNo: this.currentIndex + 1,
+          mark_id: this.btnLists.length ? this.btnLists[this.currentItems].id : 0,
+          page: num,
+          per_page: size,
+          sort_by: this.sortType, // 新增：排序字段
+          sort_order: this.sortOrder // 新增：排序方向
+        }, Loading: true,
+        success: res => {
+          if (res.code == 200) {
+            if (num == 1) {
+              this.tabList = []
+            }
+            if (res.data.length) {
+              console.log(111);
+              this.tabList = [...this.tabList, ...res.data]
+
+              // this.boxLogList = [...this.boxLogList, ...res.data.data]
+            }
+          } else {
+            this.mescroll.endBySize(0, 0)
+          }
+        }
+      })
+    },
+    getSortList(e) {
+      if (e.mark_id === this.currentId) {
+        if (!this.nextPage) {
+          uni.showToast({
+            title: '没有更多了',
+            icon: "none"
+          })
+          return
+        }
+        this.pageNum++
+      } else {
+        this.pageNum = 1
+      }
+      uni.showLoading({ title: "加载中" })
+      this.req({
+        url: '/v1/box/boxLogList88',
+        data: {
+          id: this.boxInfo.id,
+          mark_id: e.mark_id,
+          page: this.pageNum,
+          per_page: 20
+        },
+        Loading: true,
+        success: res => {
+          if (res.code === 200) {
+            this.sortData = res.data.find(v => v.mark_id === e.mark_id),
+              this.pageNum === 1 ? this.sortList = this.sortData.data : this.sortList = [...this.sortList, ...this.sortData.data];
+            this.nextPage = this.sortData.next_page
+            this.currentId = e.mark_id
+            uni.hideLoading();
+          }
+        }
+      })
+
+    },
+    clearList() {
+      this.sortList = []
+      this.nextPage = true
+      this.pageNum = 0
+    },
+    prev() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -780,7 +942,7 @@ export default {
       }
       this.getData()
     },
-    next () {
+    next() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -792,7 +954,7 @@ export default {
       }
       this.getData()
     },
-    changeNum () {
+    changeNum() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -802,7 +964,7 @@ export default {
       this.currentIndex = Math.floor(Math.random() * num)
       this.getData()
     },
-    setAnimate () {
+    setAnimate() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -810,7 +972,7 @@ export default {
       })
       this.setShow = true
     },
-    closeSet () {
+    closeSet() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -818,7 +980,7 @@ export default {
       })
       this.setShow = false
     },
-    changeAnimate (e) {
+    changeAnimate(e) {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -827,17 +989,17 @@ export default {
       this.animateSet = !!e
       uni.setStorageSync('animateSet', this.animateSet)
     },
-    useCouPon (item) {
+    useCouPon(item) {
       this.coupon_info = item
       // 请求订单信息
       this.confirmSubmit(0)
       this.couponPop = false
     },
-    goCoupon () {
+    goCoupon() {
       this.couponPop = true
       this.getUserCoupon()
     },
-    getUserCoupon () {
+    getUserCoupon() {
       this.req({
         url: '/v1/coupon/order_coupons',
         data: {
@@ -858,13 +1020,13 @@ export default {
         }
       })
     },
-    zsCu (index) {
+    zsCu(index) {
       this.currentItems = index
       this.boxLogList = []
       this.mescroll.resetUpScroll()
       this.mescroll.scrollTo(0, 0)
     },
-    zs () {
+    zs() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -874,7 +1036,7 @@ export default {
       this.getTab()
     },
 
-    getBoxLogList ({
+    getBoxLogList({
       num,
       size
     }) {
@@ -913,7 +1075,7 @@ export default {
         }
       })
     },
-    getTab () {
+    getTab() {
       return new Promise((resolve, reject) => {
         this.req({
           url: '/v1/box/mark',
@@ -939,7 +1101,7 @@ export default {
         })
       })
     },
-    handleSwiperChange (event) {
+    handleSwiperChange(event) {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -948,7 +1110,7 @@ export default {
       const current = event.detail.current;
       this.currentBanner = current;
     },
-    checkPayStatus () {
+    checkPayStatus() {
       const _this = this
 
       const order_info = uni.getStorageSync('order_info_box')
@@ -967,12 +1129,19 @@ export default {
             switch (res.code) {
               case 200:
                 _this.cancelCheckPayStatus()
-                // if (this.isMyTurn) {
-                //   this.resetTimer() // 付款后重置倒计时
-                // }
+                if (this.isMyTurn) {
+                  this.resetTimer() // 付款后重置倒计时
+                }
                 this.$common.toast({
                   title: '支付成功', icon: 'success', duration: 1500, success: () => {
-                   
+                    // this.$common.to({
+                    //   type: 1, url: '/package/box/firstDraw', query: {
+                    //     id: res.data.id,
+                    //     order_sn: order_info.order_sn,
+                    //     drawNum: res.data.box_num
+                    //   }
+                    // })
+                    this.openBox(order_info.order_sn)
                   }
                 })
                 break;
@@ -991,7 +1160,7 @@ export default {
         _this.cancelCheckPayStatus();
       }, 60 * 1000)
     },
-    cancelCheckPayStatus () {
+    cancelCheckPayStatus() {
       uni.removeStorageSync('order_info_box')
       // this.$common.toast({
       // 	title: '支付超时',
@@ -1007,7 +1176,7 @@ export default {
       }
     },
     // 取消支付
-    cancelOrderPay () {
+    cancelOrderPay() {
       const order_info = uni.getStorageSync('order_info_box')
       if (order_info.order_sn) {
         this.req({
@@ -1026,7 +1195,7 @@ export default {
 * @description: 获取数据
 * @return {*}
 */
-    getData () {
+    getData() {
       return new Promise((resolve, reject) => {
         this.req({
           url: '/v1/box/info',
@@ -1044,23 +1213,9 @@ export default {
                 loaded: false
               }));
 
-              // this.awardList = res.data.awardList.map(item => {
-              //   if (item.mark_id == 1) {
-              //     item.image = 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01wmdjUN24NdcqIPVsW_!!2200676927379.png'
-              //   } else if (item.mark_id == 2) {
-              //     item.image = 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01tfLPbl24NdcpT2yp2_!!2200676927379.png'
-              //   }
-              //   else if (item.mark_id == 3) {
-              //     item.image = 'https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01JWsQ7M24NdcoKUk8K_!!2200676927379.png'
-              //   } else if (item.mark_id == 4) {
-              //     item.image = 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01cgJHsL24NdcoKTXJP_!!2200676927379.png'
-              //   }
-              //   return item
-              // })
-
               this.markList = res.data.box ? res.data.box.markList : []
               this.getDraw()
-              // this.getQueueStatus();
+              this.getQueueStatus();
               resolve()
             }
           }
@@ -1071,7 +1226,7 @@ export default {
 * @description: 获取抽奖方式
 * @return {*}
 */
-    getDraw () {
+    getDraw() {
       return new Promise((resolve, reject) => {
         this.req({
           url: '/v1/box/draw',
@@ -1086,17 +1241,17 @@ export default {
         })
       })
     },
-    changePayType (e) {
+    changePayType(e) {
       this.payTypeCur = e
     },
-    changeBuyType (e) {
+    changeBuyType(e) {
       this.btnCur = e
       this.confirmSubmit(0)
     },
-    openBox () {
+    openBox() {
       this.confirmSubmit(0)
     },
-    async confirmSubmit (e) {
+    async confirmSubmit(e) {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1124,15 +1279,18 @@ export default {
 
       let data = {
         id: this.boxInfo.id,
-        draw_num: 1,
+        // draw_id: this.btnList[this.btnCur].id || '',
+        // draw_id: this.btnCur,
+        draw_num: this.btnCur,
         invite_user_id: this.optionsData.userId || '',
         pay_type: this.payTypeList[this.payTypeCur].id,
         coupon_id: this.coupon_info?.id || '',
         submit: e,
+        set_no: this.currentIndex + 1
       }
 
       this.req({
-        url: '/v1/box/moneyOrder',
+        url: '/v1/box/order',
         data,
         success: res => {
           if (res.code == 200) {
@@ -1147,7 +1305,7 @@ export default {
                 uni.setStorageSync('order_info_box', order_info);
                 this.checkPayStatus()
                 // #endif
-                const params = { ...res.data, is_epay: this.is_epay, returnUrl: `/pages/box//yinpiao?id=${this.boxInfo.id}` }
+                const params = { ...res.data, is_epay: this.is_epay, returnUrl: `/package/box/kaixiang?id=${this.boxInfo.id}` }
                 this.$common.orderPay(params).then(res1 => {
                   if (res1 == 'success') {
                     this.$common.toast({
@@ -1155,10 +1313,31 @@ export default {
                       icon: 'success',
                       duration: 1500,
                       success: () => {
-                       
+                        this.openBox(res.data.order_sn)
+                        // 表示全收
+                        // if (res.data.draw_num == -1) {
+                        //   uni.switchTab({
+                        //     url: '/pages/tabBar/bag',
+                        //   });
+                        // } else {
+                        //   this.$common.to({
+                        //     type: 1,
+                        //     url: '/package/box/firstDraw',
+                        //     query: {
+                        //       id: this.boxInfo.id,
+                        //       order_sn: res.data.order_sn,
+                        //       drawNum: this.orderData.box.num,
+                        //       set_no: this.currentIndex + 1
+                        //     }
+                        //   })
+                        // }
+
+
                       }
                     })
-                  
+                    if (this.isMyTurn) {
+                      this.resetTimer() // 付款后重置倒计时
+                    }
                   }
                 })
               } else {
@@ -1166,33 +1345,91 @@ export default {
                   title: '支付成功',
                   duration: 1500,
                   success: () => {
-                    
+                    this.openBox(res.data.order_sn)
+                    // 表示全收
+                    // if (res.data.draw_num == -1) {
+                    //   uni.switchTab({
+                    //     url: '/pages/tabBar/bag',
+                    //   });
+                    // } else {
+                    //   this.$common.to({
+                    //     type: 1,
+                    //     url: '/package/box/firstDraw',
+                    //     query: {
+                    //       id: this.boxInfo.id,
+                    //       order_sn: res.data.order_sn,
+                    //       drawNum: this.orderData.box.num,
+                    //       set_no: this.currentIndex + 1
+                    //     }
+                    //   })
+                    // }
                   }
                 })
-               
+                if (this.isMyTurn) {
+                  this.resetTimer() // 付款后重置倒计时
+                }
               }
             }
+          } else {
+            this.$common.toast({
+              title: res.msg,
+              duration: 5000,
+              success: () => {
+
+              }
+            })
           }
         }
       })
     },
-    openOrderPop () {
+    openBox(order_sn) {
+      let url = '/v1/box/order/mergeAward'
+      let data = {
+        order_sn: order_sn
+      }
+      this.req({
+        url,
+        data,
+        Loading: false,
+        success: res => {
+          if (res.code == 200) {
+            this.prizeResult = res.data.map(item => {
+              // if (item.mark_id == 33) {
+              //   item.mark_title = 'A赏'
+              // } else if (item.mark_id == 34) {
+              //   item.mark_title = 'B赏'
+              // }
+              // else if (item.mark_id == 35) {
+              //   item.mark_title = 'C赏'
+              // } else if (item.mark_id == 36) {
+              //   item.mark_title = 'D赏'
+              // }
+              return item
+            })
+
+            this.awardShow = true
+            this.getData()
+          }
+        }
+      })
+    },
+    openOrderPop() {
       this.agree = true
 
       this.$refs.orderPop.open()
     },
-    closeOrderPop () {
+    closeOrderPop() {
       this.$refs.orderPop.close()
     },
 
-    tryPlay () {
+    tryPlay() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
         }
       })
     },
-    goMall () {
+    goMall() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1213,7 +1450,7 @@ export default {
       // console.log(e)
       this.scrollTop = e.detail.scrollTop
     },
-    goInvite () {
+    goInvite() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1239,7 +1476,7 @@ export default {
       })
     },
     // 玩法
-    goRule () {
+    goRule() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1248,7 +1485,7 @@ export default {
       this.$common.to({ url: '/pages/index/rule?id=3' })
     },
     // 联系客服
-    lxkefu () {
+    lxkefu() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1256,7 +1493,7 @@ export default {
       })
       this.kefushow = true
     },
-    openDetailPop (e) {
+    openDetailPop(e) {
       if (e.award_type == 2) {
         this.curDetail = e
         this.isBoxPopupShow = true;
@@ -1273,10 +1510,10 @@ export default {
       }
 
     },
-    closeDetailPop () {
+    closeDetailPop() {
       this.detailPop = false
     },
-    playMusic () {
+    playMusic() {
       this.muteBgMusic = !this.muteBgMusic;
       this.$nextTick(() => {
         if (switchMusic) {
@@ -1289,58 +1526,16 @@ export default {
         bgMusic.pause()
       }
     },
-    noticeEnd (e) {
+    noticeEnd(e) {
       console.log('123', e)
     },
-    back () {
-      this.$nextTick(() => {
-        if (switchMusic) {
-          switchMusic.play()
-        }
-      })
-
-      uni.navigateBack({
-        delta: 1
-      });
-        
-      // uni.switchTab({
-      //   url: '/pages/tabBar/home',
-      // });
-    },
-    changeCurrentCate (index) {
+    changeCurrentCate(index) {
       this.currentCate = index
       if (index == 1) {
-        this.getList({ num: 1, size: 20 })
+        this.getTabs({ num: 1, size: 20 })
       }
     },
-    getList ({
-      num,
-      size
-    }) {
-      this.req({
-        url: '/v1/box/boxLogList',
-        data: {
-          id: this.optionsData.id,
-          mark_id: this.btnLists.length ? this.btnLists[this.currentItems].id : 0,
-          page: num,
-          per_page: size
-        },
-        Loading: true,
-        success: res => {
-          if (res.code == 200) {
-            if (num == 1) {
-              this.boxLogList = []
-            }
-            console.log(res.data.data.length)
-            this.boxLogList = [...this.boxLogList, ...res.data.data]
-            this.mescroll.endBySize(res.data.data.length, res.data.total)
-          } else {
-            this.mescroll.endBySize(0, 0)
-          }
-        }
-      })
-    },
-    fresh () {
+    fresh() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1353,7 +1548,21 @@ export default {
       })
       this.getData()
     },
-    openRule () {
+    tobag() {
+      this.$nextTick(() => {
+        if (switchMusic) {
+          switchMusic.play()
+        }
+      })
+
+      uni.switchTab({
+        url: '/pages/tabBar/bag',
+      });
+    },
+    tocontinue() {
+      this.awardShow = false
+    },
+    openRule() {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1361,8 +1570,53 @@ export default {
       })
       this.rulePop = true
     },
+    back() {
+      this.$nextTick(() => {
+        if (switchMusic) {
+          switchMusic.play()
+        }
+      })
+      this.req({
+        url: '/v1/box/getQueueStatus',
+        data: {
+          box_id: this.boxInfo.id,
+          set_count: this.currentIndex + 1
+        },
+        success: res => {
+          if (res.code === 200) {
+            this.queueInfo = res.data;
+            if (res.data.status === 1) {
+              this.levelQueueShow = true
+            } else {
+              uni.switchTab({
+                url: '/pages/tabBar/home',
+              });
+            }
+          }
+        }
+      });
+    },
+    // 离开页面
+    levelPage() {
+      this.req({
+        url: '/v1/box/leaveQueue',
+        data: {
+          box_id: this.boxInfo.id,
+          set_count: this.currentIndex + 1
+        },
+        success: res => {
+          this.isMyTurn = false;
+          this.queueInfo = { status: 0 };
+          this.getQueueStatus();
+          this.$store.dispatch('stopQueueCountdown')
+          uni.switchTab({
+            url: '/pages/tabBar/home',
+          });
+        }
+      });
+    },
     // 加入队列
-    joinQueue () {
+    joinQueue() {
       this.req({
         url: '/v1/box/joinQueue',
         data: {
@@ -1372,7 +1626,7 @@ export default {
         Loading: true,
         success: res => {
           // 假设res.data.status: 1=轮到我, 2=等待他人
-          if (res.code === 200) {
+          if (res.code == 200) {
             this.queueInfo = res.data;
             if (res.data.status === 1) {
               this.isMyTurn = true;
@@ -1381,14 +1635,44 @@ export default {
               this.isMyTurn = false;
               this.startPollQueueStatus();
             }
+          } else if (res.code == 201) {
+            // 切换队列确认
+            this.switchQueueShow = true
           } else {
             this.$common.toast({ title: res.msg || '加入队列失败' });
           }
         }
       });
     },
+    // 切换队列
+    switchQueue() {
+      // 用户确认切换队列
+      this.req({
+        url: '/v1/box/switchQueue',
+        data: {
+          box_id: this.boxInfo.id,
+          set_count: this.currentIndex + 1
+        },
+        Loading: true,
+        success: switchRes => {
+          if (switchRes.code == 200) {
+            this.queueInfo = switchRes.data;
+            if (switchRes.data.status === 1) {
+              this.isMyTurn = true;
+              this.startQueueTimer();
+            } else {
+              this.isMyTurn = false;
+              this.startPollQueueStatus();
+            }
+            this.$common.toast({ title: '切换队列成功' });
+          } else {
+            this.$common.toast({ title: switchRes.msg || '切换队列失败' });
+          }
+        }
+      });
+    },
     // 重置倒计时
-    resetTimer () {
+    resetTimer() {
       this.req({
         url: '/v1/box/resetTimer',
         data: {
@@ -1413,7 +1697,7 @@ export default {
       });
     },
     // 开始倒计时
-    startQueueTimer () {
+    startQueueTimer() {
       if (this.queueTimer) clearInterval(this.queueTimer);
       this.queueTimer = setInterval(() => {
         if (this.queueInfo.remainingTime > 0) {
@@ -1425,7 +1709,7 @@ export default {
       }, 1000);
     },
     // 离开队列
-    leaveQueue () {
+    leaveQueue() {
       this.req({
         url: '/v1/box/leaveQueue',
         data: {
@@ -1441,14 +1725,14 @@ export default {
       });
     },
     // 轮询队列状态
-    startPollQueueStatus () {
+    startPollQueueStatus() {
       if (this.pollTimer) clearInterval(this.pollTimer);
       this.pollTimer = setInterval(() => {
         this.getQueueStatus();
       }, 3000); // 每3秒刷新一次
     },
     // 获取队列状态
-    getQueueStatus () {
+    getQueueStatus() {
       this.req({
         url: '/v1/box/getQueueStatus',
         data: {
@@ -1468,10 +1752,13 @@ export default {
         }
       });
     },
-    cancelQueue () {
+    cancelQueue() {
       this.leaveQueue();
       if (this.pollTimer) clearInterval(this.pollTimer);
     },
+    changeTabs(e) {
+      this.tabCur = e
+    }
   },
 }
 </script>
@@ -1486,6 +1773,7 @@ page {
   // min-height: calc(100vh - 50px);
   padding-bottom: 120rpx;
   background: #f7f7f7;
+
 
   .nav {
     ::v-deep .uni-navbar__header {
@@ -1738,7 +2026,7 @@ page {
       align-items: center;
       justify-content: center;
 
-      .open-nav-con{
+      .open-nav-con {
         display: flex;
         padding: 10rpx;
         background: #F0E9FF;
@@ -2396,12 +2684,14 @@ page {
 
       &-content {
         text {
-          // padding: 2rpx 6rpx;
           font-size: 28rpx;
           font-family: PingFang SC;
           font-weight: bold;
-          color: #ffffff;
+          color: #fff;
+          background: #e4082c;
           margin-right: 10rpx;
+          border-radius: 10rpx;
+          padding: 10rpx 20rpx;
         }
 
         font-size: 32rpx;
@@ -2459,7 +2749,6 @@ page {
       color: #333333;
     }
 
-    .content {}
   }
 }
 
@@ -2519,8 +2808,14 @@ page {
   }
 }
 
+.open-card {
+  background: #fff;
+  padding: 20rpx;
+  border-radius: 20rpx;
+  margin-top: 20rpx;
+}
+
 .award-wrap {
-  padding: 0 20rpx;
   margin-top: 20rpx;
 
   .award-log-item {
@@ -2532,7 +2827,6 @@ page {
     // background-size: 100% 100%;
     margin-bottom: 20rpx;
     position: relative;
-    border-radius: 20rpx;
     padding: 20rpx;
     // background: linear-gradient(to right, #5dfda1, #baf828);
     // background: linear-gradient(to right, #c1f721, #8dfa63, #62fc9b);
@@ -2540,6 +2834,11 @@ page {
 
     &:last-child {
       margin-bottom: 0;
+    }
+
+    .user-avatar {
+      width: 100rpx;
+      border-radius: 50rpx;
     }
 
     .qishu {
@@ -2554,6 +2853,7 @@ page {
     .award-log-left {
       flex: 1;
       width: 50%;
+      padding: 0 20rpx;
 
       .award-log-time {
         margin-bottom: 10px;
@@ -2713,11 +3013,12 @@ page {
   background-size: 100% 100%;
   margin: 0 20rpx;
   position: relative;
+  padding-bottom: 20rpx;
 
   .card-top-item {
     display: flex;
     padding: 80rpx 40rpx;
-    padding-bottom: 50rpx;
+    padding-bottom: 20rpx;
     background: #fff;
     border-radius: 20rpx;
 
@@ -2788,14 +3089,6 @@ page {
         }
       }
 
-      .card-money {
-        color: #6c58dc;
-        .price {
-          color: #fb3b7a;
-          margin-left: 5rpx;
-        }
-      }
-
       .card-btn {
         display: flex;
         justify-content: center;
@@ -2818,6 +3111,18 @@ page {
           background: linear-gradient(to right, #5dfda1, #baf828);
         }
       }
+    }
+  }
+
+  .card-count {
+    display: flex;
+    justify-content: center;
+    font-size: 30rpx;
+    font-weight: bold;
+    margin-bottom: 15rpx;
+
+    .count-num {
+      margin-left: 10rpx;
     }
   }
 }
@@ -2884,8 +3189,8 @@ page {
 }
 
 .empty-list {
-  // min-height: 30vh;
-  // margin-top: 200rpx;
+  min-height: 30vh;
+  margin-top: 200rpx;
 }
 
 .rule-pop {
@@ -2936,15 +3241,15 @@ page {
     text-align: center;
     border: 2rpx solid #333;
     // background: linear-gradient(to right, #5dfda1, #baf828);
-    // background: linear-gradient(to right, #c1f721, #8dfa63, #62fc9b);
+    background: linear-gradient(to right, #c1f721, #8dfa63, #62fc9b);
     text-shadow: -1px -1px #fff, 1px 1px #333;
     // box-shadow: 0px 5px 5px #888888;
-    // box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
+    box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
   }
 
   .chou-first-wrap {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     column-gap: 20rpx;
 
     .chou-first-item {}
@@ -3020,13 +3325,24 @@ page {
         width: 140rpx; // 固定宽度
         height: 140rpx; // 固定高度
         border-radius: 16rpx;
-        overflow: hidden;
+        // overflow: hidden;
         background-color: #f5f5f5;
+        // box-shadow: 0 0 10rpx 10rpx rgba(216, 213, 11, 0.8);
 
         .award-img {
           width: 100%;
           height: 100%;
           object-fit: cover;
+        }
+
+        @keyframes starFlick {
+          from {
+            box-shadow: 0 0 10rpx 10rpx rgba(255, 255, 0, 0.8);
+          }
+
+          to {
+            box-shadow: 0 0 3rpx 3rpx rgba(240, 236, 5, 0.2);
+          }
         }
 
         .award-tag {
@@ -3099,58 +3415,57 @@ page {
     }
   }
 }
+</style>
+<style lang='scss' scoped>
+/* 排序 */
+.sort-controls {
+  margin: 0 10rpx;
+  margin-top: 20rpx;
+  display: flex;
+  padding: 12rpx 20rpx;
+  background-color: #fff;
+  border-bottom: 1px solid #f5f5f5;
+  border-radius: 20rpx;
 
-.desc-content {
-  padding: 0 20rpx;
+}
 
-  .zheng-pin {
-    width: 100%;
-    height: 114rpx;
-    margin-top: 40rpx;
-  }
+.sort-btn {
+  display: flex;
+  align-items: center;
+  margin-right: 40rpx;
+  font-size: 28rpx;
+  color: #333;
+  padding: 8rpx 0;
+}
 
-  .goods-tag {
-    padding: 30rpx;
-    display: flex;
-    justify-content: space-between;
-    background: #fff;
+.sort-btn .sort-icon {
+  margin-left: 8rpx;
+  color: #ff4d4f;
+  /* 排序状态图标颜色 */
+}
 
-    &-item {
-      display: flex;
-      align-items: center;
+/* 选中的排序类型可加深样式 */
+.sort-btn.active {
+  color: #ff4d4f;
+  font-weight: bold;
+}
 
-      .icon {
-        width: 30rpx;
-        height: 30rpx;
-        margin-right: 4rpx;
-      }
+.up-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20rpx;
+}
 
-      font-size: 24rpx;
-      font-family: PingFang SC;
-      font-weight: bold;
-      color: #222222;
-      line-height: 30rpx;
-    }
-  }
+.no-text {
+  margin-top: 20rpx;
+  text-align: center;
+}
 
-  .description-section {
-    margin: 20rpx 0;
-    padding: 20rpx;
-    background-color: #f5f5f5;
-    border-radius: 10rpx;
-  }
-
-  .description-title {
-    font-size: 32rpx;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 10rpx;
-  }
-
-  .description-content {
-    font-size: 28rpx;
-    color: #666;
-    line-height: 40rpx;
-  }
+.more-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20rpx;
 }
 </style>

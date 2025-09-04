@@ -29,16 +29,16 @@ export default {
         {
           id: 0,
           path: '/pages/tabBar/home',
-          icon: 'https://box.bjkc010.com/static/mini/tabbar/home.png',
-          selectIcon: 'https://box.bjkc010.com/static/mini/tabbar/home-active.png',
+          icon: 'https://box.miaomicw.com.cn/static/mini/tabbar/home.png',
+          selectIcon: 'https://box.miaomicw.com.cn/static/mini/tabbar/home-active.png',
           text: '首页',
           centerItem: false
         },
         {
           id: 2,
           path: '/pages/index/index',
-          icon: 'https://box.bjkc010.com/static/mini/tabbar/shop.png',
-          selectIcon: 'https://box.bjkc010.com/static/mini/tabbar/shop-active.png',
+          icon: 'https://box.miaomicw.com.cn/static/mini/tabbar/shop.png',
+          selectIcon: 'https://box.miaomicw.com.cn/static/mini/tabbar/shop-active.png',
           text: '商城',
           centerItem: false
         },
@@ -46,16 +46,16 @@ export default {
         {
           id: 3,
           path: '/pages/tabBar/bag',
-          icon: 'https://box.bjkc010.com/static/mini/tabbar/cangku.png',
-          selectIcon: 'https://box.bjkc010.com/static/mini/tabbar/cangku-active.png',
+          icon: 'https://box.miaomicw.com.cn/static/mini/tabbar/cangku.png',
+          selectIcon: 'https://box.miaomicw.com.cn/static/mini/tabbar/cangku-active.png',
           text: '猫窝',
           centerItem: false
         },
         {
           id: 4,
           path: '/pages/tabBar/my',
-          icon: 'https://box.bjkc010.com/static/mini/tabbar/my.png',
-          selectIcon: 'https://box.bjkc010.com/static/mini/tabbar/my-active.png',
+          icon: 'https://box.miaomicw.com.cn/static/mini/tabbar/my.png',
+          selectIcon: 'https://box.miaomicw.com.cn/static/mini/tabbar/my-active.png',
           text: '我的',
           centerItem: false
         }

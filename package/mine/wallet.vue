@@ -142,7 +142,7 @@ export default {
   methods: {
     toBox () {
       uni.switchTab({
-        url: '/pages/box/box'
+        url: '/package/box/box'
       })
     },
     /**

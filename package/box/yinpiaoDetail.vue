@@ -2,7 +2,7 @@
   <view class="kaixiang">
     <view class="nav">
       <uni-nav-bar color="#000" leftIcon="left" backgroundColor="transparent" :border="false" :statusBar="true"
-        :fixed="true" title="福袋">
+        :fixed="true" title="猫咪好物">
         <view slot="left" class="nav-left" @click="back">
           <u-icon name="arrow-left" color="#333" size="40"></u-icon>
         </view>
@@ -12,36 +12,11 @@
     <view class="card-top-wrap">
       <view class="card-top-item">
         <view class="card-top-left">
-          <!-- 新增相对定位容器 -->
-          <view class="card-img-overlay" v-if="is_user_limited">
-            <!-- 用户信息区域 -->
-            <view class="user-info">
-              <image class="user-avatar" :src="first_limit_user.avatar" mode="widthFix" />
-              <text class="user-nickname">{{ first_limit_user.nickName }}</text>
-            </view>
-
-            <!-- 锁箱文字 -->
-            <view class="lock-text">锁箱中</view>
-
-            <!-- 倒计时区域 -->
-            <view class="countdown">
-              <!-- <text>倒计时：</text> -->
-              <!-- <text class="countdown-time">{{ countdownSecond }}</text> -->
-              <u-count-down :show-days="false" :timestamp="countdownSecond"></u-count-down>
-            </view>
-          </view>
-
-          <!-- 原图片元素 -->
-          <image class="card-top-left-img" :src="cardThumb" mode="aspectFit" lazy-load="false" binderror=""
-            bindload="" />
-
-          <!-- 原箱数信息 -->
+          <image class="card-top-left-img" :src="cardThumb" mode="aspectFit" lazy-load="false" binderror="" bindload="" />
           <view class="card-num">
-            第{{ currentIndex + 1 }}/{{ boxInfo.set_count }}箱
+            <!-- 第{{ currentIndex + 1 }}/{{ boxInfo.set_count }}箱 -->
           </view>
         </view>
-
-        <!-- 右侧原有内容保持不变 -->
         <view class="card-top-right">
           <view class="card-title">
             {{ boxInfo.title }}
@@ -49,7 +24,10 @@
           <view class="card-price">
             <text>￥</text> <text class="price">{{ boxInfo.price }}/抽</text>
           </view>
-          <view class="card-btn">
+          <view class="card-price card-money">
+            <text>可获得平台币</text> <text class="price">{{ boxInfo.money }}</text>
+          </view>
+          <!-- <view class="card-btn">
             <image class="card-btn-img"
               src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01Wtg27c24NdcZ9jUng_!!2200676927379.png"
               mode="widthFix" lazy-load="false" binderror="" bindload="" @click="prev" />
@@ -57,11 +35,9 @@
             <image class="card-btn-img"
               src="https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01Ho6HBV24NdcZCytvN_!!2200676927379.png"
               mode="widthFix" lazy-load="false" binderror="" bindload="" @click="next" />
-          </view>
+          </view> -->
         </view>
       </view>
-      <view class="card-count">本套剩余:<text class="count-num">{{ posstion_remaining_stock }}/{{ posstion_total_stock
-          }}</text></view>
     </view>
 
     <view class="rule-btn-wrap">
@@ -75,55 +51,87 @@
           src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01WJw25c24NdcXfR5bK_!!2200676927379.png"
           mode="widthFix" lazy-load="false" binderror="" bindload="" />
       </view>
-      <view class="rule-btn-item" @click="tobag">
-        <image class="rule-btn-item-img"
-          src="https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01YjcRcT24NddntRZ8e_!!2200676927379.png"
-          mode="widthFix" lazy-load="false" binderror="" bindload="" />
-      </view>
     </view>
 
-    <view class="gd-desc">抽赏存在概率性, 请谨慎购买 <text @click="goRule">发货须知</text></view>
+    <view class="gd-desc">当前为特殊赏品，可兑换平台币 <text @click="goRule">发货须知</text></view>
 
-    <view class="queue-status-wrapper">
-      <!-- 无人排队 -->
-      <view v-if="queueInfo.status == 0" class="no-queue-box">
-        <text class="no-queue-text">当前无人排队，快来抢购！</text>
+    <view class="desc-content">
+      <view class="zheng-pin">
+        <cimage src="/static/img/zheng_pin.png" mode="scaleToFill" />
       </view>
 
-      <!-- 轮到我 -->
-      <view v-else-if="queueInfo.status == 1" class="my-turn-box">
-        排到你了，拥有专属时间 <text class="highlight">{{ remainingTime }}</text>s，
-        后面有 <text class="highlight">{{ queueInfo.behind }}</text> 人在排队
+      <view class="goods-tag">
+        <view class="goods-tag-item">
+          <view class="icon">
+            <cimage src="/static/icon/check2_act.png" mode="scaleToFill" />
+          </view>
+
+          假一罚三
+        </view>
+
+        <view class="goods-tag-item">
+          <view class="icon">
+            <cimage src="/static/icon/check2_act.png" mode="scaleToFill" />
+          </view>
+
+          正品保障
+        </view>
+
+        <view class="goods-tag-item">
+          <view class="icon">
+            <cimage src="/static/icon/check2_act.png" mode="scaleToFill" />
+          </view>
+
+          全新正品
+        </view>
+
+        <view class="goods-tag-item">
+          <view class="icon">
+            <cimage src="/static/icon/check2_act.png" mode="scaleToFill" />
+          </view>
+
+          超时赔付
+        </view>
       </view>
 
-      <!-- 等待他人 -->
-      <view v-else-if="queueInfo.status == 2 || queueInfo.status == 3" class="waiting-box">
-        <view class="user-row">
-          <view class="waiting-text">
-            前面还有 <text class="highlight">{{ queueInfo.ahead }}</text> 人，当前排到用户：
-          </view>
-          <view class="user-info-wrap">
-            <image :src="queueInfo.avatar" class="avatar" mode="aspectFill" />
-            <view class="user-info-right">
-              <view class="nickname">{{ queueInfo.nickname || '微信用户' }}</view>
-              <view class="time-info">
-                <text class="highlight">{{ remainingTime }}</text>s
-              </view>
-            </view>
-          </view>
+      <!-- 新增的文字说明 -->
+      <view class="description-section">
+        <view class="description-title">产品优势</view>
+        <view class="description-content">
+          1. 精心挑选，确保每一件商品都是高质量、值得信赖的好物。<br />
+          2. 所有商品享有正品保障，让您购物无忧。<br />
+          3. 提供快速的发货服务，确保您的购物体验高效便捷。
+        </view>
+      </view>
+
+      <view class="description-section">
+        <view class="description-title">购买须知</view>
+        <view class="description-content">
+          1. 每次购买均可兑换平台币，积分累计使用。<br />
+          2. 如果您对商品有任何疑问，欢迎随时联系客服。<br />
+          3. 产品一旦售出，恕不退换，除非遇到质量问题。
+        </view>
+      </view>
+
+      <view class="description-section">
+        <view class="description-title">注意事项</view>
+        <view class="description-content">
+          1. 请确认收货地址无误，避免因地址错误导致发货延误。<br />
+          2. 特殊情况下，如遇节假日，可能会影响发货速度。<br />
+          3. 使用平台币支付时，请确保账户余额充足。
         </view>
       </view>
     </view>
+
+
 
     <view class="shop-list">
-      <view class="open-nav">
-        <view class="open-nav-con">
-          <view class="open-nav-item" :class="[currentCate == index ? 'open-active-nav' : '']"
-            v-for="(item, index) in navList" :key="index" @click="changeCurrentCate(index)">
-            {{ item.name }}
-          </view>
+      <!-- <view class="open-nav">
+        <view class="open-nav-item" :class="[currentCate == index ? 'open-active-nav' : '']"
+          v-for="(item, index) in navList" :key="index" @click="changeCurrentCate(index)">
+          {{ item.name }}
         </view>
-      </view>
+      </view> -->
       <template v-if="currentCate == 0">
         <template v-if="awardList.length">
           <view class="mh-goods-list">
@@ -167,7 +175,8 @@
         </template>
         <template v-else>
           <view class="empty-list">
-            <u-empty text="暂无赏品数据~" mode="list"></u-empty>
+            <!-- <u-empty text="暂无赏品数据~" mode="list"></u-empty> -->
+
           </view>
         </template>
       </template>
@@ -175,71 +184,24 @@
         <template v-if="boxLogList.length">
           <mescroll-body ref="mescrollRef" height="400" @init="mescrollInit" @down="downCallback" @up="getList"
             :down="downOption" :up="upOption">
-
             <view class="award-wrap">
               <view class="award-log-item" v-for="(item, index) in boxLogList" :key="index">
-
-                <!-- 普通奖品展示 -->
-                <template v-if="item.is_box == 0">
-                  <view class="award-single-info">
-                    <view class="award-single-left">
-                      <!-- 用户头像和昵称 -->
-                      <image :src="item.avatar" class="user-avatar" />
-                      <view class="user-info">
-                        <view class="user-nickname">{{ item.nickName }}</view>
-                        <view class="award-time">{{ item.created_at }}</view>
-                      </view>
-                    </view>
-
-                    <!-- 奖品图片 -->
-                    <view class="award-log-box">
-                      <image class="award-single-img" :src="item.thumb" mode="widthFix" lazy-load="false" binderror=""
-                        bindload="" />
-                    </view>
+                <view class="award-log-left">
+                  <view class="award-log-time">
+                    {{ item.created_at }}
                   </view>
-                </template>
-
-                <!-- 宝箱奖品展示 -->
-                <template v-else>
-                  <view class="award-box-content">
-                    <view class="award-box-info">
-                      <view class="award-box-left">
-                        <!-- 用户头像和昵称 -->
-                        <image :src="item.avatar" class="user-avatar" />
-                        <view class="user-info">
-                          <text class="user-nickname">{{ item.nickName }}</text>
-                          <text class="award-time">{{ item.created_at }}</text>
-                        </view>
-                      </view>
-
-                      <!-- 宝箱文字 -->
-                      <view class="award-log-box">
-                        <text class="box-text">宝箱X1</text>
-                      </view>
-                    </view>
-
-                    <!-- 宝箱奖品信息 -->
-                    <view class="box-award-content">
-                      <image :src="item.thumb" class="box-award-img" />
-                      <view class="award-log-box-items">
-                        <view>{{ item.title }}</view>
-                        <view v-for="(subItem, subIndex) in item.sub_orders" :key="subIndex" class="sub-item">
-                          <image :src="subItem.thumb" class="sub-item-img" />
-                          <view class="sub-item-info">
-                            <text class="sub-item-title">{{ subItem.title }}</text>
-                            <text class="sub-item-price">价值: ¥{{ subItem.price }}</text>
-                          </view>
-                        </view>
-                      </view>
-                    </view>
-
+                  <view class="award-log-info">
+                    {{ item.nickName }} 获得 <text class="award-name">{{ item.title }}</text>
                   </view>
-                </template>
+                </view>
+                <view class="award-log-right">
+                  <image class="award-log-img" :src="item.thumb" mode="widthFix" lazy-load="false" binderror=""
+                    bindload="" />
+                </view>
               </view>
             </view>
           </mescroll-body>
         </template>
-
         <template v-else>
           <view class="empty-list">
             <u-empty text="暂无中赏记录~" mode="list"></u-empty>
@@ -248,85 +210,10 @@
       </template>
     </view>
 
-    <!-- 福袋 -->
-    <view class="lottery-bag-wrap">
-      <view class="lottery-bag-card">
-        <!-- 顶部信息栏 -->
-        <view class="header">
-          <text class="title">选择福袋</text>
-          <view class="info">
-            <text>剩余{{ posstion_remaining_stock }}/{{ posstion_total_stock }}</text>
-            <!-- 显示状态说明，无点击事件 -->
-            <view class="status-desc">
-              <view class="status-wrap">
-                <view class="status-dot optional-dot"></view>
-                <view>可选</view>
-              </view>
-              <view class="status-wrap">
-                <view class="status-dot sold-dot"></view>
-                <view>已售</view>
-              </view>
-            </view>
-            <button class="select-all" @click="selectAll">
-              {{ getSelectAllText }}
-            </button>
-          </view>
-        </view>
-
-        <!-- 福袋列表（显示所有福袋，包括可选和已售） -->
-        <view class="bag-list" :style="{ maxHeight: listMaxHeight, overflow: 'hidden' }">
-          <view v-for="(item, index) in positionList" :key="item.index" class="bag-item" :class="{
-            selected: item.selected,
-            gray: item.is_sold == 1  // 已售状态
-          }" @click="handleBagClick(item)">
-            <text class="bag-number">{{ item.index }}</text>
-            <!-- 选中标记 -->
-            <view class="selected-mark" v-if="item.selected">✓</view>
-          </view>
-        </view>
-
-        <!-- 操作按钮 -->
-        <view class="footer">
-          <view class="btn-wrap" @click="handleCollapse">
-            <button class="collapse-btn">
-              {{ isCollapsed ? '展开' : '收起' }}
-            </button>
-            <image class="collapse-icon"
-              :src="isCollapsed ? 'https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01hwG7y624Nde3QSFRQ_!!2200676927379.png' : 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01Mk9rOA24Nde3ie1dx_!!2200676927379.png'"
-              mode="widthFix"></image>
-          </view>
-        </view>
-      </view>
-    </view>
-
     <view class="chou-btn-wrap">
-      <!-- 状态 1：轮到我，展示购买按钮组 -->
-      <template v-if="queueInfo.status === 1">
-        <view class="bag-wrap">
-          <view class="bag-selected-info">
-            <view>已选择{{ selectedCount }}个福袋</view>
-            <view class="price">待支付：¥{{ totalPayPrice.toFixed(2) }}</view>
-          </view>
-          <view class="chou-first-wrap">
-            <view class="chou-btn-item" @click="changeBuyType()">
-              立即购买
-            </view>
-          </view>
-        </view>
-      </template>
-
-
-      <!-- 状态 0：未加入队列，展示立即排队按钮 -->
-      <view v-else-if="queueInfo.status === 0 || queueInfo.status == 3" class="queue-action-wrap">
-        <view class="chou-action-item" @click="joinQueue">
-          立即排队
-        </view>
-      </view>
-
-      <!-- 状态 2：等待他人，展示取消排队按钮 -->
-      <view v-else-if="queueInfo.status === 2" class="queue-action-wrap">
-        <view class="chou-action-item" @click="cancelQueue">
-          取消排队
+      <view class="queue-action-wrap">
+        <view class="chou-action-item" @click="openBox">
+          立即购买
         </view>
       </view>
     </view>
@@ -356,7 +243,7 @@
           </view>
 
           <view class="row">
-            <view class="title">抵扣金额</view>
+            <view class="title">星币抵扣</view>
 
             <view class="right">
               <view class="price red">
@@ -366,7 +253,7 @@
             </view>
           </view>
 
-          <view class="row">
+          <!-- <view class="row">
             <view class="title">优惠券</view>
 
             <view class="right">
@@ -380,13 +267,13 @@
                 暂无可用 <u-icon name="arrow-right" color="#d5b644" size="28"></u-icon>
               </view>
             </view>
-          </view>
+          </view> -->
 
           <view class="row">
-            <view class="title">获得数量</view>
+            <view class="title">获得平台币</view>
 
             <view class="right">
-              <view class="gray">随机获得{{ orderData.box.num }}件商品</view>
+              <view class="gray">获得{{ orderData.money }}平台币</view>
             </view>
           </view>
 
@@ -526,8 +413,7 @@
         <view class="zsbox-top">
           <view class="zs-title">
             <view>中赏记录</view>
-            <view class="zs-icon" @click="zsPop = false"><uni-icons type="closeempty" color="#fff"
-                size="20"></uni-icons>
+            <view class="zs-icon" @click="zsPop = false"><uni-icons type="closeempty" color="#fff" size="20"></uni-icons>
             </view>
           </view>
 
@@ -590,38 +476,34 @@
       </view>
     </u-popup>
 
-    <!-- 开盒动画 -->
-    <u-popup v-model="setShow" mode="center" border-radius="16" :closeable="true" @close="closeSet">
-      <view class="setbox">
-        <view class="set-title">设置</view>
-        <view class="set-tip">
-          <view>
-            跳过动画
-          </view>
-          <u-switch @change="changeAnimate" active-color="#7768d5" v-model="animateSet"></u-switch>
-        </view>
-      </view>
-    </u-popup>
-
     <!-- 规则说明 -->
     <u-popup v-model="rulePop" mode="center" width="93%" border-radius="20">
       <view class="rule-pop">
         <view class="rule-title">
-          规则说明
+          平台币使用规则
         </view>
         <scroll-view class="rule-pop-bd" scroll-y>
-          <view class="rule-content"> 1、禁止未满18周岁的未成年人在平台内的一切消费行为。</view>
+          <view class="rule-content">1、购买本商品后，可按平台规定比例将商品兑换为平台币，兑换比例以商品详情页公示为准；</view>
           <view class="rule-content">
-            2、购买福袋及盲盒类商品具有随机性，付款后即完成在线拆盒知晓具体款式，依据《消费者权益保障法》第二十五条第二款和《网络购买商品七日无理由退货暂行办法》第七条规定，不适用七天无理由退货。售后请在签收7日内凭开箱视频联系客服售后，所有公仔挂件及周边不包官瑕，不支持挑脸中古款不包牌损。
+            2、兑换后的平台币可用于平台内各类商品的购买，包括但不限于"一番赏"等开赏类商品；
           </view>
           <view class="rule-content">
-            3、购买商品在猫窝页面可供查，用户可自行对商品选择发货操作，商品一件包邮，下单后15天内按顺序发货，商品发货时间有特别说明的则以该商品特别说明时间为准。
+            3、平台币不设有效期，可长期存放使用，且不支持兑换为现金；
           </view>
           <view class="rule-content">
-            4、.商品猫窝寄存期限为30天，商品到期后将发货至默认收货地址，请确保默认收货地址准确真实有效，如因收件信息有误导致的所有损失，将由您自行承担。已过期超过7天的商品若无有效默认地址，视为主动放弃，放弃后商品将不可找回。对于以上提示，请您认真阅读，购买即表示认可以上条款，感谢您的支持。
+            4、使用平台币购买商品时，遵循"优先抵扣平台币，不足部分补差价"的原则；
           </view>
           <view class="rule-content">
-            5、本平台保证发出的货品内容全新未拆，请多多支持！
+            5、通过商品兑换的平台币，不可转赠给其他用户，仅限本人账号使用；
+          </view>
+          <view class="rule-content">
+            6、若购买后已将商品兑换为平台币，该商品将不再支持退货退款；
+          </view>
+          <view class="rule-content">
+            7、用户可通过"我的-平台币"查看余额及收支明细，如有疑问可联系客服咨询；
+          </view>
+          <view class="rule-content">
+            8、平台有权根据运营需求调整兑换规则，如有变动将提前3天在平台公告栏公示。
           </view>
         </scroll-view>
       </view>
@@ -632,18 +514,14 @@
       <view class="box-content">
         <view class="box-popup-title">宝箱物品</view>
         <view class="box-popup-desc">打开后随机获得一个赏品</view>
-        <template v-if="curDetail && curDetail.box_awards && curDetail.box_awards.length">
+        <template v-if="curDetail && curDetail.box_awards.length">
           <view class="award-grid">
+
             <view class="award-card" v-for="(award, index) in curDetail.box_awards" :key="index">
               <view class="award-img-container">
-                <!-- <image :src="award.thumb" class="award-img" mode="aspectFill" @click="previewImage(award)"></image> -->
-
-                <view :class="award.mark_title === 'H赏' ? '' : 'animate-img'">
-                  <xc-image :src="award.thumb" :showBg="true" ratio="1:1" borderRadius="10"
-                    @click="previewImage(award)" />
-                </view>
+                <image :src="award.thumb" class="award-img" mode="aspectFill"></image>
                 <view class="award-tag">{{ award.mark_title || 'A' }}</view>
-                <view class="award-probability">{{ award.show_rate }}%</view>
+                <view class="award-probability">{{ award.real_rate }}%</view>
               </view>
               <view class="award-info">
                 <view class="award-name">{{ award.title }}</view>
@@ -662,68 +540,6 @@
         </view>
       </view>
     </u-popup>
-
-    <!-- 中奖赏品 -->
-    <u-popup v-model="awardShow" mode="center" border-radius="20" width="90%">
-      <view class="box-content box-award-content">
-        <view class="box-popup-title">中奖赏品</view>
-        <view class="box-popup-desc">恭喜你获得获得以下赏品</view>
-        <template v-if="prizeResult && prizeResult.length">
-          <view class="award-grid">
-            <view class="award-card" v-for="(award, index) in prizeResult" :key="index">
-              <view class="award-img-container">
-                <view :class="award.mark_title === 'H赏' ? '' : 'animate-img'">
-                  <xc-image :src="award.thumb" :showBg="true" ratio="1:1" borderRadius="10" />
-                </view>
-                <view class="award-tag">
-                  <template v-if="award.is_box == 1">
-                    BX赏
-                  </template>
-                  <template v-else>
-                    {{ award.mark_title }}
-                  </template>
-                </view>
-                <view class="award-probability">x{{ award.total }}</view>
-              </view>
-              <view class="award-info">
-                <view class="award-name">{{ award.title }}</view>
-              </view>
-            </view>
-          </view>
-        </template>
-        <template v-else>
-          <view class="empty">
-            <u-empty text="暂无数据" mode="list"></u-empty>
-          </view>
-        </template>
-        <view class="close-btn-wrap">
-          <button class="box-popup-close-btn" @click="tobag">去背包</button>
-          <button class="box-popup-close-btn" @click="tocontinue">继续抽奖</button>
-        </view>
-      </view>
-    </u-popup>
-
-    <!-- 自定义图片预览弹窗 -->
-    <u-popup v-model="isPreviewVisible" mode="center" border-radius="20" width="90%">
-      <view class="image-preview-content">
-        <!-- 赏品明细标题 -->
-        <view class="preview-title">{{ previewInfo.mark_title }}·赏品明细</view>
-
-        <!-- 预览的图片 -->
-        <image :src="previewInfo.thumb" class="image-preview" mode="widthFix"></image>
-        <!-- <xc-image :src="previewInfo.thumb" :showBg="true" ratio="1:1" borderRadius="10"  /> -->
-
-        <!-- 商品标题 -->
-        <view class="preview-product-title">{{ previewInfo.title }}</view>
-      </view>
-    </u-popup>
-
-    <u-modal v-model="switchQueueShow" content="您已在其他队列中，是否切换到当前队列" show-cancel-button cancel-text="取消"
-      confirm-text="确认切换" @confirm="switchQueue"></u-modal>
-
-    <u-modal v-model="levelQueueShow" content="退出页面, 则视为主动放弃当前拥有的专属抽盒时间，是否继续退出" show-cancel-button cancel-text="取消"
-      confirm-text="退出" @confirm="levelPage"></u-modal>
-
   </view>
 </template>
 
@@ -740,18 +556,40 @@ export default {
   components: {
 
   },
-  data() {
+  data () {
     return {
       muteBgMusic: false,
       kefushow: false,
       wx_kefu: '',
       optionsData: '',
       scrollTop: 0,
+      boxBtnList: [
+        {
+          num: 1,
+          title: '一发入魂',
+          img: 'https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01uDibP824NdcoDFYlf_!!2200676927379.png'
+        },
+        {
+          num: 3,
+          title: '霸气三连',
+          img: 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN015KXyAD24NdcotafBb_!!2200676927379.png'
+        },
+        {
+          num: 5,
+          title: '五连绝世',
+          img: 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01Jd8j3U24Ndcpz2k2H_!!2200676927379.png'
+        },
+      ],
+      markIconList: [
+        'https://www.img.xcooo.cn/uploads/2024/03/198c2a7e10410c63.png',
+        'https://www.img.xcooo.cn/uploads/2024/03/f7c171b8f3dabff6.png',
+        'https://www.img.xcooo.cn/uploads/2024/03/7e0edd987451aae3.png'
+      ],
       list: [
         '恭喜 微信用户获得路由器'
       ],
       boxInfo: {},
-      // 赏等级列表e
+      // 赏等级列表
       markList: [],
       // 当前展示的奖品列表（默认是第一套的奖品）
       awardList: [],
@@ -839,33 +677,10 @@ export default {
       isMyTurn: false,       // 是否轮到我
       pollTimer: null,       // 轮询定时器
       timer: null,
-      remainingTime: 0,   // 队首用户的剩余时间，不是当前用户的。
-      previewInfo: {}, // 存储要预览的商品信息
-      isPreviewVisible: false, // 控制预览是否显示
-      first_limit_user: {
-        avatar: '',
-        nickName: ''
-      },
-      is_user_limited: false,
-      countdownSecond: 30 * 24 * 60 * 60,
-      remainingStock: 0,
-      totalStock: 0,
-      // 中赏物品
-      awardShow: false,
-      prizeResult: [],
-      switchQueueShow: false,
-      levelQueueShow: false,
-      filterType: '可选',
-      // 数量信息（动态计算，无需手动设置）
-      posstion_remaining_stock: 0,
-      posstion_total_stock: 0,
-      isCollapsed: true, // 默认收起
-      listMaxHeight: '', // 初始高度由created计算
-      rowHeight: 110, // 每行高度（福袋100rpx + 行间距10rpx）
-      positionList: [], // 福袋列表
+      remainingTime: 0   // 队首用户的剩余时间，不是当前用户的。
     }
   },
-  onLoad(options) {
+  onLoad (options) {
     if (options.scene) {
       let arr = options.scene.split('_')
       this.optionsData = {
@@ -874,9 +689,6 @@ export default {
       }
     } else {
       this.optionsData = options
-    }
-    if (options.set_count) {
-      this.currentIndex = +options.set_count - 1
     }
 
     switchMusic.src = switchMp3
@@ -894,11 +706,12 @@ export default {
     // #endif
     this.getData()
   },
-  onShow() {
+  onShow () {
     this.$store.dispatch('getUserInfo').then(res => {
-      // console.log(res)
+      console.log(res)
     })
     this.$store.dispatch('getAppConfig').then((res) => {
+      console.log(res);
       this.is_epay = res.data.is_epay
       this.wx_kefu = res.data.wx_kefu
       // if (res.data.bg_music) {
@@ -909,11 +722,9 @@ export default {
     })
     // 清空优惠券信息
     this.coupon_info = {}
-    // 初始化时计算收起状态的高度（默认显示3行）
-    this.listMaxHeight = this.rowHeight * 3 + 'rpx';
   },
   watch: {
-    'queueInfo.remainingTime'(val) {
+    'queueInfo.remainingTime' (val) {
       this.remainingTime = val;
       if (this.timer) clearInterval(this.timer);
 
@@ -927,9 +738,9 @@ export default {
           }
         }, 1000);
       }
-    },
+    }
   },
-  onUnload() {
+  onUnload () {
     console.log('移除事件')
     clearInterval(this.barrageTimer)
     clearInterval(this.checkTimer)
@@ -944,35 +755,7 @@ export default {
   },
   computed: {
     ...mapGetters(['sysConfig', 'userInfo']),
-    // 全选按钮文本
-    getSelectAllText() {
-      const selectedCount = this.list.filter(
-        item => item.status === 1 && item.selected
-      ).length;
-      const optionalCount = this.list.filter(
-        item => item.status === 1
-      ).length;
-
-      if (selectedCount === 0) return '一键全选';
-      if (selectedCount === optionalCount) return '取消全选';
-      return '一键全选';
-    },
-    // 计算已选择的待售福袋数量
-    selectedCount() {
-      // 过滤条件：待售（is_sold=0）且已选中（selected=true）
-      return this.positionList.filter(item => {
-        return item.is_sold === 0 && item.selected;
-      }).length;
-    },
-    // 计算待支付总金额
-    totalPayPrice() {
-      // 先计算原始乘积，再转换为整数运算避免精度问题（这里假设 price 是小数，如 8.88 等）
-      // 原理：将小数放大为整数运算，再缩小回小数
-      const total = this.selectedCount * this.boxInfo.price;
-      // toFixed(2) 保留两位小数，同时处理精度问题（内部会做四舍五入）
-      return Number(total.toFixed(2));
-    },
-    cardThumb() {
+    cardThumb () {
       let img
       // if (this.currentIndex == 0) {
       //   img = this.boxInfo.thumb
@@ -985,34 +768,7 @@ export default {
     }
   },
   methods: {
-    // 一键全选（只操作待售状态的福袋）
-    selectAll() {
-      // 判断是否已有待售福袋被选中
-      const hasSelected = this.positionList.some(
-        item => item.is_sold == 0 && item.selected
-      );
-
-      this.positionList.forEach(item => {
-        // 只处理待售状态（is_sold=0）的福袋
-        if (item.is_sold == 0) {
-          item.selected = !hasSelected;  // 全选/取消全选
-        }
-      });
-    },
-    // 点击福袋
-    handleBagClick(item) {
-      if (item.is_sold == 1) return; // 已售不可选
-      item.selected = !item.selected; // 无动画，直接切换
-    },
-    // 收起/展开
-    handleCollapse() {
-      this.isCollapsed = !this.isCollapsed;
-      // 切换时更新高度
-      this.listMaxHeight = this.isCollapsed
-        ? this.rowHeight * 3 + 'rpx'  // 收起：3行高度
-        : '9999rpx';  // 展开：极大值显示全部
-    },
-    prev() {
+    prev () {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1024,7 +780,7 @@ export default {
       }
       this.getData()
     },
-    next() {
+    next () {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1036,7 +792,7 @@ export default {
       }
       this.getData()
     },
-    changeNum() {
+    changeNum () {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1046,7 +802,7 @@ export default {
       this.currentIndex = Math.floor(Math.random() * num)
       this.getData()
     },
-    setAnimate() {
+    setAnimate () {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1054,7 +810,7 @@ export default {
       })
       this.setShow = true
     },
-    closeSet() {
+    closeSet () {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1062,7 +818,7 @@ export default {
       })
       this.setShow = false
     },
-    changeAnimate(e) {
+    changeAnimate (e) {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1071,17 +827,17 @@ export default {
       this.animateSet = !!e
       uni.setStorageSync('animateSet', this.animateSet)
     },
-    useCouPon(item) {
+    useCouPon (item) {
       this.coupon_info = item
       // 请求订单信息
       this.confirmSubmit(0)
       this.couponPop = false
     },
-    goCoupon() {
+    goCoupon () {
       this.couponPop = true
       this.getUserCoupon()
     },
-    getUserCoupon() {
+    getUserCoupon () {
       this.req({
         url: '/v1/coupon/order_coupons',
         data: {
@@ -1102,13 +858,13 @@ export default {
         }
       })
     },
-    zsCu(index) {
+    zsCu (index) {
       this.currentItems = index
       this.boxLogList = []
       this.mescroll.resetUpScroll()
       this.mescroll.scrollTo(0, 0)
     },
-    zs() {
+    zs () {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1117,7 +873,8 @@ export default {
       this.zsPop = true
       this.getTab()
     },
-    getBoxLogList({
+
+    getBoxLogList ({
       num,
       size
     }) {
@@ -1126,7 +883,6 @@ export default {
         data: {
           id: this.optionsData.id,
           mark_id: this.btnLists.length ? this.btnLists[this.currentItems].id : 0,
-          setNo: this.currentIndex + 1,
           page: num,
           per_page: size
         },
@@ -1136,30 +892,28 @@ export default {
             if (num == 1) {
               this.boxLogList = []
             }
-            if (res.data.data.length) {
-              let newArr = res.data.data.map(item => {
-                if (item.mark_id == 1) {
-                  item.image = 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01khNh7d24NdcoDC0Ny_!!2200676927379.png'
-                } else if (item.mark_id == 2) {
-                  item.image = 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01KaZ6qs24Ndco6VAfA_!!2200676927379.png'
-                }
-                else if (item.mark_id == 3) {
-                  item.image = 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01GpZzz024NdcoDFpOW_!!2200676927379.png'
-                } else if (item.mark_id == 4) {
-                  item.image = 'https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01PZkzwd24NdcoKRnBt_!!2200676927379.png'
-                }
-                return item
-              })
-              this.boxLogList = [...this.boxLogList, ...newArr]
-              this.mescroll.endBySize(res.data.data.length, res.data.total)
-            }
+            let newArr = res.data.data.map(item => {
+              if (item.mark_id == 1) {
+                item.image = 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01khNh7d24NdcoDC0Ny_!!2200676927379.png'
+              } else if (item.mark_id == 2) {
+                item.image = 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01KaZ6qs24Ndco6VAfA_!!2200676927379.png'
+              }
+              else if (item.mark_id == 3) {
+                item.image = 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01GpZzz024NdcoDFpOW_!!2200676927379.png'
+              } else if (item.mark_id == 4) {
+                item.image = 'https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01PZkzwd24NdcoKRnBt_!!2200676927379.png'
+              }
+              return item
+            })
+            this.boxLogList = [...this.boxLogList, ...newArr]
+            this.mescroll.endBySize(res.data.data.length, res.data.total)
           } else {
             this.mescroll.endBySize(0, 0)
           }
         }
       })
     },
-    getTab() {
+    getTab () {
       return new Promise((resolve, reject) => {
         this.req({
           url: '/v1/box/mark',
@@ -1185,7 +939,7 @@ export default {
         })
       })
     },
-    handleSwiperChange(event) {
+    handleSwiperChange (event) {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1194,7 +948,7 @@ export default {
       const current = event.detail.current;
       this.currentBanner = current;
     },
-    checkPayStatus() {
+    checkPayStatus () {
       const _this = this
 
       const order_info = uni.getStorageSync('order_info_box')
@@ -1213,12 +967,12 @@ export default {
             switch (res.code) {
               case 200:
                 _this.cancelCheckPayStatus()
-                if (this.isMyTurn) {
-                  this.resetTimer() // 付款后重置倒计时
-                }
+                // if (this.isMyTurn) {
+                //   this.resetTimer() // 付款后重置倒计时
+                // }
                 this.$common.toast({
                   title: '支付成功', icon: 'success', duration: 1500, success: () => {
-                    this.openBox(order_info.order_sn)
+                   
                   }
                 })
                 break;
@@ -1237,7 +991,7 @@ export default {
         _this.cancelCheckPayStatus();
       }, 60 * 1000)
     },
-    cancelCheckPayStatus() {
+    cancelCheckPayStatus () {
       uni.removeStorageSync('order_info_box')
       // this.$common.toast({
       // 	title: '支付超时',
@@ -1253,7 +1007,7 @@ export default {
       }
     },
     // 取消支付
-    cancelOrderPay() {
+    cancelOrderPay () {
       const order_info = uni.getStorageSync('order_info_box')
       if (order_info.order_sn) {
         this.req({
@@ -1268,7 +1022,11 @@ export default {
         })
       }
     },
-    getData() {
+    /**
+* @description: 获取数据
+* @return {*}
+*/
+    getData () {
       return new Promise((resolve, reject) => {
         this.req({
           url: '/v1/box/info',
@@ -1280,38 +1038,40 @@ export default {
           success: res => {
             if (res.code == 200) {
               this.boxInfo = res.data.box
-              this.is_user_limited = res.data.box.is_user_limited
-              this.first_limit_user = res.data.box.first_limit_user
-              this.remainingStock = res.data.remainingStock
-              this.totalStock = res.data.totalStock
-              // 奖品数据按套分组
+              // 一番赏：奖品数据按套分组
               this.awardList = res.data.awardList.map(item => ({
                 ...item,
                 loaded: false
               }));
 
-              // 福袋位置列表
-              if (res.data.positionData) {
-                this.positionList = res.data.positionData.position_list.map(item => ({
-                  ...item,
-                  selected: false
-                }));
-                this.posstion_remaining_stock = res.data.positionData.remaining_stock
-                this.posstion_total_stock = res.data.positionData.total_stock
-              }
-
+              // this.awardList = res.data.awardList.map(item => {
+              //   if (item.mark_id == 1) {
+              //     item.image = 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01wmdjUN24NdcqIPVsW_!!2200676927379.png'
+              //   } else if (item.mark_id == 2) {
+              //     item.image = 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01tfLPbl24NdcpT2yp2_!!2200676927379.png'
+              //   }
+              //   else if (item.mark_id == 3) {
+              //     item.image = 'https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01JWsQ7M24NdcoKUk8K_!!2200676927379.png'
+              //   } else if (item.mark_id == 4) {
+              //     item.image = 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01cgJHsL24NdcoKTXJP_!!2200676927379.png'
+              //   }
+              //   return item
+              // })
 
               this.markList = res.data.box ? res.data.box.markList : []
               this.getDraw()
-              this.getQueueStatus();
-              this.getList({ num: 1, size: 20 })
+              // this.getQueueStatus();
               resolve()
             }
           }
         })
       })
     },
-    getDraw() {
+    /**
+* @description: 获取抽奖方式
+* @return {*}
+*/
+    getDraw () {
       return new Promise((resolve, reject) => {
         this.req({
           url: '/v1/box/draw',
@@ -1326,16 +1086,17 @@ export default {
         })
       })
     },
-    changePayType(e) {
+    changePayType (e) {
       this.payTypeCur = e
     },
-    changeBuyType() {
+    changeBuyType (e) {
+      this.btnCur = e
       this.confirmSubmit(0)
     },
-    openBox() {
+    openBox () {
       this.confirmSubmit(0)
     },
-    async confirmSubmit(e) {
+    async confirmSubmit (e) {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1361,32 +1122,17 @@ export default {
         return
       }
 
-      if (this.selectedCount <= 0) {
-        this.$common.toast({
-          title: '请选择要购买的福袋位置'
-        })
-        return
-      }
-
-      // 提取选中的福袋位置索引数组
-      const selectedPositions = this.positionList
-        .filter(item => item.is_sold === 0 && item.selected)
-        .map(item => item.index);
-
       let data = {
         id: this.boxInfo.id,
-        draw_num: this.selectedCount,
+        draw_num: 1,
         invite_user_id: this.optionsData.userId || '',
         pay_type: this.payTypeList[this.payTypeCur].id,
         coupon_id: this.coupon_info?.id || '',
         submit: e,
-        set_no: this.currentIndex + 1,
-        // 福袋位置
-        bag_positions: selectedPositions
       }
 
       this.req({
-        url: '/v1/box/lotteryBagOrder',
+        url: '/v1/box/moneyOrder',
         data,
         success: res => {
           if (res.code == 200) {
@@ -1401,7 +1147,7 @@ export default {
                 uni.setStorageSync('order_info_box', order_info);
                 this.checkPayStatus()
                 // #endif
-                const params = { ...res.data, is_epay: this.is_epay, returnUrl: `/pages/box/kaixiang?id=${this.boxInfo.id}` }
+                const params = { ...res.data, is_epay: this.is_epay, returnUrl: `/package/box//yinpiao?id=${this.boxInfo.id}` }
                 this.$common.orderPay(params).then(res1 => {
                   if (res1 == 'success') {
                     this.$common.toast({
@@ -1409,12 +1155,10 @@ export default {
                       icon: 'success',
                       duration: 1500,
                       success: () => {
-                        this.openBox(res.data.order_sn)
+                       
                       }
                     })
-                    if (this.isMyTurn) {
-                      this.resetTimer() // 付款后重置倒计时
-                    }
+                  
                   }
                 })
               } else {
@@ -1422,53 +1166,33 @@ export default {
                   title: '支付成功',
                   duration: 1500,
                   success: () => {
-                    this.openBox(res.data.order_sn)
+                    
                   }
                 })
-                if (this.isMyTurn) {
-                  this.resetTimer() // 付款后重置倒计时
-                }
+               
               }
             }
           }
         }
       })
     },
-    openBox(order_sn) {
-      let url = '/v1/box/order/mergeAward'
-      let data = {
-        order_sn: order_sn
-      }
-      this.req({
-        url,
-        data,
-        Loading: false,
-        success: res => {
-          if (res.code == 200) {
-            this.prizeResult = res.data
-            this.awardShow = true
-            this.getData()
-          }
-        }
-      })
-    },
-    openOrderPop() {
+    openOrderPop () {
       this.agree = true
 
       this.$refs.orderPop.open()
     },
-    closeOrderPop() {
+    closeOrderPop () {
       this.$refs.orderPop.close()
     },
 
-    tryPlay() {
+    tryPlay () {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
         }
       })
     },
-    goMall() {
+    goMall () {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1489,7 +1213,7 @@ export default {
       // console.log(e)
       this.scrollTop = e.detail.scrollTop
     },
-    goInvite() {
+    goInvite () {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1515,7 +1239,7 @@ export default {
       })
     },
     // 玩法
-    goRule() {
+    goRule () {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1524,7 +1248,7 @@ export default {
       this.$common.to({ url: '/pages/index/rule?id=3' })
     },
     // 联系客服
-    lxkefu() {
+    lxkefu () {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1532,7 +1256,7 @@ export default {
       })
       this.kefushow = true
     },
-    openDetailPop(e) {
+    openDetailPop (e) {
       if (e.award_type == 2) {
         this.curDetail = e
         this.isBoxPopupShow = true;
@@ -1549,10 +1273,10 @@ export default {
       }
 
     },
-    closeDetailPop() {
+    closeDetailPop () {
       this.detailPop = false
     },
-    playMusic() {
+    playMusic () {
       this.muteBgMusic = !this.muteBgMusic;
       this.$nextTick(() => {
         if (switchMusic) {
@@ -1565,16 +1289,31 @@ export default {
         bgMusic.pause()
       }
     },
-    noticeEnd(e) {
+    noticeEnd (e) {
       console.log('123', e)
     },
-    changeCurrentCate(index) {
+    back () {
+      this.$nextTick(() => {
+        if (switchMusic) {
+          switchMusic.play()
+        }
+      })
+
+      uni.navigateBack({
+        delta: 1
+      });
+        
+      // uni.switchTab({
+      //   url: '/pages/tabBar/home',
+      // });
+    },
+    changeCurrentCate (index) {
       this.currentCate = index
       if (index == 1) {
         this.getList({ num: 1, size: 20 })
       }
     },
-    getList({
+    getList ({
       num,
       size
     }) {
@@ -1583,7 +1322,6 @@ export default {
         data: {
           id: this.optionsData.id,
           mark_id: this.btnLists.length ? this.btnLists[this.currentItems].id : 0,
-          setNo: this.currentIndex + 1,
           page: num,
           per_page: size
         },
@@ -1593,17 +1331,16 @@ export default {
             if (num == 1) {
               this.boxLogList = []
             }
-            if (res.data.data.length) {
-              this.boxLogList = [...this.boxLogList, ...res.data.data]
-              this.mescroll.endBySize(res.data.data.length, res.data.total)
-            }
+            console.log(res.data.data.length)
+            this.boxLogList = [...this.boxLogList, ...res.data.data]
+            this.mescroll.endBySize(res.data.data.length, res.data.total)
           } else {
             this.mescroll.endBySize(0, 0)
           }
         }
       })
     },
-    fresh() {
+    fresh () {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1616,21 +1353,7 @@ export default {
       })
       this.getData()
     },
-    tobag() {
-      this.$nextTick(() => {
-        if (switchMusic) {
-          switchMusic.play()
-        }
-      })
-
-      uni.switchTab({
-        url: '/pages/tabBar/bag',
-      });
-    },
-    tocontinue() {
-      this.awardShow = false
-    },
-    openRule() {
+    openRule () {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
@@ -1638,58 +1361,8 @@ export default {
       })
       this.rulePop = true
     },
-    // 图片预览方法
-    previewImage(previewInfo) {
-      this.previewInfo = previewInfo;  // 把要预览的图片添加到数组中
-      this.isPreviewVisible = true;     // 显示图片预览弹窗
-    },
-    back() {
-      this.$nextTick(() => {
-        if (switchMusic) {
-          switchMusic.play()
-        }
-      })
-      this.req({
-        url: '/v1/box/getQueueStatus',
-        data: {
-          box_id: this.boxInfo.id,
-          set_count: this.currentIndex + 1
-        },
-        success: res => {
-          if (res.code === 200) {
-            this.queueInfo = res.data;
-            if (res.data.status === 1) {
-              this.levelQueueShow = true
-            } else {
-              uni.switchTab({
-                url: '/pages/tabBar/home',
-              });
-            }
-          }
-        }
-      });
-    },
-    // 离开页面
-    levelPage() {
-      this.req({
-        url: '/v1/box/leaveQueue',
-        data: {
-          box_id: this.boxInfo.id,
-          set_count: this.currentIndex + 1
-        },
-        success: res => {
-          this.isMyTurn = false;
-          this.queueInfo = { status: 0 };
-          this.getQueueStatus();
-          this.$store.dispatch('stopQueueCountdown')
-          uni.switchTab({
-            url: '/pages/tabBar/home',
-          });
-        }
-      });
-    },
     // 加入队列
-    joinQueue() {
+    joinQueue () {
       this.req({
         url: '/v1/box/joinQueue',
         data: {
@@ -1699,7 +1372,7 @@ export default {
         Loading: true,
         success: res => {
           // 假设res.data.status: 1=轮到我, 2=等待他人
-          if (res.code == 200) {
+          if (res.code === 200) {
             this.queueInfo = res.data;
             if (res.data.status === 1) {
               this.isMyTurn = true;
@@ -1708,44 +1381,14 @@ export default {
               this.isMyTurn = false;
               this.startPollQueueStatus();
             }
-          } else if (res.code == 201) {
-            // 切换队列确认
-            this.switchQueueShow = true
           } else {
             this.$common.toast({ title: res.msg || '加入队列失败' });
           }
         }
       });
     },
-    // 切换队列
-    switchQueue() {
-      // 用户确认切换队列
-      this.req({
-        url: '/v1/box/switchQueue',
-        data: {
-          box_id: this.boxInfo.id,
-          set_count: this.currentIndex + 1
-        },
-        Loading: true,
-        success: switchRes => {
-          if (switchRes.code == 200) {
-            this.queueInfo = switchRes.data;
-            if (switchRes.data.status === 1) {
-              this.isMyTurn = true;
-              this.startQueueTimer();
-            } else {
-              this.isMyTurn = false;
-              this.startPollQueueStatus();
-            }
-            this.$common.toast({ title: '切换队列成功' });
-          } else {
-            this.$common.toast({ title: switchRes.msg || '切换队列失败' });
-          }
-        }
-      });
-    },
     // 重置倒计时
-    resetTimer() {
+    resetTimer () {
       this.req({
         url: '/v1/box/resetTimer',
         data: {
@@ -1770,7 +1413,7 @@ export default {
       });
     },
     // 开始倒计时
-    startQueueTimer() {
+    startQueueTimer () {
       if (this.queueTimer) clearInterval(this.queueTimer);
       this.queueTimer = setInterval(() => {
         if (this.queueInfo.remainingTime > 0) {
@@ -1782,7 +1425,7 @@ export default {
       }, 1000);
     },
     // 离开队列
-    leaveQueue() {
+    leaveQueue () {
       this.req({
         url: '/v1/box/leaveQueue',
         data: {
@@ -1798,14 +1441,14 @@ export default {
       });
     },
     // 轮询队列状态
-    startPollQueueStatus() {
+    startPollQueueStatus () {
       if (this.pollTimer) clearInterval(this.pollTimer);
       this.pollTimer = setInterval(() => {
         this.getQueueStatus();
       }, 3000); // 每3秒刷新一次
     },
     // 获取队列状态
-    getQueueStatus() {
+    getQueueStatus () {
       this.req({
         url: '/v1/box/getQueueStatus',
         data: {
@@ -1820,14 +1463,12 @@ export default {
               if (this.pollTimer) clearInterval(this.pollTimer);
               this.isMyTurn = true;
               this.startQueueTimer();
-              const countdown = res.data.countdown || 180;
-              this.$store.dispatch('startQueueCountdown', countdown)
             }
           }
         }
       });
     },
-    cancelQueue() {
+    cancelQueue () {
       this.leaveQueue();
       if (this.pollTimer) clearInterval(this.pollTimer);
     },
@@ -1843,7 +1484,7 @@ page {
 .kaixiang {
   // background-size: cover;
   // min-height: calc(100vh - 50px);
-  padding-bottom: 150rpx;
+  padding-bottom: 120rpx;
   background: #f7f7f7;
 
   .nav {
@@ -2097,7 +1738,7 @@ page {
       align-items: center;
       justify-content: center;
 
-      .open-nav-con {
+      .open-nav-con{
         display: flex;
         padding: 10rpx;
         background: #F0E9FF;
@@ -2940,121 +2581,6 @@ page {
       }
     }
   }
-
-  .award-single-info {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    .award-single-left {
-      display: flex;
-    }
-
-    .award-time {
-      margin-top: 10rpx;
-      font-size: 28rpx;
-      color: #777;
-    }
-
-    .award-single-img {
-      width: 100rpx;
-      height: 100rpx;
-    }
-  }
-
-  .award-box-content {
-    width: 100%;
-
-    .award-box-info {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      .award-box-left {
-        display: flex;
-
-        .user-info {
-          display: flex;
-          flex-direction: column;
-        }
-
-        .user-nickname {
-          font-size: 28rpx;
-          font-weight: bold;
-
-        }
-
-        .award-time {
-          margin-top: 10rpx;
-          font-size: 28rpx;
-          color: #777;
-        }
-
-      }
-
-      .award-log-box {
-        padding: 10px;
-        text-align: center;
-        font-size: 28rpx;
-        color: #333;
-      }
-    }
-
-    .box-award-content {
-      display: flex;
-      align-items: center;
-
-      .box-award-img {
-        width: 100rpx;
-        height: 100rpx;
-        margin-right: 20rpx;
-      }
-    }
-  }
-
-  .award-log-left {
-    display: flex;
-    align-items: center;
-  }
-
-  .user-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 10px;
-  }
-
-  .award-log-box-items {
-    margin-top: 15px;
-  }
-
-  .sub-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-
-  .sub-item-img {
-    width: 100rpx;
-    height: 100rpx;
-    margin-right: 10rpx;
-  }
-
-  .sub-item-info {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .sub-item-title {
-    font-size: 14px;
-  }
-
-  .sub-item-price {
-    font-size: 12px;
-    color: #ff3e00;
-  }
-
 }
 </style>
 
@@ -3187,7 +2713,6 @@ page {
   background-size: 100% 100%;
   margin: 0 20rpx;
   position: relative;
-  padding-bottom: 20rpx;
 
   .card-top-item {
     display: flex;
@@ -3199,96 +2724,9 @@ page {
     .card-top-left {
       position: relative;
 
-      .card-img-overlay {
-        position: absolute;
-        /* 相对于父容器定位 */
-        top: 0;
-        left: 0;
-        width: 100%;
-        padding: 10rpx;
-        box-sizing: border-box;
-        z-index: 10;
-
-        /* 确保在图片上方显示 */
-        .user-info {
-          display: flex;
-          align-items: center;
-          margin-top: 8rpx;
-          margin-bottom: 8rpx;
-          /* 新增溢出隐藏相关样式 */
-          overflow: hidden;
-          /* 超出容器部分隐藏 */
-          white-space: nowrap;
-          /* 文本不换行 */
-        }
-
-        .user-avatar {
-          width: 50rpx;
-          height: 50rpx;
-          border-radius: 50%;
-          margin-right: 10rpx;
-          margin-left: 10rpx;
-          border: 2rpx solid #fff;
-          flex-shrink: 0;
-        }
-
-        .user-nickname {
-          color: #fff;
-          font-size: 24rpx;
-          text-shadow: 0 1rpx 2rpx rgba(0, 0, 0, 0.5);
-          /* 文本溢出时显示省略号 */
-          overflow: hidden;
-          text-overflow: ellipsis;
-          max-width: calc(100% - 60rpx);
-          /* 减去头像宽度，避免挤压 */
-        }
-
-        .lock-text {
-          color: #fff;
-          font-size: 28rpx;
-          font-weight: bold;
-          margin-bottom: 8rpx;
-          text-align: center;
-          text-shadow: 0 1rpx 2rpx rgba(0, 0, 0, 0.5);
-        }
-
-        .countdown {
-          color: #fff;
-          font-size: 24rpx;
-          // text-align: center;
-          // margin-left: 10rpx;
-          text-shadow: 0 1rpx 2rpx rgba(0, 0, 0, 0.5);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          ::v-deep .u-countdown-item {
-            background: none !important;
-          }
-
-          ::v-deep .u-countdown-time {
-            color: #fff !important;
-            font-size: 24rpx !important;
-          }
-        }
-
-
-        .countdown-time {
-          color: #fff;
-          font-weight: bold;
-        }
-
-        .card-top-left-img {
-          /* 确保图片占满容器，与覆盖层配合显示 */
-          width: 100%;
-          display: block;
-        }
-
-      }
-
       .card-top-left-img {
-        width: 200rpx;
-        height: 180rpx;
+        width: 150rpx;
+        height: 150rpx;
         border-radius: 20rpx;
         margin-right: 20rpx;
       }
@@ -3350,6 +2788,14 @@ page {
         }
       }
 
+      .card-money {
+        color: #6c58dc;
+        .price {
+          color: #fb3b7a;
+          margin-left: 5rpx;
+        }
+      }
+
       .card-btn {
         display: flex;
         justify-content: center;
@@ -3364,7 +2810,7 @@ page {
           font-size: 30rpx;
           font-weight: 700;
           color: #000;
-          margin: 0 30rpx;
+          margin: 0 40rpx;
           flex-shrink: 0;
           padding: 10rpx 40rpx;
           border-radius: 50rpx;
@@ -3372,18 +2818,6 @@ page {
           background: linear-gradient(to right, #5dfda1, #baf828);
         }
       }
-    }
-  }
-
-  .card-count {
-    display: flex;
-    justify-content: center;
-    font-size: 30rpx;
-    font-weight: bold;
-    margin-bottom: 15rpx;
-
-    .count-num {
-      margin-left: 10rpx;
     }
   }
 }
@@ -3450,8 +2884,8 @@ page {
 }
 
 .empty-list {
-  min-height: 30vh;
-  margin-top: 200rpx;
+  // min-height: 30vh;
+  // margin-top: 200rpx;
 }
 
 .rule-pop {
@@ -3486,34 +2920,11 @@ page {
 }
 
 .chou-btn-wrap {
-
-  .bag-wrap {
-    position: fixed;
-    bottom: 0%;
-    z-index: 10;
-    width: 100%;
-    padding: 30rpx 30rpx;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #fff;
-
-    /* 已选福袋信息样式 */
-    .bag-selected-info {
-      display: flex;
-      flex-direction: column;
-      font-size: 28rpx;
-      color: #333;
-      line-height: 40rpx;
-    }
-
-    /* 价格强调 */
-    .bag-selected-info .price {
-      color: #f60;
-      font-weight: bold;
-      margin-top: 10rpx;
-    }
-  }
+  position: fixed;
+  bottom: 4%;
+  z-index: 10;
+  width: 100%;
+  padding: 0 30rpx;
 
   .chou-btn-item {
     flex-shrink: 0;
@@ -3532,7 +2943,11 @@ page {
   }
 
   .chou-first-wrap {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 20rpx;
+
+    .chou-first-item {}
 
     .chou-second-item {
       // background: #fffc30;
@@ -3540,13 +2955,20 @@ page {
     }
   }
 
+  .chou-second-wrap {
+    margin-top: 40rpx;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+
+    .chou-second-item {
+      width: 50%;
+      // background: #fffc30;
+      // box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
+    }
+  }
 
   .queue-action-wrap {
-    position: fixed;
-    bottom: 4%;
-    z-index: 10;
-    width: 100%;
-    padding: 0 30rpx;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -3597,30 +3019,14 @@ page {
         position: relative;
         width: 140rpx; // 固定宽度
         height: 140rpx; // 固定高度
+        border-radius: 16rpx;
+        overflow: hidden;
         background-color: #f5f5f5;
-
-        .animate-img {
-          width: 140rpx; // 固定宽度
-          height: 140rpx; // 固定高度
-          animation: starFlick 0.6s ease-out infinite;
-          -webkit-animation: starFlick 0.6s ease-out infinite;
-          border-radius: 16rpx;
-        }
 
         .award-img {
           width: 100%;
           height: 100%;
           object-fit: cover;
-        }
-
-        @keyframes starFlick {
-          from {
-            box-shadow: 0 0 10rpx 10rpx rgba(255, 255, 0, 0.8);
-          }
-
-          to {
-            box-shadow: 0 0 3rpx 3rpx rgba(240, 236, 5, 0.2);
-          }
         }
 
         .award-tag {
@@ -3694,212 +3100,57 @@ page {
   }
 }
 
+.desc-content {
+  padding: 0 20rpx;
 
-/* 图片预览弹窗的样式 */
-.image-preview-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 40rpx;
+  .zheng-pin {
+    width: 100%;
+    height: 114rpx;
+    margin-top: 40rpx;
+  }
 
-  .preview-title {
-    font-size: 30rpx;
+  .goods-tag {
+    padding: 30rpx;
+    display: flex;
+    justify-content: space-between;
+    background: #fff;
+
+    &-item {
+      display: flex;
+      align-items: center;
+
+      .icon {
+        width: 30rpx;
+        height: 30rpx;
+        margin-right: 4rpx;
+      }
+
+      font-size: 24rpx;
+      font-family: PingFang SC;
+      font-weight: bold;
+      color: #222222;
+      line-height: 30rpx;
+    }
+  }
+
+  .description-section {
+    margin: 20rpx 0;
+    padding: 20rpx;
+    background-color: #f5f5f5;
+    border-radius: 10rpx;
+  }
+
+  .description-title {
+    font-size: 32rpx;
     font-weight: bold;
     color: #333;
-    margin-bottom: 30rpx;
+    margin-bottom: 10rpx;
   }
 
-  .image-preview {
-    width: 80%;
-    // height: 400rpx;
-    object-fit: cover;
-    margin-bottom: 30rpx;
+  .description-content {
+    font-size: 28rpx;
+    color: #666;
+    line-height: 40rpx;
   }
-
-  .preview-product-title {
-    font-size: 32rpx;
-    font-weight: 700;
-    color: #000;
-    text-align: center;
-  }
-}
-</style>
-
-<style lang="scss" scoped>
-.lottery-bag-wrap {
-  padding: 20rpx;
-
-  .lottery-bag-card {
-    padding: 20rpx;
-    background-color: #fff;
-    border-radius: 20rpx;
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30rpx;
-
-      .title {
-        font-size: 32rpx;
-        font-weight: bold;
-      }
-
-      .info {
-        display: flex;
-        align-items: center;
-
-        .status-desc {
-          margin-left: 20rpx;
-          margin-right: 20rpx;
-          color: #666;
-          font-size: 26rpx;
-          display: flex;
-          align-items: center;
-          gap: 10rpx;
-
-          .status-wrap {
-            display: flex;
-            align-items: center;
-          }
-
-          .status-dot {
-            display: inline-block;
-            width: 30rpx;
-            height: 30rpx;
-            border-radius: 50%;
-            margin-right: 10rpx;
-
-          }
-
-          .optional-dot {
-            background-color: #b39dfa;
-            background: #fd8e1a;
-            background: #fc6e2c;
-          }
-
-          .sold-dot {
-            background-color: #ccc;
-          }
-        }
-
-        .select-all {
-          font-size: 28rpx;
-          padding: 10rpx 5rpx;
-        }
-      }
-    }
-
-    .bag-list {
-      display: grid;
-      grid-template-columns: repeat(8, 1fr);
-      column-gap: 10rpx;
-      row-gap: 10rpx;
-      margin-bottom: 30rpx;
-      overflow: hidden;
-      // 增加过渡效果（可选，但能让展开/收起更平滑）
-      transition: max-height 0.3s ease-in-out;
-      // 初始不限制高度
-      max-height: 9999rpx;
-
-      .bag-item {
-        width: 100%;
-        aspect-ratio: 1;
-        // height: 100rpx;
-        background-color: #b39dfa;
-        background: #fd8e1a;
-        background: #fc6e2c;
-        border-radius: 12rpx;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: #fff;
-        font-size: 28rpx;
-        text-align: center;
-        box-sizing: border-box;
-        position: relative;
-        // 移除所有过渡效果
-
-        &.gray {
-          background-color: #ccc;
-        }
-
-        &.selected {
-          background-color: #7b57f5;
-        }
-
-        .bag-number {
-          font-size: 28rpx;
-        }
-
-        .selected-mark {
-          position: absolute;
-          top: 3rpx;
-          right: 3rpx;
-          width: 24rpx;
-          height: 24rpx;
-          background-color: #fff;
-          color: #7b57f5;
-          border-radius: 50%;
-          font-size: 18rpx;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          font-weight: bold;
-        }
-      }
-    }
-
-    .footer {
-      margin-top: 20rpx;
-
-      .btn-wrap {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .collapse-btn {
-        font-size: 28rpx;
-      }
-
-      .collapse-icon {
-        width: 32rpx;
-        /* 图标宽度 */
-        height: 32rpx;
-        /* 图标高度 */
-        margin-left: 20rpx;
-      }
-    }
-  }
-}
-
-.uni-common-mt {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20rpx;
-}
-
-.uni-progress {
-  overflow: hidden;
-  border-radius: 50rpx;
-}
-
-.progress-box {
-  position: relative;
-  width: 60%;
-}
-
-.uni-icon {
-  line-height: 1.5;
-}
-
-.progress-cancel {
-  margin-left: 40rpx;
-}
-
-.progress-control button {
-  margin-top: 20rpx;
 }
 </style>

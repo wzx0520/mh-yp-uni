@@ -2,7 +2,7 @@
   <view class="kaixiang">
     <view class="nav">
       <uni-nav-bar color="#000" leftIcon="left" backgroundColor="transparent" :border="false" :statusBar="true"
-        :fixed="true" title="无限赏">
+        :fixed="true" :title="titleName">
         <view slot="left" class="nav-left" @click="back">
           <u-icon name="arrow-left" color="#333" size="40"></u-icon>
         </view>
@@ -12,13 +12,36 @@
     <view class="card-top-wrap">
       <view class="card-top-item">
         <view class="card-top-left">
+          <!-- 新增相对定位容器 -->
+          <view class="card-img-overlay" v-if="is_user_limited">
+            <!-- 用户信息区域 -->
+            <view class="user-info">
+              <image class="user-avatar" :src="first_limit_user.avatar" mode="widthFix" />
+              <text class="user-nickname">{{ first_limit_user.nickName }}</text>
+            </view>
+
+            <!-- 锁箱文字 -->
+            <view class="lock-text">锁箱中</view>
+
+            <!-- 倒计时区域 -->
+            <view class="countdown">
+              <!-- <text>倒计时：</text> -->
+              <!-- <text class="countdown-time">{{ countdownSecond }}</text> -->
+              <u-count-down :show-days="false" :timestamp="countdownSecond"></u-count-down>
+            </view>
+          </view>
+
+          <!-- 原图片元素 -->
           <image class="card-top-left-img" :src="cardThumb" mode="aspectFit" lazy-load="false" binderror=""
             bindload="" />
+
+          <!-- 原箱数信息 -->
           <view class="card-num">
-            <!-- 第{{ currentIndex + 1 }}/{{ boxInfo.set_count }}箱 -->
-            <!-- 第{{ currentIndex + 1 }}/1箱 -->
+            第{{ currentIndex + 1 }}/{{ boxInfo.set_count }}箱
           </view>
         </view>
+
+        <!-- 右侧原有内容保持不变 -->
         <view class="card-top-right">
           <view class="card-title">
             {{ boxInfo.title }}
@@ -26,9 +49,24 @@
           <view class="card-price">
             <text>￥</text> <text class="price">{{ boxInfo.price }}/抽</text>
           </view>
+          <view class="card-btn">
+            <image class="card-btn-img"
+              src="https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01Wtg27c24NdcZ9jUng_!!2200676927379.png"
+              mode="widthFix" lazy-load="false" binderror="" bindload="" @click="prev" />
+            <view class="card-btn-text" @click="changeNum">换箱</view>
+            <image class="card-btn-img"
+              src="https://img.alicdn.com/imgextra/i3/2200676927379/O1CN01Ho6HBV24NdcZCytvN_!!2200676927379.png"
+              mode="widthFix" lazy-load="false" binderror="" bindload="" @click="next" />
+          </view>
         </view>
       </view>
-      <view class="card-count">累计已抽:<text class="count-num">{{ boxInfo.sales }}</text></view>
+      <view class="uni-padding-wrap uni-common-mt">
+        <view class="progress-box">
+          <progress :percent="remainingStock / totalStock * 100" border-radius=100 stroke-width="30"
+            active-color="#B39DFA" />
+          <view class="card-count">本套剩余:<text class="count-num">{{ remainingStock }}/{{ totalStock }}</text></view>
+        </view>
+      </view>
     </view>
 
     <view class="rule-btn-wrap">
@@ -56,7 +94,6 @@
       <view v-if="queueInfo.status == 0" class="no-queue-box">
         <text class="no-queue-text">当前无人排队，快来抢购！</text>
       </view>
-
 
       <!-- 轮到我 -->
       <view v-else-if="queueInfo.status == 1" class="my-turn-box">
@@ -104,7 +141,7 @@
                   mode="widthFix" lazy-load="false" binderror="" bindload="" />
                 <view class="mh-goods-rate-text">
                   <template v-if="item.award_type == 2">
-                    宝箱
+                    BX赏
                   </template>
                   <template v-else>
                     {{ item.mark_title }}
@@ -126,9 +163,9 @@
                 v-if="item.mark_id == 1 || item.mark_id == 2 || item.mark_id == 3 || item.mark_id == 4 || item.mark_id == 5">
                 只赠不售
               </view>
-              <view class="mh-rate" v-else>概率: {{ item.show_rate }}%</view>
+              <view class="mh-rate" v-else>概率: {{ item.real_rate }}%</view>
 
-              <!-- <view class="mh-sale">{{ item.remaining_quantity }}/{{ item.initial_quantity }}</view> -->
+              <view class="mh-sale">{{ item.remaining_quantity }}/{{ item.initial_quantity }}</view>
               <view class="mh-sale">￥{{ item.price }}</view>
             </view>
           </view>
@@ -140,61 +177,110 @@
         </template>
       </template>
       <template v-else>
-        <template v-if="tabList.length">
-
-          <view class="open-card" v-for="(item, index) in tabList" :key="index">
-            <view class="award-wrap">
-              <view class="award-log-item">
-                <view>
-                  <image :src="item.data[0].avatar" class="user-avatar" mode="widthFix" />
-                </view>
-                <view class="award-log-left">
-                  <view class="award-log-time">
-                    {{ item.data[0].created_at }}
-                  </view>
-                  <view class="award-log-info">
-                    {{ item.data[0].nickName }} 获得 <text class="award-name">{{ item.data[0].title }}</text>
-                  </view>
-                </view>
-                <view class="award-log-right">
-                  <view>{{ item.data[0].mark_title }}</view>
-                  <image class="award-log-img" :src="item.data[0].thumb" mode="widthFix" lazy-load="false" binderror=""
-                    bindload="" />
-                </view>
-              </view>
-              <view v-if="item.mark_id === currentId">
-                <view class="award-log-item" v-for="(info, index) in sortList" :key="info.id">
-                  <view>
-                    <image :src="info.avatar" class="user-avatar" mode="widthFix" />
-                  </view>
-                  <view class="award-log-left">
-                    <view class="award-log-time">
-                      {{ info.created_at }}
-                    </view>
-                    <view class="award-log-info">
-                      {{ info.nickName }} 获得 <text class="award-name">{{ info.title }}</text>
-                    </view>
-                  </view>
-                  <view class="award-log-right">
-                    <view>{{ info.mark_title }}</view>
-                    <image class="award-log-img" :src="info.thumb" mode="widthFix" lazy-load="false" binderror=""
-                      bindload="" />
-                  </view>
-                </view>
-                <view v-if="sortList.length" class="up-btn">
-                  <view class="up-text" @click="clearList()">收起</view>
-                  <uni-icons type="arrow-up" size="20"></uni-icons>
-                </view>
-              </view>
-              <view>
-                <view class="more-btn">
-                  <view class="more-text" @click="getSortList(item)">展开查看更多</view>
-                  <uni-icons type="arrow-down" size="20"></uni-icons>
-                </view>
-              </view>
+        <template v-if="boxLogList.length">
+          <!-- 中赏记录排序控件 -->
+          <view class="sort-controls">
+            <view class="sort-btn" @click="changeSort('time')">
+              <text>按时间排序</text>
+              <!-- 显示当前排序状态图标 -->
+              <text class="sort-icon" v-if="sortType === 'created_at'">
+                {{ sortOrder === 'asc' ? '↑' : '↓' }}
+              </text>
+            </view>
+            <view class="sort-btn" @click="changeSort('value')">
+              <text>按标签排序</text>
+              <text class="sort-icon" v-if="sortType === 'return_price'">
+                {{ sortOrder === 'asc' ? '↑' : '↓' }}
+              </text>
             </view>
           </view>
+          <mescroll-body ref="mescrollRef" height="400" @init="mescrollInit" @down="downCallback" @up="getList"
+            :down="downOption" :up="upOption">
+
+            <view class="award-wrap">
+              <view class="award-log-item" v-for="(item, index) in boxLogList" :key="index">
+
+                <!-- 普通奖品展示 -->
+                <template>
+                  <view class="award-single-info">
+                    <!-- 左侧：用户信息 + 宝箱/奖品内容 -->
+                    <view class="award-single-left">
+                      <!-- 用户头像 + 昵称/时间 -->
+                      <view class="award-user-info">
+                        <image :src="item.avatar" class="user-avatar" />
+                        <view class="user-info">
+                          <view class="user-nickname">{{ item.nickName }}</view>
+                          <view class="award-time">{{ item.created_at }}</view>
+                        </view>
+                      </view>
+
+                      <!-- 宝箱/奖品内容：支持多层（宝箱 + 内部奖品） -->
+                      <view class="award-content">
+                        <template>
+                          <!-- 普通奖品/宝箱 -->
+                          <view class="flex flex-acenter">
+                            <image class="award-single-img" :src="item.thumb" mode="widthFix" lazy-load="false" />
+                            <view class="award-name"><text class="box-title" v-if="item.is_box == 1">[宝箱]</text>{{
+                              item.title }}</view>
+                          </view>
+                        </template>
+                        <!-- 宝箱奖品 -->
+                        <template v-if="item.box_awards">
+                          <view class="flex flex-acenter mb-20">
+                            <image class="award-single-img" :src="item.box_awards.thumb" mode="widthFix"
+                              lazy-load="false" />
+                            <view class="box-info">{{ item.box_awards.title }}</view>
+                          </view>
+                        </template>
+                      </view>
+                    </view>
+
+                    <!-- 右侧：奖品标识 -->
+                    <view class="award-log-box">
+                      {{ item.mark_title }}
+                    </view>
+                  </view>
+                </template>
+
+                <!-- 宝箱奖品展示 -->
+                <!-- <template v-else>
+                  <view class="award-box-content">
+                    <view class="award-box-info">
+                      <view class="award-box-left">
+        
+                        <image :src="item.avatar" class="user-avatar" />
+                        <view class="user-info">
+                          <text class="user-nickname">{{ item.nickName }}</text>
+                          <text class="award-time">{{ item.created_at }}</text>
+                        </view>
+                      </view>
+
+                      <view class="award-log-box">
+                        <text class="box-text">宝箱X1</text>
+                      </view>
+                    </view>
+
+                    <view class="box-award-content">
+                      <image :src="item.thumb" class="box-award-img" />
+                      <view class="award-log-box-items">
+                        <view>{{ item.title }}</view>
+                        <view v-for="(subItem, subIndex) in item.sub_orders" :key="subIndex" class="sub-item">
+                          <image :src="subItem.thumb" class="sub-item-img" />
+                          <view class="sub-item-info">
+                            <text class="sub-item-title">{{ subItem.title }}</text>
+                            <text class="sub-item-price">价值: ¥{{ subItem.price }}</text>
+                          </view>
+                        </view>
+                      </view>
+                    </view>
+
+                  </view>
+                </template> -->
+              </view>
+            </view>
+          </mescroll-body>
         </template>
+
         <template v-else>
           <view class="empty-list">
             <u-empty text="暂无中赏记录~" mode="list"></u-empty>
@@ -215,9 +301,9 @@
         <view class="chou-btn-item chou-first-item" @click="changeBuyType(10)">
           冲十发
         </view>
-        <!-- <view class="chou-btn-item chou-second-item" @click="changeBuyType(-1)">
+        <view class="chou-btn-item chou-second-item" @click="changeBuyType(-1)">
           全收
-        </view> -->
+        </view>
       </view>
 
       <!-- 状态 0：未加入队列，展示立即排队按钮 -->
@@ -410,7 +496,7 @@
                 <text>参考价</text>
               </text>
             </view>
-            <view class="rate">概率{{ curDetail.show_rate }}%</view>
+            <view class="rate">概率{{ curDetail.real_rate }}%</view>
           </view>
 
           <u-gap height="20"></u-gap>
@@ -511,49 +597,67 @@
     <u-popup v-model="rulePop" mode="center" width="93%" border-radius="20">
       <view class="rule-pop">
         <view class="rule-title">
-          玩法说明
+          规则说明
         </view>
         <scroll-view class="rule-pop-bd" scroll-y>
+          <view class="rule-content"> 1、"一番赏"为开赏类商品，有一定概率性，请谨慎、理性购买, 保证绝无空包;</view>
           <view class="rule-content">
-            “无限赏”的所有商品均有图文展示及数量说明，购买赏品具有盲盒的特点，您购买所得赏品可能与您预期不符，您需要根据个人的消费需求对自己消费行为负责，请理性消费，未成年人不得购买。
-          </view>
-          <view class="rule-content"> 1、“无限赏”为开赏类商品，一经购买不可退货，请谨慎、理性购买;</view>
-          <view class="rule-content">
-            2、未成年人禁止购买;
+            2、FIRST赏只要抽完池子第一发就赠送;
           </view>
           <view class="rule-content">
-            3、用户根据需求点击[抽1发][抽3发]或[抽5发]等购买按钮;
+            3、LAST赏在池子后一半总数抽完后送出，A中奖概率-A在奖池后-半抽的发数/奖池后一半的总数;
           </view>
           <view class="rule-content">
-            4、本平台只保证发出的货品内容物全新未拆，不保任何商品的运输
+            4、最终赏为最后奖池最后一抽抽赏用户获得;
           </view>
           <view class="rule-content">
-            5、若收到的商品出现涂装瑕疵、零件错误等官方瑕疵情况，则不包售后，不予退换(如有特殊情况请联系客服);
+            5、全局赏在奖池总数抽完后发出，A中奖概率=A在整个奖池抽的发数/整个奖池总数;
           </view>
           <view class="rule-content">
-            6、收到商品后请先确认封条、外箱完整，并全程拍摄开箱验货视频(照片无效)，该视频将会是定责的唯一证据，若出现运输损坏情况，请联系承运快递发起索赔，或联系客服索要索赔所需的相关材料;
+            6、冲锋赏为整个奖池抽赏发数最多用户获得;
           </view>
           <view class="rule-content">
-            7、部分3C电子产品，发货后必须激活产品。本平台保证预激活时间在发货日前后的5-7天内，全新未使用，商品激活无拆封，不接受因商品本身质量问题以外的退换货要求;
+            7、用户根据需求点击[抽1发][抽3发]或[抽5发]或[全收]等购买按钮;
           </view>
           <view class="rule-content">
-            8、无限赏概率解释:每一次打开盲盒都是从剩下的赏品中提取1个赏品，根据赏品剩余数量，系统会测算出，剩余赏品抽赏概率。
-          </view>
-          <view class="rule-content">
-            9、无限赏不提供任何形式的物品交易和回收渠道，为保障您的资金安全，亦不建议用户进行任何形式的私下交易;
-          </view>
-          <view class="rule-content">
-            10、禁止从事任何形式的赌博/欺诈/作弊/诈骗行为，若有发现，将封禁您的账号并交由相关部门处理:
-          </view>
-          <view class="rule-content">
-            11、无限赏概率解释:例如: 传说概率设置的是0.01%，并不是1万次里有1次出现传说,而是每一次打开盲盒概率都是按照公示概率数值进行抽奖，无论任意次数，也有可能1万次里多次出现或者不出。
-          </view>
-          <view class="rule-content">
-            12、无限赏说明。
+            8、本平台保证发出的货品内容全新未拆，请多多支持！
           </view>
         </scroll-view>
       </view>
     </u-popup>
+
+    <!-- 宝箱物品 -->
+    <u-popup v-model="isBoxPopupShow" mode="center" border-radius="20" width="90%">
+      <view class="box-content">
+        <view class="box-popup-title">宝箱物品</view>
+        <view class="box-popup-desc">打开后随机获得一个赏品</view>
+        <template v-if="curDetail && curDetail.box_awards && curDetail.box_awards.length">
+          <view class="award-grid">
+            <view class="award-card" v-for="(award, index) in curDetail.box_awards" :key="index">
+              <view class="award-img-container">
+                <xc-image :src="award.thumb" :showBg="true" ratio="1:1" borderRadius="10"
+                  @click="previewImage(award)" />
+                <view class="award-tag">{{ award.mark_title || 'A' }}</view>
+                <view class="award-probability">{{ award.show_rate }}%</view>
+              </view>
+              <view class="award-info">
+                <view class="award-name">{{ award.title }}</view>
+                <view class="award-ref-price">参考价{{ award.price }}</view>
+              </view>
+            </view>
+          </view>
+        </template>
+        <template v-else>
+          <view class="empty">
+            <u-empty text="暂无数据" mode="list"></u-empty>
+          </view>
+        </template>
+        <view class="close-btn-wrap">
+          <button class="box-popup-close-btn" @click="isBoxPopupShow = false">关闭</button>
+        </view>
+      </view>
+    </u-popup>
+
 
     <!-- 中奖赏品 -->
     <u-popup v-model="awardShow" mode="center" border-radius="20" width="90%">
@@ -564,11 +668,14 @@
           <view class="award-grid">
             <view class="award-card" v-for="(award, index) in prizeResult" :key="index">
               <view class="award-img-container">
-                <view :class="award.mark_title==='H赏'?'':'animate-img'">
-                  <xc-image :src="award.thumb" :showBg="true" ratio="1:1" borderRadius="10" />
-                </view>
+                <xc-image :src="award.thumb" :showBg="true" ratio="1:1" borderRadius="10" />
                 <view class="award-tag">
-                  {{ award.mark_title }}
+                  <template v-if="award.is_box == 1">
+                    BX赏
+                  </template>
+                  <template v-else>
+                    {{ award.mark_title }}
+                  </template>
                 </view>
                 <view class="award-probability">x{{ award.total }}</view>
               </view>
@@ -589,11 +696,28 @@
         </view>
       </view>
     </u-popup>
+
+    <!-- 自定义图片预览弹窗 -->
+    <u-popup v-model="isPreviewVisible" mode="center" border-radius="20" width="90%">
+      <view class="image-preview-content">
+        <!-- 赏品明细标题 -->
+        <view class="preview-title">{{ previewInfo.mark_title }}·赏品明细</view>
+
+        <!-- 预览的图片 -->
+        <image :src="previewInfo.thumb" class="image-preview" mode="widthFix"></image>
+        <!-- <xc-image :src="previewInfo.thumb" :showBg="true" ratio="1:1" borderRadius="10"  /> -->
+
+        <!-- 商品标题 -->
+        <view class="preview-product-title">{{ previewInfo.title }}</view>
+      </view>
+    </u-popup>
+
     <u-modal v-model="switchQueueShow" content="您已在其他队列中，是否切换到当前队列" show-cancel-button cancel-text="取消"
       confirm-text="确认切换" @confirm="switchQueue"></u-modal>
 
     <u-modal v-model="levelQueueShow" content="退出页面, 则视为主动放弃当前拥有的专属抽盒时间，是否继续退出" show-cancel-button cancel-text="取消"
       confirm-text="退出" @confirm="levelPage"></u-modal>
+
   </view>
 </template>
 
@@ -677,12 +801,6 @@ export default {
       is_epay: 0,
       currentBanner: 0,
       zsPop: false,
-      nextPage: true,
-      pageNum: 1,
-      currentId: '',
-      tabList: [],
-      sortData: {},
-      sortList: [],
       boxLogList: [],
       btnLists: [
       ],
@@ -711,8 +829,7 @@ export default {
       couponPop: false,
       couponShow: false,
       coupon_info: {},
-      // animateSet: uni.getStorageSync('animateSet') ? uni.getStorageSync('animateSet') : false,
-      animateSet: true,
+      animateSet: uni.getStorageSync('animateSet') ? uni.getStorageSync('animateSet') : false,
       setShow: false,
       currentIndex: 0,
       navList: [
@@ -739,6 +856,17 @@ export default {
       pollTimer: null,       // 轮询定时器
       timer: null,
       remainingTime: 0,   // 队首用户的剩余时间，不是当前用户的。
+      previewInfo: {}, // 存储要预览的商品信息
+      isPreviewVisible: false, // 控制预览是否显示
+      first_limit_user: {
+        avatar: '',
+        nickName: ''
+      },
+      titleName: '',
+      is_user_limited: false,
+      countdownSecond: 30 * 24 * 60 * 60,
+      remainingStock: 0,
+      totalStock: 0,
       // 中赏物品
       awardShow: false,
       prizeResult: [],
@@ -750,6 +878,9 @@ export default {
     }
   },
   onLoad(options) {
+    console.log(options, '111');
+
+    this.titleName = options.title
     if (options.scene) {
       let arr = options.scene.split('_')
       this.optionsData = {
@@ -758,6 +889,9 @@ export default {
       }
     } else {
       this.optionsData = options
+    }
+    if (options.set_count) {
+      this.currentIndex = +options.set_count - 1
     }
 
     switchMusic.src = switchMp3
@@ -859,78 +993,49 @@ export default {
           this.sortOrder = 'desc';
         }
       }
+
+      // 重新获取第一页数据
+      if (this.$refs.mescrollRef) {
+        this.getList({ num: 1, size: this.pageSize });
+      }
     },
-    getTabs(
+
+    // 下拉刷新回调
+    downCallback() {
+      // 刷新时使用当前排序参数重新加载第一页
+      this.getList({ num: 1, size: this.pageSize });
+      this.mescroll.endDownScroll(); // 结束下拉刷新
+    },
+    getList({
       num,
       size
-    ) {
+    }) {
       this.req({
-        url: '/v1/box/boxLogList88',
+        url: '/v1/box/boxLogList',
         data: {
           id: this.optionsData.id,
-          setNo: this.currentIndex + 1,
           mark_id: this.btnLists.length ? this.btnLists[this.currentItems].id : 0,
+          setNo: this.currentIndex + 1,
           page: num,
           per_page: size,
           sort_by: this.sortType, // 新增：排序字段
           sort_order: this.sortOrder // 新增：排序方向
-        }, Loading: true,
+        },
+        Loading: true,
         success: res => {
           if (res.code == 200) {
             if (num == 1) {
-              this.tabList = []
+              this.boxLogList = []
             }
-            if (res.data.length) {
-              console.log(111);
-              this.tabList = [...this.tabList, ...res.data]
-
-              // this.boxLogList = [...this.boxLogList, ...res.data.data]
+            if (res.data.data.length) {
+              this.boxLogList = [...this.boxLogList, ...res.data.data]
+              this.mescroll.endBySize(res.data.data.length, res.data.total)
             }
           } else {
             this.mescroll.endBySize(0, 0)
           }
         }
       })
-    },
-    getSortList(e) {
-      if (e.mark_id === this.currentId) {
-        if (!this.nextPage) {
-          uni.showToast({
-            title: '没有更多了',
-            icon: "none"
-          })
-          return
-        }
-        this.pageNum++
-      } else {
-        this.pageNum = 1
-      }
-      uni.showLoading({ title: "加载中" })
-      this.req({
-        url: '/v1/box/boxLogList88',
-        data: {
-          id: this.boxInfo.id,
-          mark_id: e.mark_id,
-          page: this.pageNum,
-          per_page: 20
-        },
-        Loading: true,
-        success: res => {
-          if (res.code === 200) {
-            this.sortData = res.data.find(v => v.mark_id === e.mark_id),
-              this.pageNum === 1 ? this.sortList = this.sortData.data : this.sortList = [...this.sortList, ...this.sortData.data];
-            this.nextPage = this.sortData.next_page
-            this.currentId = e.mark_id
-            uni.hideLoading();
-          }
-        }
-      })
-
-    },
-    clearList() {
-      this.sortList = []
-      this.nextPage = true
-      this.pageNum = 0
     },
     prev() {
       this.$nextTick(() => {
@@ -1047,6 +1152,7 @@ export default {
         data: {
           id: this.optionsData.id,
           mark_id: this.btnLists.length ? this.btnLists[this.currentItems].id : 0,
+          setNo: this.currentIndex + 1,
           page: num,
           per_page: size
         },
@@ -1056,21 +1162,23 @@ export default {
             if (num == 1) {
               this.boxLogList = []
             }
-            let newArr = res.data.data.map(item => {
-              if (item.mark_id == 1) {
-                item.image = 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01khNh7d24NdcoDC0Ny_!!2200676927379.png'
-              } else if (item.mark_id == 2) {
-                item.image = 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01KaZ6qs24Ndco6VAfA_!!2200676927379.png'
-              }
-              else if (item.mark_id == 3) {
-                item.image = 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01GpZzz024NdcoDFpOW_!!2200676927379.png'
-              } else if (item.mark_id == 4) {
-                item.image = 'https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01PZkzwd24NdcoKRnBt_!!2200676927379.png'
-              }
-              return item
-            })
-            this.boxLogList = [...this.boxLogList, ...newArr]
-            this.mescroll.endBySize(res.data.data.length, res.data.total)
+            if (res.data.data.length) {
+              let newArr = res.data.data.map(item => {
+                if (item.mark_id == 1) {
+                  item.image = 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01khNh7d24NdcoDC0Ny_!!2200676927379.png'
+                } else if (item.mark_id == 2) {
+                  item.image = 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01KaZ6qs24Ndco6VAfA_!!2200676927379.png'
+                }
+                else if (item.mark_id == 3) {
+                  item.image = 'https://img.alicdn.com/imgextra/i2/2200676927379/O1CN01GpZzz024NdcoDFpOW_!!2200676927379.png'
+                } else if (item.mark_id == 4) {
+                  item.image = 'https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01PZkzwd24NdcoKRnBt_!!2200676927379.png'
+                }
+                return item
+              })
+              this.boxLogList = [...this.boxLogList, ...newArr]
+              this.mescroll.endBySize(res.data.data.length, res.data.total)
+            }
           } else {
             this.mescroll.endBySize(0, 0)
           }
@@ -1136,13 +1244,6 @@ export default {
                 }
                 this.$common.toast({
                   title: '支付成功', icon: 'success', duration: 1500, success: () => {
-                    // this.$common.to({
-                    //   type: 1, url: '/pages/box/firstDraw', query: {
-                    //     id: res.data.id,
-                    //     order_sn: order_info.order_sn,
-                    //     drawNum: res.data.box_num
-                    //   }
-                    // })
                     this.openBox(order_info.order_sn)
                   }
                 })
@@ -1164,11 +1265,6 @@ export default {
     },
     cancelCheckPayStatus() {
       uni.removeStorageSync('order_info_box')
-      // this.$common.toast({
-      // 	title: '支付超时',
-      // 	icon: 'none',
-      // 	duration: 500
-      // })
       if (this.checkTimer) {
         clearTimeout(this.checkTimer)
       }
@@ -1193,7 +1289,7 @@ export default {
         })
       }
     },
-    /**
+    /*** 
 * @description: 获取数据
 * @return {*}
 */
@@ -1209,6 +1305,10 @@ export default {
           success: res => {
             if (res.code == 200) {
               this.boxInfo = res.data.box
+              this.is_user_limited = res.data.box.is_user_limited
+              this.first_limit_user = res.data.box.first_limit_user
+              this.remainingStock = res.data.remainingStock
+              this.totalStock = res.data.totalStock
               // 一番赏：奖品数据按套分组
               this.awardList = res.data.awardList.map(item => ({
                 ...item,
@@ -1218,6 +1318,7 @@ export default {
               this.markList = res.data.box ? res.data.box.markList : []
               this.getDraw()
               this.getQueueStatus();
+              this.getList({ num: 1, size: 20 })
               resolve()
             }
           }
@@ -1292,7 +1393,7 @@ export default {
       }
 
       this.req({
-        url: '/v1/box/order',
+        url: '/v1/box/oneShotOrder',
         data,
         success: res => {
           if (res.code == 200) {
@@ -1307,7 +1408,7 @@ export default {
                 uni.setStorageSync('order_info_box', order_info);
                 this.checkPayStatus()
                 // #endif
-                const params = { ...res.data, is_epay: this.is_epay, returnUrl: `/pages/box/kaixiang?id=${this.boxInfo.id}` }
+                const params = { ...res.data, is_epay: this.is_epay, returnUrl: `/package/box/kaixiang?id=${this.boxInfo.id}` }
                 this.$common.orderPay(params).then(res1 => {
                   if (res1 == 'success') {
                     this.$common.toast({
@@ -1316,24 +1417,6 @@ export default {
                       duration: 1500,
                       success: () => {
                         this.openBox(res.data.order_sn)
-                        // 表示全收
-                        // if (res.data.draw_num == -1) {
-                        //   uni.switchTab({
-                        //     url: '/pages/tabBar/bag',
-                        //   });
-                        // } else {
-                        //   this.$common.to({
-                        //     type: 1,
-                        //     url: '/pages/box/firstDraw',
-                        //     query: {
-                        //       id: this.boxInfo.id,
-                        //       order_sn: res.data.order_sn,
-                        //       drawNum: this.orderData.box.num,
-                        //       set_no: this.currentIndex + 1
-                        //     }
-                        //   })
-                        // }
-
 
                       }
                     })
@@ -1348,23 +1431,6 @@ export default {
                   duration: 1500,
                   success: () => {
                     this.openBox(res.data.order_sn)
-                    // 表示全收
-                    // if (res.data.draw_num == -1) {
-                    //   uni.switchTab({
-                    //     url: '/pages/tabBar/bag',
-                    //   });
-                    // } else {
-                    //   this.$common.to({
-                    //     type: 1,
-                    //     url: '/pages/box/firstDraw',
-                    //     query: {
-                    //       id: this.boxInfo.id,
-                    //       order_sn: res.data.order_sn,
-                    //       drawNum: this.orderData.box.num,
-                    //       set_no: this.currentIndex + 1
-                    //     }
-                    //   })
-                    // }
                   }
                 })
                 if (this.isMyTurn) {
@@ -1395,20 +1461,7 @@ export default {
         Loading: false,
         success: res => {
           if (res.code == 200) {
-            this.prizeResult = res.data.map(item => {
-              // if (item.mark_id == 33) {
-              //   item.mark_title = 'A赏'
-              // } else if (item.mark_id == 34) {
-              //   item.mark_title = 'B赏'
-              // }
-              // else if (item.mark_id == 35) {
-              //   item.mark_title = 'C赏'
-              // } else if (item.mark_id == 36) {
-              //   item.mark_title = 'D赏'
-              // }
-              return item
-            })
-
+            this.prizeResult = res.data
             this.awardShow = true
             this.getData()
           }
@@ -1428,6 +1481,14 @@ export default {
       this.$nextTick(() => {
         if (switchMusic) {
           switchMusic.play()
+        }
+      })
+      this.$common.to({
+        url: '/package/box/firstDraw',
+        query: {
+          id: this.boxInfo.id,
+          drawNum: 1,
+          type: 'play'
         }
       })
     },
@@ -1534,7 +1595,7 @@ export default {
     changeCurrentCate(index) {
       this.currentCate = index
       if (index == 1) {
-        this.getTabs({ num: 1, size: 20 })
+        this.getList({ num: 1, size: 20 })
       }
     },
     fresh() {
@@ -1557,6 +1618,7 @@ export default {
         }
       })
 
+
       uni.switchTab({
         url: '/pages/tabBar/bag',
       });
@@ -1571,6 +1633,11 @@ export default {
         }
       })
       this.rulePop = true
+    },
+    // 图片预览方法
+    previewImage(previewInfo) {
+      this.previewInfo = previewInfo;  // 把要预览的图片添加到数组中
+      this.isPreviewVisible = true;     // 显示图片预览弹窗
     },
     back() {
       this.$nextTick(() => {
@@ -1749,6 +1816,8 @@ export default {
               if (this.pollTimer) clearInterval(this.pollTimer);
               this.isMyTurn = true;
               this.startQueueTimer();
+              const countdown = res.data.countdown || 180;
+              this.$store.dispatch('startQueueCountdown', countdown)
             }
           }
         }
@@ -1758,9 +1827,6 @@ export default {
       this.leaveQueue();
       if (this.pollTimer) clearInterval(this.pollTimer);
     },
-    changeTabs(e) {
-      this.tabCur = e
-    }
   },
 }
 </script>
@@ -1775,7 +1841,6 @@ page {
   // min-height: calc(100vh - 50px);
   padding-bottom: 120rpx;
   background: #f7f7f7;
-
 
   .nav {
     ::v-deep .uni-navbar__header {
@@ -2686,14 +2751,12 @@ page {
 
       &-content {
         text {
+          // padding: 2rpx 6rpx;
           font-size: 28rpx;
           font-family: PingFang SC;
           font-weight: bold;
-          color: #fff;
-          background: #e4082c;
+          color: #ffffff;
           margin-right: 10rpx;
-          border-radius: 10rpx;
-          padding: 10rpx 20rpx;
         }
 
         font-size: 32rpx;
@@ -2751,6 +2814,7 @@ page {
       color: #333333;
     }
 
+    .content {}
   }
 }
 
@@ -2810,14 +2874,8 @@ page {
   }
 }
 
-.open-card {
-  background: #fff;
-  padding: 20rpx;
-  border-radius: 20rpx;
-  margin-top: 20rpx;
-}
-
 .award-wrap {
+  padding: 0 20rpx;
   margin-top: 20rpx;
 
   .award-log-item {
@@ -2829,18 +2887,14 @@ page {
     // background-size: 100% 100%;
     margin-bottom: 20rpx;
     position: relative;
+    border-radius: 20rpx;
     padding: 20rpx;
     // background: linear-gradient(to right, #5dfda1, #baf828);
     // background: linear-gradient(to right, #c1f721, #8dfa63, #62fc9b);
-    // box-shadow: 2rpx 5rpx 2rpx 2rpx #209200;
+    // box-shadow: 2rpx 2rpx 2rpx 2rpx #929492;
 
     &:last-child {
       margin-bottom: 0;
-    }
-
-    .user-avatar {
-      width: 100rpx;
-      border-radius: 50rpx;
     }
 
     .qishu {
@@ -2855,7 +2909,6 @@ page {
     .award-log-left {
       flex: 1;
       width: 50%;
-      padding: 0 20rpx;
 
       .award-log-time {
         margin-bottom: 10px;
@@ -2883,6 +2936,199 @@ page {
       }
     }
   }
+
+  .award-single-info {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20rpx;
+    box-sizing: border-box;
+    border-bottom: 1px solid #f5f5f5;
+
+    // 左侧整体容器
+    .award-single-left {
+
+      .award-user-info {
+        display: flex;
+        align-items: flex-start;
+
+        // 用户头像
+        .user-avatar {
+          width: 80rpx;
+          height: 80rpx;
+          border-radius: 50%;
+          margin-right: 15rpx;
+        }
+
+        // 用户信息容器
+        .user-info {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+
+          .user-nickname {
+            font-size: 32rpx;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 8rpx;
+          }
+
+          .award-time {
+            font-size: 26rpx;
+            color: #999;
+          }
+        }
+      }
+
+      // 奖品/宝箱内容容器
+      .award-content {
+        margin-top: 10rpx;
+        margin-left: 15rpx;
+
+        // 宝箱标题
+        .box-title {
+          font-size: 28rpx;
+          color: #ff6600;
+          margin-bottom: 10rpx;
+          font-weight: bold;
+        }
+
+        // 宝箱内单个奖品
+        .box-item {
+          display: flex;
+          align-items: center;
+          margin-bottom: 8rpx;
+
+          .award-single-img {
+            width: 60rpx;
+            height: 60rpx;
+            margin-right: 10rpx;
+          }
+
+          .box-item-name {
+            font-size: 28rpx;
+            color: #666;
+          }
+        }
+
+        // 普通奖品图片
+        .award-single-img {
+          width: 70rpx;
+          height: 70rpx;
+          margin-right: 10rpx;
+        }
+
+        // 普通奖品名称
+        .award-name {
+          font-size: 28rpx;
+          color: #666;
+        }
+      }
+    }
+
+    // 右侧奖品标识
+    .award-log-box {
+      font-size: 30rpx;
+      color: #ff6600;
+      font-weight: bold;
+      align-self: center;
+    }
+  }
+
+
+  .award-box-content {
+    width: 100%;
+
+    .award-box-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .award-box-left {
+        display: flex;
+
+        .user-info {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .user-nickname {
+          font-size: 28rpx;
+          font-weight: bold;
+
+        }
+
+        .award-time {
+          margin-top: 10rpx;
+          font-size: 28rpx;
+          color: #777;
+        }
+
+      }
+
+      .award-log-box {
+        padding: 10px;
+        text-align: center;
+        font-size: 28rpx;
+        color: #333;
+      }
+    }
+
+    .box-award-content {
+      display: flex;
+      align-items: center;
+
+      .box-award-img {
+        width: 100rpx;
+        height: 100rpx;
+        margin-right: 20rpx;
+      }
+    }
+  }
+
+  .award-log-left {
+    display: flex;
+    align-items: center;
+  }
+
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+
+  .award-log-box-items {
+    margin-top: 15px;
+  }
+
+  .sub-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .sub-item-img {
+    width: 100rpx;
+    height: 100rpx;
+    margin-right: 10rpx;
+  }
+
+  .sub-item-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sub-item-title {
+    font-size: 14px;
+  }
+
+  .sub-item-price {
+    font-size: 12px;
+    color: #ff3e00;
+  }
+
 }
 </style>
 
@@ -3020,16 +3266,103 @@ page {
   .card-top-item {
     display: flex;
     padding: 80rpx 40rpx;
-    padding-bottom: 20rpx;
+    padding-bottom: 50rpx;
     background: #fff;
     border-radius: 20rpx;
 
     .card-top-left {
       position: relative;
 
+      .card-img-overlay {
+        position: absolute;
+        /* 相对于父容器定位 */
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 10rpx;
+        box-sizing: border-box;
+        z-index: 10;
+
+        /* 确保在图片上方显示 */
+        .user-info {
+          display: flex;
+          align-items: center;
+          margin-top: 8rpx;
+          margin-bottom: 8rpx;
+          /* 新增溢出隐藏相关样式 */
+          overflow: hidden;
+          /* 超出容器部分隐藏 */
+          white-space: nowrap;
+          /* 文本不换行 */
+        }
+
+        .user-avatar {
+          width: 50rpx;
+          height: 50rpx;
+          border-radius: 50%;
+          margin-right: 10rpx;
+          margin-left: 10rpx;
+          border: 2rpx solid #fff;
+          flex-shrink: 0;
+        }
+
+        .user-nickname {
+          color: #fff;
+          font-size: 24rpx;
+          text-shadow: 0 1rpx 2rpx rgba(0, 0, 0, 0.5);
+          /* 文本溢出时显示省略号 */
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: calc(100% - 60rpx);
+          /* 减去头像宽度，避免挤压 */
+        }
+
+        .lock-text {
+          color: #fff;
+          font-size: 28rpx;
+          font-weight: bold;
+          margin-bottom: 8rpx;
+          text-align: center;
+          text-shadow: 0 1rpx 2rpx rgba(0, 0, 0, 0.5);
+        }
+
+        .countdown {
+          color: #fff;
+          font-size: 24rpx;
+          // text-align: center;
+          // margin-left: 10rpx;
+          text-shadow: 0 1rpx 2rpx rgba(0, 0, 0, 0.5);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          ::v-deep .u-countdown-item {
+            background: none !important;
+          }
+
+          ::v-deep .u-countdown-time {
+            color: #fff !important;
+            font-size: 24rpx !important;
+          }
+        }
+
+
+        .countdown-time {
+          color: #fff;
+          font-weight: bold;
+        }
+
+        .card-top-left-img {
+          /* 确保图片占满容器，与覆盖层配合显示 */
+          width: 100%;
+          display: block;
+        }
+
+      }
+
       .card-top-left-img {
-        width: 150rpx;
-        height: 150rpx;
+        width: 200rpx;
+        height: 180rpx;
         border-radius: 20rpx;
         margin-right: 20rpx;
       }
@@ -3105,7 +3438,7 @@ page {
           font-size: 30rpx;
           font-weight: 700;
           color: #000;
-          margin: 0 40rpx;
+          margin: 0 30rpx;
           flex-shrink: 0;
           padding: 10rpx 40rpx;
           border-radius: 50rpx;
@@ -3117,15 +3450,12 @@ page {
   }
 
   .card-count {
-    display: flex;
-    justify-content: center;
-    font-size: 30rpx;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 26rpx;
     font-weight: bold;
-    margin-bottom: 15rpx;
-
-    .count-num {
-      margin-left: 10rpx;
-    }
   }
 }
 
@@ -3242,24 +3572,15 @@ page {
     border-radius: 50rpx;
     text-align: center;
     border: 2rpx solid #333;
-    // background: linear-gradient(to right, #5dfda1, #baf828);
     background: linear-gradient(to right, #c1f721, #8dfa63, #62fc9b);
     text-shadow: -1px -1px #fff, 1px 1px #333;
-    // box-shadow: 0px 5px 5px #888888;
-    box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
+    box-shadow: 0px 5px 5px #888888;
   }
 
   .chou-first-wrap {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     column-gap: 20rpx;
-
-    .chou-first-item {}
-
-    .chou-second-item {
-      // background: #fffc30;
-      // box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
-    }
   }
 
   .chou-second-wrap {
@@ -3270,8 +3591,6 @@ page {
 
     .chou-second-item {
       width: 50%;
-      // background: #fffc30;
-      // box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
     }
   }
 
@@ -3326,18 +3645,7 @@ page {
         position: relative;
         width: 140rpx; // 固定宽度
         height: 140rpx; // 固定高度
-        border-radius: 16rpx;
-        // overflow: hidden;
         background-color: #f5f5f5;
-        // box-shadow: 0 0 10rpx 10rpx rgba(216, 213, 11, 0.8);
-
-        .animate-img {
-          width: 140rpx; // 固定宽度
-          height: 140rpx; // 固定高度
-          animation: starFlick 0.6s ease-out infinite;
-          -webkit-animation: starFlick 0.6s ease-out infinite;
-          border-radius: 16rpx;
-        }
 
         .award-img {
           width: 100%;
@@ -3425,7 +3733,39 @@ page {
     }
   }
 }
+
+
+
+/* 图片预览弹窗的样式 */
+.image-preview-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40rpx;
+
+  .preview-title {
+    font-size: 30rpx;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 30rpx;
+  }
+
+  .image-preview {
+    width: 80%;
+    // height: 400rpx;
+    object-fit: cover;
+    margin-bottom: 30rpx;
+  }
+
+  .preview-product-title {
+    font-size: 32rpx;
+    font-weight: 700;
+    color: #000;
+    text-align: center;
+  }
+}
 </style>
+
 <style lang='scss' scoped>
 /* 排序 */
 .sort-controls {
@@ -3460,22 +3800,32 @@ page {
   font-weight: bold;
 }
 
-.up-btn {
+.uni-common-mt {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 20rpx;
 }
 
-.no-text {
-  margin-top: 20rpx;
-  text-align: center;
+.uni-progress {
+  overflow: hidden;
+  border-radius: 50rpx;
 }
 
-.more-btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.progress-box {
+  position: relative;
+  width: 60%;
+}
+
+.uni-icon {
+  line-height: 1.5;
+}
+
+.progress-cancel {
+  margin-left: 40rpx;
+}
+
+.progress-control button {
   margin-top: 20rpx;
 }
 </style>

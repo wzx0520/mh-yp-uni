@@ -279,7 +279,7 @@ export default {
         }
         if (wx) {
           uni.switchTab({
-            url: '/pages/box/box'
+            url: '/package/box/box'
           })
         }
 
