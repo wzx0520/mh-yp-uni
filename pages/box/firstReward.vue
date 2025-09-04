@@ -3575,24 +3575,15 @@ page {
     border-radius: 50rpx;
     text-align: center;
     border: 2rpx solid #333;
-    // background: linear-gradient(to right, #5dfda1, #baf828);
     background: linear-gradient(to right, #c1f721, #8dfa63, #62fc9b);
     text-shadow: -1px -1px #fff, 1px 1px #333;
     box-shadow: 0px 5px 5px #888888;
-    // box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
   }
 
   .chou-first-wrap {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     column-gap: 20rpx;
-
-    .chou-first-item {}
-
-    .chou-second-item {
-      // background: #fffc30;
-      // box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
-    }
   }
 
   .chou-second-wrap {
@@ -3603,8 +3594,6 @@ page {
 
     .chou-second-item {
       width: 50%;
-      // background: #fffc30;
-      // box-shadow: 2rpx 10rpx 2rpx 2rpx #209200;
     }
   }
 
