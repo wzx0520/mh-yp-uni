@@ -2094,7 +2094,7 @@ page {
 
       .open-nav-con {
         display: flex;
-        padding: 10rpx;
+        padding: 2rpx;
         background: #F0E9FF;
         border-radius: 30rpx;
       }
@@ -2881,6 +2881,8 @@ page {
     width: 100%;
     display: flex;
     align-items: center;
+    background: #fff;
+    border-radius: 20rpx;
     // background: url('@/static/web/319.png') no-repeat;
     // background: url('https://xlcwmax.oss-cn-beijing.aliyuncs.com/aliyun/92a69c867c922ec3dffc06612a0cbd62.jpg') no-repeat;
     // background-size: 100% 100%;

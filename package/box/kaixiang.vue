@@ -2028,7 +2028,7 @@ page {
 
       .open-nav-con {
         display: flex;
-        padding: 10rpx;
+        padding: 2rpx;
         background: #F0E9FF;
         border-radius: 30rpx;
       }

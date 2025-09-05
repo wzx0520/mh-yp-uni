@@ -188,7 +188,7 @@
               </text>
             </view>
             <view class="sort-btn" @click="changeSort('value')">
-              <text>按标签排序</text>
+              <text>按价格排序</text>
               <text class="sort-icon" v-if="sortType === 'return_price'">
                 {{ sortOrder === 'asc' ? '↑' : '↓' }}
               </text>
@@ -207,10 +207,16 @@
                     <view class="award-single-left">
                       <!-- 用户头像 + 昵称/时间 -->
                       <view class="award-user-info">
-                        <image :src="item.avatar" class="user-avatar" />
-                        <view class="user-info">
-                          <view class="user-nickname">{{ item.nickName }}</view>
-                          <view class="award-time">{{ item.created_at }}</view>
+                        <view class="award-user-info-left">
+                          <image :src="item.avatar" class="user-avatar" />
+                          <view class="user-info">
+                            <view class="user-nickname">{{ item.nickName }}</view>
+                            <view class="award-time">{{ item.created_at }}</view>
+                          </view>
+                        </view>
+                        <!-- 右侧：奖品标识 -->
+                        <view class="award-log-box">
+                          {{ item.mark_title }}
                         </view>
                       </view>
 
@@ -218,27 +224,28 @@
                       <view class="award-content">
                         <template>
                           <!-- 普通奖品/宝箱 -->
-                          <view class="flex flex-acenter">
-                            <image class="award-single-img" :src="item.thumb" mode="widthFix" lazy-load="false" />
-                            <view class="award-name"><text class="box-title" v-if="item.is_box == 1">[宝箱]</text>{{
-                              item.title }}</view>
+                          <view class="flex-inline flex-acenter mt-20">
+                            <view class="award-content-left">
+                              <image class="award-single-img" :src="item.thumb" mode="widthFix" lazy-load="false" />
+                              <view class="award-name"><text class="box-title" v-if="item.is_box == 1">[宝箱]</text>{{
+                                item.title }}</view>
+                            </view>
+                            <view v-if="item.box_awards" class="open-text">已开箱</view>
+                            <!-- 宝箱奖品 -->
+                            <template v-if="item.box_awards">
+                              <view class="flex flex-acenter">
+                                <image class="award-single-img" :src="item.box_awards.thumb" mode="widthFix"
+                                  lazy-load="false" />
+                                <view class="box-info">{{ item.box_awards.title }}</view>
+                              </view>
+                            </template>
                           </view>
                         </template>
-                        <!-- 宝箱奖品 -->
-                        <template v-if="item.box_awards">
-                          <view class="flex flex-acenter mb-20">
-                            <image class="award-single-img" :src="item.box_awards.thumb" mode="widthFix"
-                              lazy-load="false" />
-                            <view class="box-info">{{ item.box_awards.title }}</view>
-                          </view>
-                        </template>
+
                       </view>
                     </view>
 
-                    <!-- 右侧：奖品标识 -->
-                    <view class="award-log-box">
-                      {{ item.mark_title }}
-                    </view>
+
                   </view>
                 </template>
 
@@ -973,6 +980,7 @@ export default {
   methods: {
     // 切换排序方式
     changeSort(type) {
+      uni.showLoading({ title: '加载中' })
       // type: 'time' 时间排序, 'value' 价值排序
       if (type === 'time') {
         if (this.sortType === 'created_at') {
@@ -1034,6 +1042,7 @@ export default {
           } else {
             this.mescroll.endBySize(0, 0)
           }
+          uni.hideLoading()
         }
       })
     },
@@ -2095,7 +2104,7 @@ page {
 
       .open-nav-con {
         display: flex;
-        padding: 10rpx;
+        padding: 2rpx;
         background: #F0E9FF;
         border-radius: 30rpx;
       }
@@ -2888,7 +2897,7 @@ page {
     margin-bottom: 20rpx;
     position: relative;
     border-radius: 20rpx;
-    padding: 20rpx;
+    // padding: 20rpx;
     // background: linear-gradient(to right, #5dfda1, #baf828);
     // background: linear-gradient(to right, #c1f721, #8dfa63, #62fc9b);
     // box-shadow: 2rpx 2rpx 2rpx 2rpx #929492;
@@ -2939,19 +2948,26 @@ page {
 
   .award-single-info {
     width: 100%;
-    display: flex;
+    // display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 20rpx;
+    padding: 26rpx;
     box-sizing: border-box;
     border-bottom: 1px solid #f5f5f5;
+    background: #fff;
+    border-radius: 20rpx;
 
     // 左侧整体容器
     .award-single-left {
 
       .award-user-info {
         display: flex;
+        justify-content: space-between;
         align-items: flex-start;
+
+        .award-user-info-left {
+          display: flex;
+        }
 
         // 用户头像
         .user-avatar {
@@ -2983,8 +2999,10 @@ page {
 
       // 奖品/宝箱内容容器
       .award-content {
-        margin-top: 10rpx;
-        margin-left: 15rpx;
+
+        .flex-inline {
+          display: flex
+        }
 
         // 宝箱标题
         .box-title {
@@ -3010,6 +3028,16 @@ page {
             font-size: 28rpx;
             color: #666;
           }
+        }
+
+        .award-content-left {
+          display: flex;
+          align-items: center;
+        }
+
+        .open-text {
+          color: #afadad;
+          padding: 0 30rpx;
         }
 
         // 普通奖品图片
