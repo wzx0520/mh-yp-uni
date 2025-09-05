@@ -48,9 +48,19 @@ if (process.env.NODE_ENV === 'development') {
   // #ifdef H5
   baseURL = "https://box.miaomicw.com.cn"
   imgURL = "https://box.miaomicw.com.cn"
-
-  // baseURL = "https://box.bjkc010.com/";
-  // imgURL = "https://box.bjkc010.com/";
+  // baseURL = "http://www.mh-v16.xcooo.cn";
+  // imgURL = "http://www.mh-v16.xcooo.cn";
+  // #endif
+  // #ifdef MP
+  // baseURL = "https://www.mhxcx.tazz.laibinwl.cn";
+  // imgURL = "https://www.mhxcx.tazz.laibinwl.cn";
+  baseURL = "https://box.miaomicw.com.cn";
+  imgURL = "https://box.miaomicw.com.cn";
+  baseURL = "https://box.miaomicw.com.cn";
+  imgURL = "https://box.miaomicw.com.cn";
+  // #endif
+  // baseURL = "https://www.mh-v6.xcooo.cn";
+  // imgURL = "https://www.mh-v6.xcooo.cn";
 } else {
   //console.log('生产环境')
   // #ifdef H5
