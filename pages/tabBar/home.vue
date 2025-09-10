@@ -181,7 +181,7 @@ export default {
           type: 1,
           thumb: 'https://box.bjkc010.com/uploads/upload/image/logo/2.png',
           title: '每日签到',
-          url: '/package/index/sign'
+          url: '/pages/index/sign'
         },
         {
           type: 2, thumb: 'https://box.bjkc010.com/uploads/upload/image/logo/1.png',
@@ -191,7 +191,7 @@ export default {
         {
           type: 3, thumb: 'https://box.bjkc010.com/uploads/upload/image/logo/3.png',
           title: '消费奖励',
-          url: '/package/index/consume'
+          url: '/pages/index/consume'
         },
         {
           type: 4, thumb: 'https://box.bjkc010.com/uploads/upload/image/logo/4.png',
