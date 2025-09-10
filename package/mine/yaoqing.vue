@@ -23,12 +23,13 @@
           <text>已邀请用户：{{ userInfo.total_xjnum.total_num }}人</text>
         </view>
         <!-- #ifdef APP-PLUS || H5  || MP-WEIXIN   -->
-        <view class="btn-ground-right" style="background: #6b57dd;" @click="sharePoster">立即邀请</view>
+        <!-- <view class="btn-ground-right" style="background: #6b57dd;" @click="sharePoster">立即邀请</view> -->
         <!-- #endif -->
         <!-- #ifdef MP-WEIXIN  -->
-        <!-- <view class="btn-ground-right" style="background: #6b57dd;" @click="handleInvite">
-          生成分享海报
-        </view> -->
+        <view class="btn-ground-right" style="background: #6b57dd;" @click="handleInvite">
+          <!-- 生成分享海报 -->
+		  立即邀请
+        </view>
         <!-- #endif -->
 
       </view>
