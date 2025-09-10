@@ -195,7 +195,7 @@ export default {
         },
         {
           type: 4, thumb: 'https://box.bjkc010.com/uploads/upload/image/logo/4.png',
-          title: '羊村好物',
+          title: '猫咪好物',
           url: '/package/box/yinpiao'
         }
       ],
