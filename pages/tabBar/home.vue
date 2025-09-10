@@ -179,23 +179,23 @@ export default {
       menuList: [
         {
           type: 1,
-          thumb: 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01udPyg924Nde2V1ZYa_!!2200676927379.png',
+          thumb: 'https://box.bjkc010.com/uploads/upload/image/logo/2.png',
           title: '每日签到',
-          url: '/pages/index/sign'
+          url: '/package/index/sign'
         },
         {
-          type: 2, thumb: 'https://img.alicdn.com/imgextra/i1/2200676927379/O1CN01qdXmxv24Nde39W0ZO_!!2200676927379.png',
+          type: 2, thumb: 'https://box.bjkc010.com/uploads/upload/image/logo/1.png',
           title: '领券中心',
           url: '/package/mine/coupon'
         },
         {
-          type: 3, thumb: 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN019SlLKy24Nde2lTsy7_!!2200676927379.png',
+          type: 3, thumb: 'https://box.bjkc010.com/uploads/upload/image/logo/3.png',
           title: '消费奖励',
-          url: '/pages/index/consume'
+          url: '/package/index/consume'
         },
         {
-          type: 4, thumb: 'https://img.alicdn.com/imgextra/i4/2200676927379/O1CN01U2cPtq24Nde2Dtdt4_!!2200676927379.png',
-          title: '猫咪好物',
+          type: 4, thumb: 'https://box.bjkc010.com/uploads/upload/image/logo/4.png',
+          title: '羊村好物',
           url: '/package/box/yinpiao'
         }
       ],
