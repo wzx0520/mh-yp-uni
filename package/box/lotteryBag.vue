@@ -275,7 +275,7 @@
 
         <!-- 福袋列表（显示所有福袋，包括可选和已售） -->
         <view class="bag-list" :style="{ maxHeight: listMaxHeight, overflow: 'hidden' }">
-          <view v-for="(item, index) in positionList" :key="item.index" class="bag-item" :class="{
+          <view v-for="(item, index) in positionList" class="bag-item" :class="{
             selected: item.selected,
             gray: item.is_sold == 1  // 已售状态
           }" @click="handleBagClick(item)">
