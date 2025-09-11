@@ -551,19 +551,19 @@ export default {
                 url: '/package/box/firstReward',
                 query: {
                   id: item.id,
-                  title:'一番赏'
+                  title: '一番赏'
                 }
               })
-              break 
+              break
             case 5:
-                this.$common.to({
+              this.$common.to({
                 url: '/package/box/firstReward',
                 query: {
                   id: item.id,
-                  title:'宝箱'
+                  title: '宝箱'
                 }
               })
-              break  
+              break
             // 无限赏
             case 2:
               this.$common.to({
@@ -707,10 +707,6 @@ export default {
     left: 50%;
     transform: translateX(-50%);
   }
-}
-
-.xc-top {
-  background: linear-gradient(95deg, #8bf9ba, #c0fac6, #c3edee, #c2f6f4);
 }
 
 .home-page {
