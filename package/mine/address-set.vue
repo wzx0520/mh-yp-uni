@@ -105,7 +105,7 @@ export default {
   components: {
     LbPicker
   },
-  data () {
+  data() {
     return {
       optionsData: '',
       list: addressData,
@@ -124,7 +124,7 @@ export default {
       areaList: []
     }
   },
-  onLoad (options) {
+  onLoad(options) {
     this.optionsData = options
 
     if (options.id) {
@@ -132,7 +132,7 @@ export default {
       this.getData()
     }
   },
-  onReady () {
+  onReady() {
     uni.setNavigationBarTitle({ title: this.title })
   },
   methods: {
@@ -141,7 +141,7 @@ export default {
      * @param {*}
      * @return {*}
      */
-    getData () {
+    getData() {
       this.req({
         url: '/v1/address/info',
         data: {
@@ -164,7 +164,7 @@ export default {
      * @param {*}
      * @return {*}
      */
-    submitAddress () {
+    submitAddress() {
       if (this.formData.name == '') {
         uni.showToast({
           title: '请输入姓名',
@@ -215,7 +215,29 @@ export default {
                 this.$common.back()
               }
             })
+          } else if (res.code == 1002) {
+            uni.showModal({
+              title: '您还未登录',
+              confirmText: '去登录',
+              success: res => {
+                if (res.confirm) {
+                  this.toLogin()
+                }
+              }
+            })
+          } else {
+            this.$common.toast({ title: res.msg });
           }
+        }
+      })
+    },
+
+    //  去登录
+    toLogin() {
+      this.$common.to({
+        url: '/pages/mine/login',
+        query: {
+          page: '/pages/tabbar/home'
         }
       })
     },
@@ -225,7 +247,7 @@ export default {
      * @param {*} e
      * @return {*}
      */
-    addressConfirm (e) {
+    addressConfirm(e) {
       console.log(e)
       let arr = e.item.map(item => item.label) // 城市
 
@@ -241,7 +263,7 @@ export default {
      * @param {*}
      * @return {*}
      */
-    closeAddress () {
+    closeAddress() {
       this.$refs.areaPicker.hide()
     },
 
@@ -250,7 +272,7 @@ export default {
      * @param {*}
      * @return {*}
      */
-    openAddress () {
+    openAddress() {
       this.$refs.areaPicker.show()
     }
   }

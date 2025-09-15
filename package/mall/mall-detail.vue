@@ -163,8 +163,8 @@
           <view class="right">
             {{
               true === ''
-              ? '以订单页面实际支付金额为准'
-              : '以订单页面实际支付金额为准'
+                ? '以订单页面实际支付金额为准'
+                : '以订单页面实际支付金额为准'
             }}
           </view>
         </view>
@@ -293,7 +293,7 @@
 import { mapGetters } from 'vuex'
 
 export default {
-  data () {
+  data() {
     return {
       optionsData: '',
       specCurs: [],
@@ -311,7 +311,7 @@ export default {
     ...mapGetters(['sysConfig'])
   },
 
-  onShareAppMessage () {
+  onShareAppMessage() {
     return {
       title: `正品保障 ${this.pageData.title}!`,
       imageUrl: this.pageData.thumb[0],
@@ -319,7 +319,7 @@ export default {
     }
   },
 
-  onLoad (options) {
+  onLoad(options) {
     uni.$on('chooseAdd', data => {
       this.addressData = data.data
       // console.log(this.addressData)
@@ -328,19 +328,19 @@ export default {
     this.getData()
   },
 
-  onShow () {
+  onShow() {
     this.autoplay = true
   },
 
-  onReady () {
+  onReady() {
     // this.openBuyPop()
   },
 
-  onHide () {
+  onHide() {
     this.autoplay = false
   },
 
-  onUnload () {
+  onUnload() {
     uni.$off('chooseAdd')
   },
 
@@ -349,7 +349,7 @@ export default {
      * @description: 点击小图
      * @return {*}
      */
-    tapPic (e) {
+    tapPic(e) {
       this.swiperChange({
         detail: {
           current: e
@@ -362,7 +362,7 @@ export default {
      * @param {*} e
      * @return {*}
      */
-    swiperChange (e) {
+    swiperChange(e) {
       // console.log(e.detail.current)
 
       this.swiperIndex = e.detail.current
@@ -372,7 +372,7 @@ export default {
      * @description: 筛选规格
      * @return {*}
      */
-    screenSpec () {
+    screenSpec() {
       let ids = this.specCurs
         .map((item, i) => {
           return this.pageData.attr[i].valinfo[item].id
@@ -390,7 +390,7 @@ export default {
      * @param {*} e
      * @return {*}
      */
-    chooseSpec (i, b) {
+    chooseSpec(i, b) {
       this.specCurs[i] = b
       this.screenSpec()
     },
@@ -399,7 +399,7 @@ export default {
      * @description: 前往选择地址
      * @return {*}
      */
-    toChooseAddress () {
+    toChooseAddress() {
       this.$common.to({
         url: '/package/mine/address',
         query: {
@@ -412,7 +412,7 @@ export default {
      * @description: 切换收藏
      * @return {*}
      */
-    toggleCollect () {
+    toggleCollect() {
       this.req({
         url: '/v1/shop/collect',
         data: {
@@ -430,7 +430,7 @@ export default {
      * @description: 获取数据
      * @return {*}
      */
-    getData () {
+    getData() {
       this.req({
         url: '/v1/shop/info',
         data: {
@@ -461,7 +461,7 @@ export default {
      * @param {*} e 0:确认订单,1:提交订单
      * @return {*}
      */
-    confirmSubmit (e) {
+    confirmSubmit(e) {
       return new Promise((resolve, reject) => {
         let data = {
           id: this.curData.goods_id,
@@ -477,9 +477,31 @@ export default {
           success: res => {
             if (res.code == 200) {
               resolve()
+            } else if (res.code == 1002) {
+              uni.showModal({
+                title: '您还未登录',
+                confirmText: '去登录',
+                success: res => {
+                  if (res.confirm) {
+                    this.toLogin()
+                  }
+                }
+              })
+            } else {
+              this.$common.toast({ title: res.msg });
             }
           }
         })
+      })
+    },
+
+    //  去登录
+    toLogin() {
+      this.$common.to({
+        url: '/pages/mine/login',
+        query: {
+          page: '/pages/tabbar/home'
+        }
       })
     },
 
@@ -487,7 +509,7 @@ export default {
      * @description: 前往订单页
      * @return {*}
      */
-    async toOrder () {
+    async toOrder() {
       if (this.specCur === '') {
         this.$common.toast({
           title: '请选择规格'
@@ -516,7 +538,7 @@ export default {
      * @description: 验证购买数量
      * @return {*}
      */
-    checkBuyNum () {
+    checkBuyNum() {
       if (this.buyNum <= 1) {
         this.buyNum = 1
       }
@@ -530,7 +552,7 @@ export default {
      * @description: 兑换数量减
      * @return {*}
      */
-    jian () {
+    jian() {
       if (this.buyNum <= 1) {
         this.buyNum = 1
         return
@@ -543,7 +565,7 @@ export default {
      * @description: 兑换数量加
      * @return {*}
      */
-    jia () {
+    jia() {
       if (this.buyNum >= this.curData.stock) {
         this.buyNum = this.curData.stock
         return
@@ -556,7 +578,7 @@ export default {
      * @description: 关闭购买弹窗
      * @return {*}
      */
-    closeBuyPop () {
+    closeBuyPop() {
       this.$refs.buyPop.close()
     },
 
@@ -564,7 +586,7 @@ export default {
      * @description: 打开购买弹窗
      * @return {*}
      */
-    openBuyPop () {
+    openBuyPop() {
       this.screenSpec()
       this.$refs.buyPop.open()
     },
@@ -573,7 +595,7 @@ export default {
      * @description: 前往首页
      * @return {*}
      */
-    toHome () {
+    toHome() {
       this.$common.to({
         type: 3,
         url: '/pages/index/index'
